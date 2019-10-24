@@ -28,221 +28,15 @@
       @on-row-click="clickedRow"
       @on-sort-change="sortData"
     ></Table>
-    <Drawer title="账单详情" v-model="showRecordDetail" :width="drawerWidth">
-      <div>
-        <Row>
-          <Col span="8">
-            <p>账单编号:</p>
-          </Col>
-          <Col span="16">{{detail.tradeNo}}</Col>
-        </Row>
-        <Row>
-          <Col span="8">订单编号:</Col>
-          <Col span="16">{{detail.orderNo}}</Col>
-        </Row>
-        <Row>
-          <Col span="8">创建时间:</Col>
-          <Col span="16">{{detail.createTime}}</Col>
-        </Row>
-        <Row>
-          <Col span="8">支付时间:</Col>
-          <Col span="16">{{detail.paidTime}}</Col>
-        </Row>
-        <Row>
-          <Col span="8">修改时间:</Col>
-          <Col span="16">{{detail.modifyTime}}</Col>
-        </Row>
-        <Row>
-          <Col span="8">交易对方:</Col>
-          <Col span="16">{{detail.target}}</Col>
-        </Row>
-        <Row>
-          <Col span="8">金额:</Col>
-          <Col span="16">{{detail.money}}</Col>
-        </Row>
-        <Row>
-          <Col span="8">账单状态:</Col>
-          <Col span="16">{{detail.tradeStatus}}</Col>
-        </Row>
-        <Row>
-          <Col span="8">收支类型:</Col>
-          <Col span="16">{{detail.inOutType}}</Col>
-        </Row>
-        <Row>
-          <Col span="8">订单状态:</Col>
-          <Col span="16">{{detail.orderStatus}}</Col>
-        </Row>
-        <Row>
-          <Col span="8">服务手续费:</Col>
-          <Col span="16">{{detail.serviceCost}}</Col>
-        </Row>
-        <Row>
-          <Col span="8">退款:</Col>
-          <Col span="16">{{detail.refundMoney}}</Col>
-        </Row>
-        <Row type="flex" align="middle">
-          <Col span="8">交易类型:</Col>
-          <Col span="16">
-            <Input type="text" v-model="detail.orderType"></Input>
-          </Col>
-        </Row>
-        <Row type="flex" align="middle">
-          <Col span="8">交易地点:</Col>
-          <Col span="16">
-            <Input type="text" v-model="detail.location"></Input>
-          </Col>
-        </Row>
-        <Row type="flex" align="middle">
-          <Col span="8">商品名:</Col>
-          <Col span="16">
-            <Input type="text" v-model="detail.goodsName"></Input>
-          </Col>
-        </Row>
-        <Row type="flex" align="middle">
-          <Col span="8">备注:</Col>
-          <Col span="16">
-            <Input type="text" v-model="detail.memo"></Input>
-          </Col>
-        </Row>
-        <Row type="flex" align="middle">
-          <Col span="8">是否已删除</Col>
-          <Col span="16">
-            <Button size="small" @click="toggleDelete" :type="detail.isDeleted==='未删除'?'success':'error'" ghost>{{detail.isDeleted}}</Button>
-          </Col>
-        </Row>
-        <Row type="flex" align="middle">
-          <Col span="8">是否显示</Col>
-          <Col span="16">
-            <Button size="small" @click="toggleHide" :type="detail.isHidden==='显示'?'success':'error'" ghost>{{detail.isHidden}}</Button>
-          </Col>
-        </Row>
-        <Divider />
-        <Row type="flex" align="middle">
-          <Col span="8">标签:</Col>
-          <Col span="16">
-            <Tag v-for="(tag,index) in detail.tagInfos" type="border" :key="tag.id" :color="tagColors[index % tagColors.length]">{{tag.tagName}}</Tag>
-          </Col>
-        </Row>
-        <Divider />
-        <Row type="flex" align="middle">
-          <Col span="8">操作</Col>
-          <Col span="12">
-            <Row :gutter="16">
-              <Col>
-                <Button class="gap-5" type="success" @click="tagManage = true;getAllTagList()">关联标签</Button>
-              </Col>
-              <Col>
-                <Button class="gap-5" type="success" @click="saveRecordChange()">保存修改</Button>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-      </div>
-    </Drawer>
-    <Modal v-model="addTagModal" title="添加标签信息" :width="380" @on-ok="doCreateTag">
-      <Row type="flex" align="middle">
-        <Col span="8">标签名称</Col>
-        <Col span="16">
-          <Input type="text" v-model="newTag.tagName"></Input>
-        </Col>
-      </Row>
-    </Modal>
-    <Modal v-model="addCostRecordModal" title="添加账单信息" :width="380">
-      <Form ref="newRecord" :model="newRecord" label-position="right" :label-width="100" :rules="ruleValidate">
-        <FormItem label="交易时间:" prop="createTime">
-          <DatePicker type="datetime" v-model="newRecord.createTime" clearable />
-        </FormItem>
-        <FormItem label="交易地点:" prop="location">
-          <Input type="text" v-model="newRecord.location" />
-        </FormItem>
-        <FormItem label="金额:" prop="money">
-          <Input type="text" @on-blur="checkAmount" v-model="newRecord.money" />
-        </FormItem>
-        <FormItem label="交易对方:" prop="target">
-          <Input type="text" v-model="newRecord.target" />
-        </FormItem>
-        <FormItem label="备注:" prop="memo">
-          <Input type="text" v-model="newRecord.memo" />
-        </FormItem>
-        <FormItem label="交易类型:" prop="orderType">
-          <Input type="text" v-model="newRecord.orderType" />
-        </FormItem>
-        <FormItem label="收入/支出:" prop="inOutType">
-          <Select v-model="newRecord.inOutType">
-            <Option value="支出">支出</Option>
-            <Option value="收入">收入</Option>
-          </Select>
-        </FormItem>
-      </Form>
-      <div slot="footer">
-        <Button @click="addCostRecordModal=false">取消</Button>
-        <Button type="primary" @click="doAddCostRecord">确定</Button>
-      </div>
-    </Modal>
-    <Drawer title="标签管理" v-model="tagManage">
-      <Button size="small" @click="createTag">新增标签</Button>
-      <Button size="small" @click="removeTags" type="dashed">{{removeTagMode?'取消':''}}删除标签</Button>
-      <Divider orientation="left">全部标签</Divider>
-      <Row>
-        <template v-if="!removeTagMode">
-          <Button
-            class="gap-5"
-            v-for="tag in allTagList"
-            :key="tag.tagId"
-            icon="ios-add"
-            type="dashed"
-            size="small"
-            @click.native="addTagToRecord(tag.tagId)"
-          >{{tag.tagName}}</Button>
-        </template>
-        <template v-else>
-          <Tag v-for="tag in allTagList" :key="tag.tagId" type="border" color="red" closable @on-close="doRemoveTag(tag.tagId)">{{tag.tagName}}</Tag>
-        </template>
-      </Row>
-      <Divider orientation="left">已关联标签</Divider>
-      <Row>
-        <Tag
-          v-for="(tag,index) in detail.tagInfos"
-          :key="tag.tagId"
-          type="border"
-          :color="tagColors[index % tagColors.length]"
-          closable
-          @on-close="removeTagFromRecord(tag.tagId)"
-        >{{tag.tagName}}</Tag>
-      </Row>
-    </Drawer>
-    <Drawer title="标签管理" v-model="communalTagManage">
-      <Button size="small" @click="createTag">新增标签</Button>
-      <Button size="small" @click="removeTags" type="dashed">{{removeTagMode?'取消':''}}删除标签</Button>
-      <Divider orientation="left">全部标签</Divider>
-      <Row>
-        <template v-if="!removeTagMode">
-          <Button
-            class="gap-5"
-            v-for="tag in allTagList"
-            :key="tag.tagId"
-            icon="ios-add"
-            type="dashed"
-            size="small"
-            @click.native="addTagToRecords(tag.tagId)"
-          >{{tag.tagName}}</Button>
-        </template>
-        <template v-else>
-          <Tag v-for="tag in allTagList" :key="tag.tagId" type="border" color="red" closable @on-close="doRemoveTag(tag.tagId)">{{tag.tagName}}</Tag>
-        </template>
-      </Row>
-      <Divider orientation="left">已关联标签</Divider>
-      <Row>
-        <Tag
-          v-for="(tag,index) in communalTags"
-          :key="tag.tagId"
-          type="border"
-          :color="tagColors[index % tagColors.length]"
-          closable
-          @on-close="removeTagFromRecords(tag.tagId)"
-        >{{tag.tagName}}</Tag>
-      </Row>
-    </Drawer>
+    <cost-record-adder v-model="showCostRecordAdder" @requery-list="query" />
+    <record-detail-drawer :tag-colors="tagColors" v-model="showRecordDetail" :trade-no="selectedTradeNo"  @requery-list="query"/>
+    <tag-manage
+      :tag-colors="tagColors"
+      :record-id-list="selectedCostIds"
+      :bound-tag-list="communalTags"
+      v-model="showTagManage"
+      @reload-records="reloadRecordsTag"
+    />
     <Divider />
     <Page
       :total="totalItem"
@@ -251,6 +45,7 @@
       size="small"
       :current="pageNo"
       :page-size="pageSize"
+      :page-size-opts="pageSizeOpts"
       @on-change="queryNewPage"
       @on-page-size-change="queryNewSize"
     />
@@ -274,40 +69,20 @@
 <script>
 import API from '@/js/api.js'
 import TagListContainer from '@/components/bills/TagListContainer.vue'
-
-function CostRecord (item) {
-  this.createTime = item.createTime
-  this.goodsName = item.goodsName
-  this.inOutType = item.inOutType
-  this.isDeleted = item.isDeleted === 0 ? '未删除' : '已删除'
-  this.isHidden = item.isHidden === 0 ? '显示' : '隐藏'
-  this.location = item.location
-  this.money = item.money
-  this.orderStatus = item.orderStatus
-  this.orderType = item.orderType
-  this.target = item.target
-  this.tradeNo = item.tradeNo
-  this.id = item.id
-  this.version = item.version
-  // extends
-  this.tradeStatus = item.tradeStatus
-  this.orderNo = item.orderNo
-  this.modifyTime = item.modifyTime
-  this.paidTime = item.paidTime
-  this.memo = item.memo
-  this.serviceCost = item.serviceCost
-  this.refundMoney = item.refundMoney
-
-  this.tags = item.tags
-  this.tagInfos = item.tagInfos
-}
+import CostRecordAdder from '@/components/bills/billRecord/CostRecordAdder'
+import RecordDetailDrawer from '@/components/bills/billRecord/RecordDetailDrawer'
+import TagManage from '@/components/bills/billRecord/TagManage'
+import { CostRecord } from '@/js/CommonFunctions.js'
 
 export default {
   name: 'BillRecordList',
   components: {
-    TagListContainer
+    TagListContainer,
+    CostRecordAdder,
+    RecordDetailDrawer,
+    TagManage
   },
-  data () {
+  data() {
     return {
       haveSelectedItem: false,
       startDate: '',
@@ -327,19 +102,16 @@ export default {
       newPageSize: 0,
       sumAmount: 0,
       showRecordDetail: false,
-      tagManage: false,
+      showTagManage: false,
+      showCostRecordAdder: false,
       communalTagManage: false,
-      addTagModal: false,
-      removeTagMode: false,
-      addCostRecordModal: false,
-      drawerWidth: 256,
-      detail: {},
+      selectedTradeNo: '',
       allTagList: [],
       showTagColumn: false,
       newTag: {
         tagName: ''
       },
-      newRecord: {},
+      pageSizeOpts: [10, 20, 30, 40],
       communalTags: [],
       selectedCostIds: [],
       tagColors: [
@@ -426,7 +198,7 @@ export default {
           ],
           filteredValue: ['支出'],
           filterMultiple: false,
-          filterRemote: function (value, row) {
+          filterRemote: function(value, row) {
             this.inOutType = value[0]
             this.pageNo = 0
             this.query()
@@ -449,7 +221,7 @@ export default {
           ],
           filteredValue: [0],
           filterMultiple: false,
-          filterRemote: function (value, row) {
+          filterRemote: function(value, row) {
             this.isDeleted = value[0]
             this.pageNo = 0
             this.query()
@@ -472,7 +244,7 @@ export default {
           ],
           filteredValue: [0],
           filterMultiple: false,
-          filterRemote: function (value, row) {
+          filterRemote: function(value, row) {
             this.isHidden = value[0]
             this.pageNo = 0
             this.query()
@@ -497,15 +269,30 @@ export default {
     }
   },
   methods: {
-    selectChanged: function () {
+    selectChanged: function() {
       this.haveSelectedItem = this.checkHaveItemSelection()
       this.selectedCostIds = this.$refs.selection.getSelection().map(elem => elem.id)
     },
-    checkHaveItemSelection: function () {
+    checkHaveItemSelection: function() {
       let selected = this.$refs.selection.getSelection()
       return typeof selected !== 'undefined' && selected.length > 0
     },
-    batchManageTags: function () {
+    reloadRecordsTag: function() {
+      let request = {
+        costIds: this.selectedCostIds
+      }
+      API.loadCommunalTagsFromRecords(request).then(resp => {
+        if (resp.code === API.CODE_CONST.SUCCESS) {
+          this.communalTags = resp.tagInfoModels
+        } else {
+          this.communalTags = []
+        }
+      })
+      if (this.showTagColumn) {
+        this.query()
+      }
+    },
+    batchManageTags: function() {
       this.getAllTagList()
       this.communalTagManage = true
       if (this.checkHaveItemSelection()) {
@@ -514,9 +301,11 @@ export default {
         }
         this.debug(JSON.stringify(request))
         API.loadCommunalTagsFromRecords(request).then(resp => {
-          if (resp.code === API.CODE_CONST.SUCCESS) {
+          if (resp.code === API.CODE_CONST.SUCCESS || resp.code === API.CODE_CONST.DATA_NOT_EXIST) {
             this.debug(resp.tagInfoModels)
             this.communalTags = resp.tagInfoModels
+            this.showTagManage = true
+            this.debug('设置显示标签管理' + this.showTagManage)
           } else {
             this.communalTags = []
           }
@@ -525,7 +314,7 @@ export default {
         this.selectedCostIds = []
       }
     },
-    calSumAmount: function () {
+    calSumAmount: function() {
       this.sumAmount = 0
       if (this.checkHaveItemSelection()) {
         let selected = this.$refs.selection.getSelection()
@@ -539,290 +328,52 @@ export default {
         this.sumAmount = sum.toFixed(2)
       }
     },
-    checkAmount: function () {
-      this.newRecord.money = this.checkNumic(this.newRecord.money)
+    addCostRecord: function() {
+      this.showCostRecordAdder = true
     },
-    addCostRecord: function () {
-      this.addCostRecordModal = true
-    },
-    doAddCostRecord: function () {
-      this.debug('data:' + JSON.stringify(this.newRecord))
-      this.$refs['newRecord'].validate(valid => {
-        if (valid) {
-          let request = {
-            createTime: this.dateFormat(this.newRecord.createTime, 'yyyy-MM-dd HH:mm:ss'),
-            inOutType: this.newRecord.inOutType,
-            money: this.newRecord.money,
-            target: this.newRecord.target,
-            location: this.newRecord.location,
-            memo: this.newRecord.memo,
-            orderType: this.newRecord.orderType,
-            goodsName: this.newRecord.goodsName
-          }
-          API.addRecord(request).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
-              this.addCostRecordModal = false
-              this.$Message.success('添加成功')
-              this.newRecord = {}
-              this.query()
-            }
-          })
-        } else {
-          this.$Message.error('请检查输入是否正确')
-        }
-      })
-    },
-    toggleDelete: function () {
-      let nowStatus = this.detail.isDeleted === '已删除'
-      let newStatus = nowStatus ? '未删除' : '已删除'
-      let self = this
-      this.$Modal.confirm({
-        title: '警告',
-        content: '确定要' + (nowStatus ? '取消删除' : '删除') + '该项吗?',
-        onOk: function () {
-          this.debug('标记删除')
-          API.toggleRecordDelete({
-            nowStatus: nowStatus ? '1' : '0',
-            tradeNo: self.detail.tradeNo
-          }).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
-              self.detail.isDeleted = newStatus
-              self.query()
-            }
-          })
-        }
-      })
-    },
-    toggleHide: function () {
-      let nowStatus = this.detail.isHidden === '隐藏'
-      let newStatus = nowStatus ? '显示' : '隐藏'
-      let self = this
-      this.$Modal.confirm({
-        title: '警告',
-        content: '确定要' + (nowStatus ? '显示' : '隐藏') + '该项吗?',
-        onOk: function () {
-          self.debug('标记显示')
-          API.toggleRecordHide({
-            nowStatus: nowStatus ? '1' : '0',
-            tradeNo: self.detail.tradeNo
-          }).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
-              self.detail.isHidden = newStatus
-              self.query()
-            }
-          })
-        }
-      })
-    },
-    saveRecordChange: function () {
-      let request = {
-        version: this.detail.version,
-        tradeNo: this.detail.tradeNo,
-        memo: this.detail.memo,
-        location: this.detail.location,
-        goodsName: this.detail.goodsName,
-        orderType: this.detail.orderType
-      }
-      API.updateRecord(request).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
-          this.query()
-        }
-      })
-    },
-    addTagToRecord: function (tagId) {
-      let request = {
-        tagId: tagId,
-        tradeNo: this.detail.tradeNo
-      }
-      API.addTagToRecord(request).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
-          API.loadRecordTagList(request).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
-              this.detail.tagInfos = resp.tagInfoModels
-            } else if (resp.code === API.CODE_CONST.DATA_NOT_EXIST) {
-              this.detail.tagInfos = []
-            }
-          })
-          if (this.showTagColumn) {
-            this.query()
-          }
-        }
-      })
-    },
-    removeTagFromRecord: function (tagId) {
-      let request = {
-        tagId: tagId,
-        tradeNo: this.detail.tradeNo
-      }
-      API.removeTagFromRecord(request).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
-          API.loadRecordTagList(request).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
-              this.detail.tagInfos = resp.tagInfoModels
-            } else if (resp.code === API.CODE_CONST.DATA_NOT_EXIST) {
-              this.detail.tagInfos = []
-            }
-          })
-          if (this.showTagColumn) {
-            this.query()
-          }
-        }
-      })
-    },
-    addTagToRecords: function (tagId) {
-      let request = {
-        tagId: tagId,
-        costIds: this.selectedCostIds
-      }
-      API.batchAddTagToRecords(request).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
-          API.loadCommunalTagsFromRecords(request).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
-              this.debug(resp.tagInfoModels)
-              this.communalTags = resp.tagInfoModels
-            } else {
-              this.communalTags = []
-            }
-          })
-          if (this.showTagColumn) {
-            this.query()
-          }
-        }
-      })
-    },
-    removeTagFromRecords: function (tagId) {
-      let request = {
-        tagId: tagId,
-        costIds: this.selectedCostIds
-      }
-      API.batchRemoveTagFromRecords(request).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
-          API.loadCommunalTagsFromRecords(request).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
-              this.debug(resp.tagInfoModels)
-              this.communalTags = resp.tagInfoModels
-            } else {
-              this.communalTags = []
-            }
-          })
-          if (this.showTagColumn) {
-            this.query()
-          }
-        }
-      })
-    },
-    removeTags: function () {
-      this.removeTagMode = !this.removeTagMode
-    },
-    doRemoveTag: function (tagId) {
-      let self = this
-      this.$Modal.confirm({
-        title: '警告',
-        content: '确定要删除该标签吗',
-        onOk: function () {
-          self.debug('删除标签')
-          API.deleteTag({
-            tagId: tagId
-          }).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
-              self.debug('删除成功')
-              self.getAllTagList()
-              API.loadRecordTagList({ tradeNo: self.detail.tradeNo }).then(resp => {
-                if (resp.code === API.CODE_CONST.SUCCESS) {
-                  self.detail.tagInfos = resp.tagInfoModels
-                } else if (resp.code === API.CODE_CONST.DATA_NOT_EXIST) {
-                  self.detail.tagInfos = []
-                }
-              })
-              if (this.showTagColumn) {
-                self.query()
-              }
-            }
-          })
-        },
-        onCancel: function () {
-          this.debug('取消删除')
-        }
-      })
-    },
-    createTag: function () {
-      this.addTagModal = true
-    },
-    doCreateTag: function () {
-      let request = {
-        tagName: this.newTag.tagName
-      }
-      API.tagNameUnique(request).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
-          API.addTag(request).then(resp => {
-            this.debug('添加成功')
-            this.getAllTagList()
-            this.newTag.tagName = ''
-          })
-        } else {
-          this.$Message.warning('标签名称重复')
-        }
-      })
-      this.debug('addTag' + request.tagName)
-    },
-    toggleTagColumn: function () {
+    toggleTagColumn: function() {
       this.showTagColumn = !this.showTagColumn
       if (this.showTagColumn) {
         this.query()
       }
     },
-    sortData: function (column) {
+    sortData: function(column) {
       this.debug(column.key + ',' + column.order)
       this.sort = column.order
       this.orderBy = column.key
       this.pageNo = 0
       this.query()
     },
-    clickedRow: function (row, index) {
+    clickedRow: function(row, index) {
       this.debug(row)
       this.debug(index)
       this.debug(this.showRecordDetail)
-
-      let request = {
-        tradeNo: row.tradeNo
-      }
-      API.loadRecordDetail(request).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
-          this.detail = new CostRecord(resp.recordDetail)
-        } else {
-          this.detail = {}
-        }
-      })
-      let width = document.documentElement.clientWidth
-      this.debug(width)
-      this.drawerWidth = width / 2 > 256 ? width / 2 : 256
-      if (this.drawerWidth > 500) {
-        this.drawerWidth = 500
-      }
+      this.selectedTradeNo = row.tradeNo
+      this.debug('选择账单：' + this.selectedTradeNo)
       this.showRecordDetail = true
     },
-    clear: function () {
+    clear: function() {
       this.content = ''
       this.startDate = ''
       this.endDate = ''
     },
-    getDateOrEmpty: function (dateStr) {
+    getDateOrEmpty: function(dateStr) {
       if (dateStr !== '') {
         return this.dateFormat(dateStr, 'yyyy-MM-dd')
       } else {
         return ''
       }
     },
-    queryNewPage: function (index) {
+    queryNewPage: function(index) {
       this.pageNo = index
       this.query()
     },
-    queryNewSize: function (newSize) {
+    queryNewSize: function(newSize) {
       this.pageSize = newSize
       this.pageNo = 0
       this.query()
     },
-    getAllTagList: function () {
+    getAllTagList: function() {
       API.loadAllTagList({}).then(resp => {
         this.allTagList = []
         if (resp.code === API.CODE_CONST.SUCCESS) {
@@ -830,11 +381,11 @@ export default {
         }
       })
     },
-    doQuery: function () {
+    doQuery: function() {
       this.pageNo = 0
       this.query()
     },
-    query: function () {
+    query: function() {
       let requestData = {
         startDate: this.getDateOrEmpty(this.startDate),
         endDate: this.getDateOrEmpty(this.endDate),
@@ -872,6 +423,7 @@ export default {
           if (this.pageNo > resp.totalPage) {
             this.pageNo = 1
           }
+          this.pageSizeOpts = [10, 20, 30, 40, resp.totalItem >= 200 ? 200 : resp.totalItem]
           this.currentAmount = resp.currentAmount
         } else {
           this.debug('请求失败')
@@ -882,11 +434,11 @@ export default {
       })
     }
   },
-  created () {
+  created() {
     this.query()
   },
   watch: {
-    showTagColumn: function () {
+    showTagColumn: function() {
       if (this.showTagColumn === true) {
         this.costRecordColumns = [this.addtionalTagColumn].concat(this.costRecordColumns)
       } else {

@@ -90,7 +90,7 @@ export default {
         typeIdentify: this.typeIdentify,
         parentCode: this.parentCode
       }
-      console.log(JSON.stringify(data))
+      this.debug(JSON.stringify(data))
       API.addAssetType(data).then(resp => {
         if (resp.code === API.CODE_CONST.SUCCESS) {
           alert('添加成功')

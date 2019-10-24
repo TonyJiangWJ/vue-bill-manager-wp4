@@ -22,6 +22,7 @@ import TaxCal from '@/components/tools/TaxCal'
 import TableDemo from '@/components/demos/TableDemo'
 import TableExpandDemo from '@/components/demos/TableExpandDemo'
 import CheckGroupDemo from '@/components/demos/check-group-demo'
+import EchartsDemo from '@/components/demos/echarts-demo'
 import { debug } from '@/js/LogUtil'
 import API from '@/js/api.js'
 import { needLogin } from '@/js/config.js'
@@ -132,6 +133,11 @@ const router = new Router({
       path: '/demo/checkGroup',
       name: 'CheckGroupDemo',
       component: CheckGroupDemo
+    },
+    {
+      path: '/demo/echarts',
+      name: 'EchartsDemo',
+      component: EchartsDemo
     },
     {
       path: '*',
