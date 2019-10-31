@@ -23,7 +23,7 @@
       </Row>
       <Row type="flex" justify="center">
         <Col span="10">金额</Col>
-        <Col span="10"><Input v-model="addAssetAmount" type="text" @on-blur="checkAssetAmount" placeholder="金额" /></Col>
+        <Col span="10"><NumberInput v-model="addAssetAmount" placeholder="金额" /></Col>
       </Row>
       <Row type="flex" justify="center">
         <Col span="10">随时使用</Col>
@@ -62,7 +62,7 @@
       </Row>
       <Row type="flex" justify="center">
         <Col span="10">总金额</Col>
-        <Col span="10"><Input v-model="liabilityAmount" type="text" @on-blur="checkLiabilityAmount" placeholder="总金额" /></Col>
+        <Col span="10"><NumberInput v-model="liabilityAmount" placeholder="总金额" /></Col>
       </Row>
     </Modal>
     <Divider orientation="left">概览</Divider>
@@ -110,6 +110,7 @@ import AssetItemDetail from '@/components/assetAndLiability/asset/AssetItemDetai
 import AssetItem from '@/components/assetAndLiability/asset/AssetItem'
 import LiabilityItem from '@/components/assetAndLiability/liability/LiabilityItem'
 import LiabilityTimeLineItem from '@/components/assetAndLiability/liability/LiabilityTimeLineItem'
+import NumberInput from '@/components/common/NumberInput'
 import API from '@/js/api.js'
 export default {
   name: 'Assets',
@@ -153,7 +154,8 @@ export default {
     AssetItem,
     AssetItemDetail,
     LiabilityItem,
-    LiabilityTimeLineItem
+    LiabilityTimeLineItem,
+    NumberInput
   },
   methods: {
     addAsset: function () {
@@ -175,12 +177,6 @@ export default {
       this.liabilityAmount = null
       this.repaymentDay = ''
       this.installment = null
-    },
-    checkAssetAmount: function () {
-      this.addAssetAmount = this.checkNumic(this.addAssetAmount)
-    },
-    checkLiabilityAmount: function () {
-      this.liabilityAmount = this.checkNumic(this.liabilityAmount)
     },
     doAddAsset: function () {
       let request = {

@@ -17,12 +17,12 @@
       </Row>
       <Row type="flex" justify="center">
         <Col span="10">金额</Col>
-        <Col span="10"><Input v-model="liabilityAmount" type="text" @on-blur="checkAmount" placeholder="金额"/></Col>
+        <Col span="10"><NumberInput v-model="liabilityAmount" placeholder="金额"/></Col>
       </Row>
       </Row>
       <Row type="flex" justify="center">
         <Col span="10">已还金额</Col>
-        <Col span="10"><Input v-model="liabilityPaid" type="text" @on-blur="checkPaid" placeholder="已还金额"/></Col>
+        <Col span="10"><NumberInput v-model="liabilityPaid" placeholder="已还金额"/></Col>
       </Row>
       <div slot="footer">
         <Button type="dashed" @click="liabilityPaid=liabilityAmount">还清</Button>
@@ -35,9 +35,12 @@
 
 <script>
 import API from '@/js/api'
-
+import NumberInput from '@/components/common/NumberInput'
 export default {
   name: 'TimeLineItemDetail',
+  components: {
+    NumberInput
+  },
   props: {
     liability: {}
   },
@@ -58,12 +61,6 @@ export default {
       this.liabilityModal = true
       this.liabilityAmount = (this.liability.amount / 100).toFixed(2)
       this.liabilityPaid = (this.liability.paid / 100).toFixed(2)
-    },
-    checkAmount: function () {
-      this.liabilityAmount = this.checkNumic(this.liabilityAmount)
-    },
-    checkPaid: function () {
-      this.liabilityPaid = this.checkNumic(this.liabilityPaid)
     },
     updateLiabilityInfo: function () {
       let request = {

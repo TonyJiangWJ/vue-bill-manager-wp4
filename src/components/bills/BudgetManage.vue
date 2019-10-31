@@ -11,7 +11,7 @@
       </Row>
       <Row type="flex" justify="center">
         <Col span="10">金额</Col>
-        <Col span="10"><Input v-model="budget.amount" type="text" @on-blur="checkAmount" placeholder="金额"/></Col>
+        <Col span="10"><NumberInput v-model="budget.amount" placeholder="金额"/></Col>
       </Row>
       <Divider v-if="budget.id" orientation="left">关联标签</Divider>
       <Row type="flex" justify="start">
@@ -78,9 +78,12 @@
 
 <script>
 import API from '@/js/api.js'
-
+import NumberInput from '@/components/common/NumberInput'
 export default {
   name: 'BudgetManage',
+  components: {
+    NumberInput
+  },
   data () {
     return {
       budget: {},
@@ -212,9 +215,6 @@ export default {
           })
         }
       })
-    },
-    checkAmount: function () {
-      this.budget.amount = this.checkNumic(this.budget.amount)
     },
     loadReport: function () {
       API.loadBudgetReport({}).then(resp => {

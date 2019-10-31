@@ -11,7 +11,7 @@
       </Row>
       <Row type="flex" justify="center">
         <Col span="10">金额</Col>
-        <Col span="10"><Input v-model="assetAmount" type="text" @on-blur="checkAmount" placeholder="金额"/></Col>
+        <Col span="10"><NumberInput v-model="assetAmount" placeholder="金额"/></Col>
       </Row>
       <Row type="flex" justify="center">
         <Col span="10">随时使用</Col>
@@ -33,9 +33,13 @@
 
 <script>
 import API from '@/js/api.js'
+import NumberInput from '@/components/common/NumberInput.vue'
 
 export default {
   name: 'AssetItemDetail',
+  components: {
+    NumberInput
+  },
   props: {
     asset: {
       type: Object
@@ -97,9 +101,6 @@ export default {
         }
       }
       this.$Modal.confirm(config)
-    },
-    checkAmount: function () {
-      this.assetAmount = this.checkNumic(this.assetAmount)
     }
   },
   created () {

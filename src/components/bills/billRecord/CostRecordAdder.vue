@@ -8,7 +8,7 @@
           <Input type="text" v-model="newRecord.location" />
         </FormItem>
         <FormItem label="金额:" prop="money">
-          <Input type="text" @on-blur="checkAmount" v-model="newRecord.money" />
+          <NumberInput v-model="newRecord.money" placeholder="请输入金额，可以自动进行简单的运算" />
         </FormItem>
         <FormItem label="交易对方:" prop="target">
           <Input type="text" v-model="newRecord.target" />
@@ -36,9 +36,13 @@
 <script>
 
 import API from '@/js/api.js'
+import NumberInput from '@/components/common/NumberInput.vue'
 
 export default {
   name: "CostRecordAdder",
+  components: {
+    NumberInput
+  },
   model: {
     prop: 'showAddModal',
     event: 'change'
@@ -192,9 +196,6 @@ export default {
   methods: {
     hideModal: function () {
       this.$emit('hide-modal')
-    },
-    checkAmount: function () {
-      this.newRecord.money = this.checkNumic(this.newRecord.money)
     },
     doAddCostRecord: function () {
       this.debug('data:' + JSON.stringify(this.newRecord))
