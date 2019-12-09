@@ -191,7 +191,7 @@
           </Row>
         </div>
       </Col>
-      <Col :xs="0" :ms="3"></Col>
+      <Col :xs="0" :ms="3"/>
     </Row>
   </div>
 </template>

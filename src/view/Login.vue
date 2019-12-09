@@ -71,7 +71,7 @@ export default {
       API.login(data).then((resp) => {
         if (resp.code === API.CODE_CONST.SUCCESS) {
           this.$debug('登录成功')
-          this.$loginError = false
+          this.loginError = false
           this.$store.commit('loginStatus/setLogin')
           if (this.redirect !== '') {
             this.$router.push(this.redirect)
@@ -80,7 +80,7 @@ export default {
           }
         } else {
           this.$debug('登录失败')
-          this.$loginError = true
+          this.loginError = true
           this.showPwdError = true
         }
       })
@@ -90,7 +90,6 @@ export default {
         if (resp.code === API.CODE_CONST.SUCCESS) {
           this.$debug('退出成功')
           this.$store.commit('loginStatus/setLogout')
-          // this.$logined = false
         }
       })
     },
@@ -121,14 +120,6 @@ export default {
   },
   created () {
     this.$store.dispatch('loginStatus/checkLoginStatus')
-    // API.checkLoginStatus().then((resp) => {
-    //   if (resp.code === API.CODE_CONST.SUCCESS) {
-    //     this.$logined = true
-    //   } else {
-    //     window.localStorage.removeItem('logined')
-    //     this.$logined = false
-    //   }
-    // })
   },
   mounted () {
     let redirect

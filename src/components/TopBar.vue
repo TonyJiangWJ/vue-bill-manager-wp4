@@ -80,7 +80,7 @@ export default {
       } else if (name === 'alipayUpload') {
         this.$router.push('/bill/alipay/upload')
       } else if (name === 'logout') {
-        this.$logout()
+        this.logout()
       } else if (name === 'goLogin') {
         this.goLogin()
       }
