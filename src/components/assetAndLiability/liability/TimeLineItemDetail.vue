@@ -71,7 +71,7 @@ export default {
       }
       API.updateLiability(request).then(resp => {
         if (resp.code === API.CODE_CONST.SUCCESS) {
-          this.debug('更新成功')
+          this.$debug('更新成功')
           this.$emit('reloadAssetInfo')
         }
       })
@@ -79,7 +79,7 @@ export default {
     }
   },
   created: function () {
-    // this.debug(JSON.stringify(this.liabilityModel.liabilityList))
+    // this.$debug(JSON.stringify(this.liabilityModel.liabilityList))
   }
 }
 </script>

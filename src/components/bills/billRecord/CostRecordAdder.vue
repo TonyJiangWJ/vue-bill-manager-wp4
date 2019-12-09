@@ -198,7 +198,7 @@ export default {
       this.$emit('hide-modal')
     },
     doAddCostRecord: function () {
-      this.debug('data:' + JSON.stringify(this.newRecord))
+      this.$debug('data:' + JSON.stringify(this.newRecord))
       this.$refs['newRecord'].validate(valid => {
         if (valid) {
           let request = {

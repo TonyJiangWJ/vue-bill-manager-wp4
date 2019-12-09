@@ -75,7 +75,7 @@ export default {
       }
       API.updateAsset(request).then(resp => {
         if (resp.code === API.CODE_CONST.SUCCESS) {
-          this.debug('更新成功')
+          this.$debug('更新成功')
           this.assetModal = false
           this.$emit('reloadAssetInfo')
         }
@@ -105,7 +105,7 @@ export default {
   },
   created () {
     this.assetAmountInpt = this.assetAmount
-    this.debug(this.available)
+    this.$debug(this.available)
   }
 }
 </script>

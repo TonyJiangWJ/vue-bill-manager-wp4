@@ -158,7 +158,7 @@ export default {
   watch: {
     innerShowDrawer: function (n, o) {
       if (n === false) {
-        this.debug('隐藏drawer')
+        this.$debug('隐藏drawer')
         this.$emit('change', n)
       }
     },
@@ -166,7 +166,7 @@ export default {
       this.innerShowDrawer = n
     },
     tradeNo: function (n, o) {
-      this.debug('账单选择变更：' + n)
+      this.$debug('账单选择变更：' + n)
       if (n !== o) {
         this.reloadDetail()
       }
@@ -175,7 +175,7 @@ export default {
   computed: {
     drawerWidth: function () {
       let width = document.documentElement.clientWidth
-      this.debug(width)
+      this.$debug(width)
       let drawerWidth = width / 2 > 256 ? width / 2 : 256
       if (drawerWidth > 500) {
         drawerWidth = 500
@@ -220,7 +220,7 @@ export default {
         title: '警告',
         content: '确定要' + (nowStatus ? '取消删除' : '删除') + '该项吗?',
         onOk: function () {
-          this.debug('标记删除')
+          this.$debug('标记删除')
           API.toggleRecordDelete({
             nowStatus: nowStatus ? '1' : '0',
             tradeNo: self.detail.tradeNo

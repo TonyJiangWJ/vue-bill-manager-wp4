@@ -125,7 +125,7 @@ export default {
       this.assignableTagList = []
     },
     upsertBudget: function () {
-      this.debug(JSON.stringify(this.budget))
+      this.$debug(JSON.stringify(this.budget))
 
       if (typeof this.budget.id === 'undefined') {
         // insert
@@ -191,7 +191,7 @@ export default {
         if (resp.code === API.CODE_CONST.SUCCESS) {
           this.$Message.success('更新成功')
           let tagInfo = this.budget.tagInfos.splice(this.budget.tagInfos.findIndex(tagInfo => tagInfo.tagId === tagId), 1)[0]
-          this.debug('JSON:' + JSON.stringify(tagInfo))
+          this.$debug('JSON:' + JSON.stringify(tagInfo))
           this.assignableTagList.push(tagInfo)
         } else {
           this.$Message.error('更新失败')

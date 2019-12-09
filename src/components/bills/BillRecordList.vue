@@ -299,13 +299,13 @@ export default {
         let request = {
           costIds: this.selectedCostIds
         }
-        this.debug(JSON.stringify(request))
+        this.$debug(JSON.stringify(request))
         API.loadCommunalTagsFromRecords(request).then(resp => {
           if (resp.code === API.CODE_CONST.SUCCESS || resp.code === API.CODE_CONST.DATA_NOT_EXIST) {
-            this.debug(resp.tagInfoModels)
+            this.$debug(resp.tagInfoModels)
             this.communalTags = resp.tagInfoModels
             this.showTagManage = true
-            this.debug('设置显示标签管理' + this.showTagManage)
+            this.$debug('设置显示标签管理' + this.showTagManage)
           } else {
             this.communalTags = []
           }
@@ -318,13 +318,13 @@ export default {
       this.sumAmount = 0
       if (this.checkHaveItemSelection()) {
         let selected = this.$refs.selection.getSelection()
-        this.debug(selected.length)
+        this.$debug(selected.length)
         let sum = selected
           .map(elem => parseFloat(elem.money))
           .reduce((a, b) => {
             return a + b
           })
-        this.debug(sum)
+        this.$debug(sum)
         this.sumAmount = sum.toFixed(2)
       }
     },
@@ -338,18 +338,18 @@ export default {
       }
     },
     sortData: function(column) {
-      this.debug(column.key + ',' + column.order)
+      this.$debug(column.key + ',' + column.order)
       this.sort = column.order
       this.orderBy = column.key
       this.pageNo = 0
       this.query()
     },
     clickedRow: function(row, index) {
-      this.debug(row)
-      this.debug(index)
-      this.debug(this.showRecordDetail)
+      this.$debug(row)
+      this.$debug(index)
+      this.$debug(this.showRecordDetail)
       this.selectedTradeNo = row.tradeNo
-      this.debug('选择账单：' + this.selectedTradeNo)
+      this.$debug('选择账单：' + this.selectedTradeNo)
       this.showRecordDetail = true
     },
     clear: function() {
@@ -401,7 +401,7 @@ export default {
       }
       API.loadBillList(requestData).then(resp => {
         if (resp.code === API.CODE_CONST.SUCCESS) {
-          this.debug('请求成功')
+          this.$debug('请求成功')
           this.costRecordList = []
           if (typeof resp.costRecordList !== 'undefined' && resp.costRecordList.length > 0) {
             for (var i = 0; i < resp.costRecordList.length; i++) {
@@ -426,9 +426,9 @@ export default {
           this.pageSizeOpts = [10, 20, 30, 40, resp.totalItem >= 200 ? 200 : resp.totalItem]
           this.currentAmount = resp.currentAmount
         } else {
-          this.debug('请求失败')
+          this.$debug('请求失败')
           if (resp.code === API.CODE_CONST.DATA_NOT_EXIST) {
-            this.debug('数据不存在')
+            this.$debug('数据不存在')
           }
         }
       })

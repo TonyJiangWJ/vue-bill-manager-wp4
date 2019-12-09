@@ -13,7 +13,7 @@ export default {
   },
   methods: {
     initEcharts: function() {
-      this.debug('初始化echarts')
+      this.$debug('初始化echarts')
       var myChart = echarts.init(document.getElementById('demo-charts'))
       // 绘制图表
       myChart.setOption({

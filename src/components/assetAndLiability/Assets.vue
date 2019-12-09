@@ -188,7 +188,7 @@ export default {
       API.addAsset(request).then(resp => {
         if (resp.code === API.CODE_CONST.SUCCESS) {
           this.loadAssetInfo()
-          this.debug('添加成功')
+          this.$debug('添加成功')
           this.resetAsset()
         }
       })
@@ -203,7 +203,7 @@ export default {
       API.addLiability(request).then(resp => {
         if (resp.code === API.CODE_CONST.SUCCESS) {
           this.loadAssetInfo()
-          this.debug('添加成功')
+          this.$debug('添加成功')
           this.resetLiability()
         }
       })
@@ -256,7 +256,7 @@ export default {
           }
         })
       })
-    this.debug(this.availableAsset)
+    this.$debug(this.availableAsset)
   }
 }
 </script>

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import iView from 'iview'
-import HelloWorld from '@/components/HelloWorld'
+// import HelloWorld from '@/components/HelloWorld'
 import Tools from '@/components/Tools'
 import T2Test from '@/components/tools/T2Test'
 import CommonTools from '@/components/tools/CommonTools'
@@ -34,42 +34,43 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
-    },
-    {
-      path: '/tools',
       component: Tools,
-      children: [{
-        path: '',
-        name: 'CommonTools',
-        component: CommonTools
-      },
-      {
-        path: '/tools/jsonFormat',
-        name: 'JsonFormat',
-        component: JsonFormat
-      },
-      {
-        path: '/tools/sqlLogFormat',
-        name: 'SqlLogFormat',
-        component: SqlLogFormat
-      },
-      {
-        path: '/tools/encryption',
-        name: 'Encryption',
-        component: Encryption
-      },
-      {
-        path: '/tools/t2test',
-        name: 'T2Test',
-        component: T2Test
-      },
-      {
-        path: '/tools/taxCal',
-        name: 'TaxCal',
-        component: TaxCal
-      }]
+      children: [
+        {
+          path: '',
+          name: 'CommonTools',
+          component: CommonTools
+        },
+        {
+          path: 'tools',
+          name: 'CommonTools',
+          component: CommonTools
+        },
+        {
+          path: '/tools/jsonFormat',
+          name: 'JsonFormat',
+          component: JsonFormat
+        },
+        {
+          path: '/tools/sqlLogFormat',
+          name: 'SqlLogFormat',
+          component: SqlLogFormat
+        },
+        {
+          path: '/tools/encryption',
+          name: 'Encryption',
+          component: Encryption
+        },
+        {
+          path: '/tools/t2test',
+          name: 'T2Test',
+          component: T2Test
+        },
+        {
+          path: '/tools/taxCal',
+          name: 'TaxCal',
+          component: TaxCal
+        }]
     },
     {
       path: '/assetList',
@@ -142,7 +143,7 @@ const router = new Router({
     {
       path: '*',
       name: 'NotFound',
-      component: HelloWorld
+      redirect: '/tools'
     }
   ]
 })

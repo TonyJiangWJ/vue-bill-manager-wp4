@@ -105,7 +105,7 @@ export default {
         if (resp.code === API.CODE_CONST.SUCCESS) {
           API.loadCommunalTagsFromRecords(request).then(resp => {
             if (resp.code === API.CODE_CONST.SUCCESS) {
-              this.debug(resp.tagInfoModels)
+              this.$debug(resp.tagInfoModels)
               this.communalTags = resp.tagInfoModels
             } else {
               this.communalTags = []
@@ -124,7 +124,7 @@ export default {
         if (resp.code === API.CODE_CONST.SUCCESS) {
           API.loadCommunalTagsFromRecords(request).then(resp => {
             if (resp.code === API.CODE_CONST.SUCCESS) {
-              this.debug(resp.tagInfoModels)
+              this.$debug(resp.tagInfoModels)
               this.communalTags = resp.tagInfoModels
             } else {
               this.communalTags = []
@@ -162,7 +162,7 @@ export default {
           })
         },
         onCancel: function() {
-          this.debug('取消删除')
+          this.$debug('取消删除')
         }
       })
     },
@@ -177,7 +177,7 @@ export default {
         if (resp.code === API.CODE_CONST.SUCCESS) {
           API.addTag(request).then(resp => {
             if (resp.code === API.CODE_CONST.SUCCESS) {
-              this.debug('添加成功')
+              this.$debug('添加成功')
               this.getAllTagList()
               this.newTag.tagName = ''
             } else {
@@ -188,7 +188,7 @@ export default {
           this.$Message.warning('标签名称重复')
         }
       })
-      this.debug('addTag' + request.tagName)
+      this.$debug('addTag' + request.tagName)
     },
     toggleTagColumn: function() {
       this.showTagColumn = !this.showTagColumn

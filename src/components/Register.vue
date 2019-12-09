@@ -100,7 +100,7 @@ export default {
           userName: this.userName,
           password: this.password
         }
-        this.debug('request:' + JSON.stringify(data))
+        this.$debug('request:' + JSON.stringify(data))
         API.register(data).then(resp => {
           if (resp.code === API.CODE_CONST.SUCCESS) {
             alert('注册成功，前往登录')

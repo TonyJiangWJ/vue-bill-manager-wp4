@@ -104,14 +104,14 @@ export default {
         }
       }
       if (flag) {
-        this.debug('生成密钥对')
+        this.$debug('生成密钥对')
         var encrypt = new JSEncrypt()
         this.myPubKey = encrypt.getPublicKey()
         this.myPrivateKey = encrypt.getPrivateKey()
       }
     },
     encrypt: function () {
-      this.debug('加密')
+      this.$debug('加密')
       var encrypt = new JSEncrypt()
       if (this.targetPubKey) {
         encrypt.setPublicKey(this.targetPubKey)
@@ -134,13 +134,13 @@ export default {
         }
 
         this.encryptedStr = result
-        this.debug('明文：' + this.decryptedStr + '结果：' + this.encryptedStr)
+        this.$debug('明文：' + this.decryptedStr + '结果：' + this.encryptedStr)
       } else {
         alert('请输入对方的公钥')
       }
     },
     decrypt: function () {
-      this.debug('解密')
+      this.$debug('解密')
       if (this.myPrivateKey) {
         var encrypt = new JSEncrypt()
         encrypt.setPrivateKey(this.myPrivateKey)

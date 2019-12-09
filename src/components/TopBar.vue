@@ -2,9 +2,9 @@
   <Menu ref="topBarMenu" theme="light" mode="horizontal" :active-name="selected"
     :open-names="openedArray"
     @on-select="clickedHome" @on-open-change="openMenuChanged">
-    <MenuItem name="index">
+    <!-- <MenuItem name="index">
     <Icon type="ios-home" /> 首页
-    </MenuItem>
+    </MenuItem> -->
     <MenuItem name="tools">
     <Icon type="ios-hammer-outline" /> 工具
     </MenuItem>
@@ -52,27 +52,25 @@ export default {
   },
   methods: {
     openMenuChanged: function (openedArray) {
-      this.debug('open menu changed:' + openedArray)
+      this.$debug('open menu changed:' + openedArray)
       this.openedArray = openedArray
     },
     toggleSubmenu: function () {
-      this.debug('toggle submenu')
+      this.$debug('toggle submenu')
       if (this.openedArray.length === 0) {
         this.openedArray = this.configArray
       } else {
         this.openedArray = []
       }
-      this.debug(this.openedArray)
+      this.$debug(this.openedArray)
       this.$nextTick(function () {
         this.$refs.topBarMenu.updateOpened()
       })
     },
     clickedHome: function (name) {
       this.openedArray = []
-      if (name === 'index') {
+      if (name === 'tools') {
         this.$router.push('/')
-      } else if (name === 'tools') {
-        this.$router.push('/tools')
       } else if (name === 'bills') {
         this.$router.push('/bill/record/list')
       } else if (name === 'budgetManage') {
@@ -82,7 +80,7 @@ export default {
       } else if (name === 'alipayUpload') {
         this.$router.push('/bill/alipay/upload')
       } else if (name === 'logout') {
-        this.logout()
+        this.$logout()
       } else if (name === 'goLogin') {
         this.goLogin()
       }

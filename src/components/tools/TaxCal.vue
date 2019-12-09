@@ -363,12 +363,12 @@ export default {
         this.oldTaxCurrentLadder = step.percent
         this.oldTaxLadderTips = '当前税率:' + (step.percent * 100) + '% ' +
         '税阶税费：' + ((taxAmount - preStep.amount) * step.percent).toFixed(2)
-        this.debug(this.oldTaxLadderTips)
+        this.$debug(this.oldTaxLadderTips)
       } else {
         this.newTaxCurrentLadder = step.percent
         this.newTaxLadderTips = '当前税率:' + (step.percent * 100) + '% ' +
         '税阶税费：' + ((taxAmount - preStep.amount) * step.percent).toFixed(2)
-        this.debug(this.newTaxLadderTips)
+        this.$debug(this.newTaxLadderTips)
       }
       return taxAmount * step.percent - step.discount
     },

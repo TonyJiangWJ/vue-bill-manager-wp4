@@ -13,7 +13,7 @@
         <Col span="8">密&nbsp;&nbsp;&nbsp;码:</Col>
         <Col span="12">
           <Tooltip :content="loginError?'用户名或密码错误':'密码最短6位'" placement="right" :disabled="!(showUserNameError||loginError)" :always="showPwdError||loginError">
-            <Input type="password" placeholder="请输入密码" v-model="password"/>
+            <Input type="password" placeholder="请输入密码" v-model="password" @on-keydown="listenKeyDown"/>
           </Tooltip>
         </Col>
       </Row>
@@ -70,8 +70,8 @@ export default {
       data.password = this.password
       API.login(data).then((resp) => {
         if (resp.code === API.CODE_CONST.SUCCESS) {
-          this.debug('登录成功')
-          this.loginError = false
+          this.$debug('登录成功')
+          this.$loginError = false
           this.$store.commit('loginStatus/setLogin')
           if (this.redirect !== '') {
             this.$router.push(this.redirect)
@@ -79,8 +79,8 @@ export default {
             this.$router.push('/')
           }
         } else {
-          this.debug('登录失败')
-          this.loginError = true
+          this.$debug('登录失败')
+          this.$loginError = true
           this.showPwdError = true
         }
       })
@@ -88,14 +88,19 @@ export default {
     logout: function () {
       API.logout().then((resp) => {
         if (resp.code === API.CODE_CONST.SUCCESS) {
-          this.debug('退出成功')
+          this.$debug('退出成功')
           this.$store.commit('loginStatus/setLogout')
-          // this.logined = false
+          // this.$logined = false
         }
       })
     },
     goRegister: function () {
       this.$router.push('/register')
+    },
+    listenKeyDown: function (event) {
+      if (event.keyCode === 13) {
+        this.doLogin()
+      }
     }
   },
   watch: {
@@ -118,25 +123,25 @@ export default {
     this.$store.dispatch('loginStatus/checkLoginStatus')
     // API.checkLoginStatus().then((resp) => {
     //   if (resp.code === API.CODE_CONST.SUCCESS) {
-    //     this.logined = true
+    //     this.$logined = true
     //   } else {
     //     window.localStorage.removeItem('logined')
-    //     this.logined = false
+    //     this.$logined = false
     //   }
     // })
   },
   mounted () {
     let redirect
     if (this.$route.params) {
-      this.debug('有参数')
+      this.$debug('有参数')
       redirect = this.$route.params.redirect
     } else {
-      this.debug('无参数')
+      this.$debug('无参数')
     }
     if (typeof redirect !== 'undefined' && redirect !== '') {
       this.redirect = redirect.substring(1)
     }
-    this.debug('转发路径：' + this.redirect)
+    this.$debug('转发路径：' + this.redirect)
   }
 }
 </script>

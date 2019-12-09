@@ -1,69 +1,22 @@
+<!--
+ * @Author: TonyJiangWJ
+ * @Date: 2018-11-11 22:12:50
+ * @Last Modified by: TonyJiangWJ
+ * @Last Modified time: 2019-12-08 14:25:38
+ * @Description: 
+ -->
 <template>
   <div>
-    <div style="float: left;display: inline;">
-      <table>
-        <tr>
-          <th>code</th>
-          <th>desc</th>
-        </tr>
-        <tr>
-          <td colspan="2">负债</td>
-        </tr>
-        <tr v-for="parent in liabilityParentList" :key="parent.id" @click="showChild(parent.id)">
-          <td>{{parent.typeCode}}</td>
-          <td>{{parent.typeDesc}}</td>
-        </tr>
-        <tr>
-          <td colspan="2">资产</td>
-        </tr>
-        <tr v-for="parent in assetParentList" :key="parent.id" @click="showChild(parent.id)">
-          <td>{{parent.typeCode}}</td>
-          <td>{{parent.typeDesc}}</td>
-        </tr>
-      </table>
-    </div>
-    <div style="float: left;display: inline;">
-      <table>
-        <tr>
-          <th>code</th>
-          <th>desc</th>
-        </tr>
-        <tr v-for="parent in childTypeList" :key="parent.id">
-          <td>{{parent.typeCode}}</td>
-          <td>{{parent.typeDesc}}</td>
-        </tr>
-      </table>
-    </div>
-    <div>
-      <div>
-        <label>类型:{{typeIdentify}}</label>
-        <select v-model="typeIdentify">
-          <option value="A">资产</option>
-          <option value="L">负债</option>
-        </select>
-      </div>
-      <div>
-        <label>父类型:{{parentCode}}</label>
-        <select v-model="parentCode">
-          <option value=""></option>
-          <template v-if="typeIdentify==='A'">
-          <option v-for="parent in assetParentList" :key="parent.id" :value="parent.typeCode">{{parent.typeDesc}}</option>
-          </template>
-          <template v-else>
-          <option v-for="parent in liabilityParentList" :key="parent.id" :value="parent.typeCode">{{parent.typeDesc}}</option>
-          </template>
-        </select>
-      </div>
-      <div>
-        <label>类型代码{{typeCode}}</label>
-        <input v-model="typeCode" type="text">
-      </div>
-      <div>
-        <label>类型描述{{typeDesc}}</label>
-        <input v-model="typeDesc" type="text">
-      </div>
-      <div><button @click="save">保存</button></div>
-    </div>
+    <Row type="flex" justify="start">
+      <Col span="8">
+        <Button>添加</Button>
+      </Col>
+    </Row>
+    <Row>
+      <Col span="8" offset="4">
+        <Tree :data="treeData" :load-data="loadChild" class="t-left"/>
+      </Col>
+    </Row>
   </div>
 </template>
 
@@ -71,11 +24,20 @@
 import API from '@/js/api'
 export default {
   name: 'AssetTypes',
-  data () {
+  data() {
     return {
-      liabilityParentList: [],
-      assetParentList: [],
-      childTypeList: [],
+      treeData: [
+        {
+          title: '资产',
+          loading: false,
+          children: []
+        },
+        {
+          title: '负债',
+          loading: false,
+          children: []
+        }
+      ],
       parentCode: '',
       typeCode: '',
       typeDesc: '',
@@ -83,14 +45,14 @@ export default {
     }
   },
   methods: {
-    save: function () {
+    save: function() {
       let data = {
         typeCode: this.typeCode,
         typeDesc: this.typeDesc,
         typeIdentify: this.typeIdentify,
         parentCode: this.parentCode
       }
-      this.debug(JSON.stringify(data))
+      this.$debug(JSON.stringify(data))
       API.addAssetType(data).then(resp => {
         if (resp.code === API.CODE_CONST.SUCCESS) {
           alert('添加成功')
@@ -100,43 +62,68 @@ export default {
         }
       })
     },
-    loadParents: function () {
-      API.getLiabilityParents().then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
-          this.liabilityParentList = resp.assetTypes
-        }
-      }).then(() => {
-        API.getAssetParents().then(resp => {
+    convertToTreeNode: function(assetTypes, hasChild) {
+      if (assetTypes && assetTypes.length > 0) {
+        return assetTypes.map(r => {
+          let node = {
+            typeCode: r.typeCode,
+            title: r.typeDesc,
+            id: r.id
+          }
+          if (hasChild) {
+            node.loading = false
+            node.children = []
+          }
+          return node
+        })
+      } else {
+        return []
+      }
+    },
+    deleteType: function(typeId) {
+      let data = {
+        id: typeId
+      }
+      this.$debug('request:' + JSON.stringify(data))
+    },
+    loadChild: function(item, callback) {
+      console.log('点击了：' + JSON.stringify(item))
+      if (item.id) {
+        API.getChildByParent({
+          id: item.id
+        }).then(resp => {
           if (resp.code === API.CODE_CONST.SUCCESS) {
-            this.assetParentList = resp.assetTypes
+            callback(this.convertToTreeNode(resp.assetTypes))
           }
         })
-      })
-    },
-    deleteType: function (typeId) {
-      let data = {
-        id: typeId
+      } else if (item.title === '资产') {
+        API.getLiabilityParents().then(resp => {
+          if (resp.code === API.CODE_CONST.SUCCESS) {
+            callback(this.convertToTreeNode(resp.assetTypes, true))
+          }
+        })
+      } else if (item.title === '负债') {
+        API.getAssetParents().then(resp => {
+          if (resp.code === API.CODE_CONST.SUCCESS) {
+            callback(this.convertToTreeNode(resp.assetTypes, true))
+          }
+        })
       }
-      this.debug('request:' + JSON.stringify(data))
-    },
-    showChild: function (typeId) {
-      let data = {
-        id: typeId
-      }
-      API.getChildByParent(data).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
-          this.childTypeList = resp.assetTypes
-        }
-      })
     }
   },
-  mounted () {
-    this.loadParents()
+  mounted() {
+    // this.loadParents()
   },
   watch: {
-    typeIdentify: function () {
+    typeIdentify: function() {
       this.parentCode = ''
     }
   }
 }
 </script>
+
+<style scoped>
+.t-left {
+  text-align: left;
+}
+</style>
