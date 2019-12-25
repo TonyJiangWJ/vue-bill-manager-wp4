@@ -1,3 +1,10 @@
+<!--
+ * @Author: TonyJiangWJ
+ * @Date: 2019-08-15 16:52:56
+ * @Last Modified by: TonyJiangWJ
+ * @Last Modified time: 2019-12-25 15:52:33
+ * @Description: 单个资产概览信息组件
+ -->
 <template>
   <Collapse v-model="collapseAsset">
     <Panel v-for="assetModel in assetModels"

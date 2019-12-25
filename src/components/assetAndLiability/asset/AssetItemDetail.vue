@@ -1,3 +1,10 @@
+<!--
+ * @Author: TonyJiangWJ
+ * @Date: 2019-08-15 16:52:56
+ * @Last Modified by: TonyJiangWJ
+ * @Last Modified time: 2019-12-25 17:03:22
+ * @Description: 资产详情弹框组件
+ -->
 <template>
   <li>
     <div @click.stop="showLayer">
@@ -6,21 +13,21 @@
     </div>
     <Modal v-model="assetModal" title="资产详情" @on-ok="updateAssetInfo" :width="380">
       <Row type="flex" justify="center">
-        <Col span="10">名称</Col>
-        <Col span="10"><Input type="text" v-model="assetName" :maxlength="20"/></Col>
+        <i-col span="10">名称</i-col>
+        <i-col span="10"><Input type="text" v-model="assetName" :maxlength="20"/></i-col>
       </Row>
       <Row type="flex" justify="center">
-        <Col span="10">金额</Col>
-        <Col span="10"><NumberInput v-model="assetAmount" placeholder="金额"/></Col>
+        <i-col span="10">金额</i-col>
+        <i-col span="10"><NumberInput v-model="assetAmount" placeholder="金额"/></i-col>
       </Row>
       <Row type="flex" justify="center">
-        <Col span="10">随时使用</Col>
-        <Col span="10">
+        <i-col span="10">随时使用</i-col>
+        <i-col span="10">
           <i-switch v-model="available">
             <span slot="open">是</span>
             <span slot="close">否</span>
           </i-switch>
-        </Col>
+        </i-col>
       </Row>
       <div slot="footer">
         <Button v-if="assetAmount == 0" type="dashed" @click="deleteAsset">删除</Button>
@@ -87,13 +94,13 @@ export default {
         title: '提示',
         content: '是否确认删除该资产',
         onOk: function () {
-          self.debug('删除当前资产' + self.asset.id)
+          self.$debug('删除当前资产' + self.asset.id)
           let request = {
             assetId: self.asset.id
           }
           API.deleteAsset(request).then(resp => {
             if (resp.code === API.CODE_CONST.SUCCESS) {
-              self.debug('删除成功')
+              self.$debug('删除成功')
               self.assetModal = false
               self.$emit('reloadAssetInfo')
             }
@@ -104,7 +111,6 @@ export default {
     }
   },
   created () {
-    this.assetAmountInpt = this.assetAmount
     this.$debug(this.available)
   }
 }

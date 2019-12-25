@@ -1,11 +1,11 @@
 <template>
   <Row>
-    <Col span="12">
+    <i-col span="12">
       {{label}}
-    </Col>
-    <Col span="12">
+    </i-col>
+    <i-col span="12">
       <Checkbox v-model="innerChecked" @on-change="onCheckChange"/>
-    </Col>
+    </i-col>
   </Row>
 </template>
 

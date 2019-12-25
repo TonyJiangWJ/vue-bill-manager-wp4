@@ -1,6 +1,7 @@
 <template>
   <div>
-    <Breadcrumb>
+    <div>
+      <Breadcrumb>
         <BreadcrumbItem to="/tools/" :class="breadcrumbSelected=='tools'?'active':''">通用工具</BreadcrumbItem>
         <BreadcrumbItem to="/tools/jsonFormat" :class="breadcrumbSelected=='jsonFormat'?'active':''">JSON格式化工具</BreadcrumbItem>
         <BreadcrumbItem to="/tools/sqlLogFormat" :class="breadcrumbSelected=='sqlLogFormat'?'active':''">iBatis/MyBatis日志转换</BreadcrumbItem>
@@ -8,28 +9,30 @@
         <BreadcrumbItem to="/tools/t2test" :class="breadcrumbSelected=='t2test'?'active':''">T2测试接口</BreadcrumbItem>
         <BreadcrumbItem to="/tools/taxCal" :class="breadcrumbSelected=='taxCal'?'active':''">个税计算</BreadcrumbItem>
         <span></span>
-    </Breadcrumb>
+      </Breadcrumb>
+    </div>
     <div class="tool-container">
-      <keep-alive>
-        <router-view></router-view>
-      </keep-alive>
+      <Row type="flex" justify="center" align="middle">
+        <i-col :xs="0" :sm="2" :md="2" :lg="3"></i-col>
+        <i-col :xs="24" :sm="20" :md="20" :lg="18">
+          <keep-alive>
+            <router-view class="main-container"></router-view>
+          </keep-alive>
+        </i-col>
+        <i-col :xs="0" :sm="2" :md="2" :lg="3"></i-col>
+      </Row>
     </div>
   </div>
 </template>
 
 <script>
-import TopBar from '@/components/TopBar'
-
 export default {
   name: 'Tools',
-  components: {
-    TopBar
-  },
-  data () {
+  data() {
     return {}
   },
   computed: {
-    breadcrumbSelected: function () {
+    breadcrumbSelected: function() {
       if (this.$route.path.includes('/tools/jsonFormat')) {
         return 'jsonFormat'
       } else if (this.$route.path.includes('/tools/sqlLogFormat')) {
@@ -46,41 +49,43 @@ export default {
     }
   },
   methods: {
-    jumpList: function () {
-      this.$router.push({path: '/tools/testList'})
+    jumpList: function() {
+      this.$router.push({ path: '/tools/testList' })
     }
-  },
-  mounted () {
-    TopBar.selected = 'tools'
   }
 }
 </script>
 
 <style>
-  .lay-span span {
-    margin: 0 10px;
-    color: #999;
-  }
+.lay-span span {
+  margin: 0 10px;
+  color: #999;
+}
 
-  .lay-span a {
-    color: #999;
-  }
+.lay-span a {
+  color: #999;
+}
 
-  .ivu-breadcrumb>span:last-child {
-    font-weight: 500;
-    color: #495060;
-  }
-  .ivu-breadcrumb>span.active {
-    font-weight: 700;
-    color: #495060;
-  }
-</style>
-<style>
+.ivu-breadcrumb > span:last-child {
+  font-weight: 500;
+  color: #495060;
+}
+.ivu-breadcrumb > span.active {
+  font-weight: 700;
+  color: #495060;
+}
 .ivu-row {
   margin: 5px 0;
 }
 
-.ivu-input-number,.ivu-date-picker {
+.ivu-input-number,
+.ivu-date-picker {
   width: 100% !important;
+}
+.main-container {
+  width: 90%;
+  margin: 50px auto;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  padding: 5px;
 }
 </style>

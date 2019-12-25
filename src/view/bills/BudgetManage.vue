@@ -2,16 +2,16 @@
   <div class="common-container">
     <Modal v-model="budgetModal" title="预算详情" :width="380">
       <Row v-if="typeof budget.id==='undefined'" type="flex" justify="center">
-        <Col span="10">月份</Col>
-        <Col span="10"><DatePicker type="month" v-model="yearMonthInfo" @on-change="setYearMonth"  placeholder="月份"></DatePicker></Col>
+        <i-col span="10">月份</i-col>
+        <i-col span="10"><DatePicker type="month" v-model="yearMonthInfo" @on-change="setYearMonth"  placeholder="月份"></DatePicker></i-col>
       </Row>
       <Row type="flex" justify="center">
-        <Col span="10">名称</Col>
-        <Col span="10"><Input type="text" placeholder="名称" v-model="budget.name" :maxlength="20"/></Col>
+        <i-col span="10">名称</i-col>
+        <i-col span="10"><Input type="text" placeholder="名称" v-model="budget.name" :maxlength="20"/></i-col>
       </Row>
       <Row type="flex" justify="center">
-        <Col span="10">金额</Col>
-        <Col span="10"><NumberInput v-model="budget.amount" placeholder="金额"/></Col>
+        <i-col span="10">金额</i-col>
+        <i-col span="10"><NumberInput v-model="budget.amount" placeholder="金额"/></i-col>
       </Row>
       <Divider v-if="budget.id" orientation="left">关联标签</Divider>
       <Row type="flex" justify="start">
@@ -35,11 +35,11 @@
     </Modal>
 
     <Row type='flex' justify="start">
-      <Col span="4">预算管理</Col>
-      <Col span="6"><Button type="primary" @click="addBudget" size="small">添加预算</Button></Col>
+      <i-col span="4" class="v-gap">预算管理</i-col>
+      <i-col span="6" class="v-gap"><Button type="primary" @click="addBudget" size="small">添加预算</Button></i-col>
     </Row>
     <Row>
-      <Col span="6"><Button type="success" ghost @click="loadReport" size="small">重新载入</Button></Col>
+      <i-col span="6" class="v-gap"><Button type="success" ghost @click="loadReport" size="small">重新载入</Button></i-col>
     </Row>
     <Divider/>
     <TimelineItem v-for="report in reportModelList" :key="report.yearMonthInfo">

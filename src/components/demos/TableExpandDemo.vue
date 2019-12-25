@@ -39,7 +39,7 @@ export default {
               },
               on: {
                 'resize-handler': function() {
-                  console.log('获取到resize事件')
+                  this.$log('获取到resize事件')
                   // self.$refs.testTable.handleResize()
                   self.$refs.testTable.fixedBody()
                   // self.resize()
@@ -111,12 +111,12 @@ export default {
   },
   methods: {
     resize: function() {
-      console.log('重置')
+      this.$log('重置')
       // this.$refs.testTable.fixedBody();
       this.$refs.testTable.fixedBody()
     },
     handleExpand: function() {
-      console.log('触发外层展开')
+      this.$log('触发外层展开')
     }
   }
 }

@@ -34,10 +34,10 @@
     </Drawer>
     <Modal v-model="addTagModal" title="添加标签信息" :width="380" @on-ok="doCreateTag">
       <Row type="flex" align="middle">
-        <Col span="8">标签名称</Col>
-        <Col span="16">
+        <i-col span="8">标签名称</i-col>
+        <i-col span="16">
           <Input type="text" v-model="newTag.tagName"/>
-        </Col>
+        </i-col>
       </Row>
     </Modal>
   </div>
@@ -143,12 +143,12 @@ export default {
         title: '警告',
         content: '确定要删除该标签吗',
         onOk: function() {
-          self.debug('删除标签')
+          self.$debug('删除标签')
           API.deleteTag({
             tagId: tagId
           }).then(resp => {
             if (resp.code === API.CODE_CONST.SUCCESS) {
-              self.debug('删除成功')
+              self.$debug('删除成功')
               self.getAllTagList()
               API.loadRecordTagList({ tradeNo: self.detail.tradeNo }).then(resp => {
                 if (resp.code === API.CODE_CONST.SUCCESS) {

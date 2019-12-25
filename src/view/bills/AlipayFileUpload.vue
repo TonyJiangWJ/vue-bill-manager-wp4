@@ -1,7 +1,7 @@
 <template>
   <div class="common-container">
     <Row>
-      <Col>
+      <i-col>
         <Upload  :before-upload="handleUpload" action="none">
           <Button icon="ios-cloud-upload-outline">选择文件</Button>
         </Upload>
@@ -9,7 +9,7 @@
           <div>支付宝账单文件： {{file.name}}</div>
           <Button type="success" ghost @click="doUpload" :loading="loadingStatus">{{loadingStatus? 'uploading' : '上传'}}</Button>
         </div>
-      </Col>
+      </i-col>
     </Row>
   </div>
 </template>

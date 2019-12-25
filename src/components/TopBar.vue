@@ -1,16 +1,23 @@
 <template>
-  <Menu ref="topBarMenu" theme="light" mode="horizontal" :active-name="selected"
+  <Menu
+    ref="topBarMenu"
+    theme="light"
+    mode="horizontal"
+    :active-name="selected"
     :open-names="openedArray"
-    @on-select="clickedHome" @on-open-change="openMenuChanged">
+    @on-select="clickedHome"
+    @on-open-change="openMenuChanged"
+  >
     <!-- <MenuItem name="index">
     <Icon type="ios-home" /> 首页
-    </MenuItem> -->
+    </MenuItem>-->
     <MenuItem name="tools">
-    <Icon type="ios-hammer-outline" /> 工具
+      <Icon type="ios-hammer-outline" />工具
     </MenuItem>
     <Submenu name="3">
       <template slot="title">
-        <Icon type="ios-stats"/> <span @click="toggleSubmenu"> 账单相关</span>
+        <Icon type="ios-stats" />
+        <span @click="toggleSubmenu">账单相关</span>
       </template>
       <MenuGroup title="使用">
         <MenuItem name="bills">账单</MenuItem>
@@ -30,32 +37,32 @@
 import API from '@/js/api'
 export default {
   name: 'TopBar',
-  data () {
+  data() {
     return {
       openedArray: [],
       configArray: ['3']
     }
   },
   computed: {
-    selected: function () {
+    selected: function() {
       if (this.$route.path.includes('bill') || this.$route.path.includes('asset')) {
         return 'bill'
       } else if (this.$route.path.includes('tools')) {
         return 'tools'
       } else {
-        return 'index'
+        return 'tools'
       }
     },
-    logined: function () {
+    logined: function() {
       return this.$store.getters['loginStatus/isLogin']
     }
   },
   methods: {
-    openMenuChanged: function (openedArray) {
+    openMenuChanged: function(openedArray) {
       this.$debug('open menu changed:' + openedArray)
       this.openedArray = openedArray
     },
-    toggleSubmenu: function () {
+    toggleSubmenu: function() {
       this.$debug('toggle submenu')
       if (this.openedArray.length === 0) {
         this.openedArray = this.configArray
@@ -63,11 +70,11 @@ export default {
         this.openedArray = []
       }
       this.$debug(this.openedArray)
-      this.$nextTick(function () {
+      this.$nextTick(function() {
         this.$refs.topBarMenu.updateOpened()
       })
     },
-    clickedHome: function (name) {
+    clickedHome: function(name) {
       this.openedArray = []
       if (name === 'tools') {
         this.$router.push('/')
@@ -85,7 +92,7 @@ export default {
         this.goLogin()
       }
     },
-    logout: function () {
+    logout: function() {
       if (confirm('确定退出登录吗?')) {
         API.logout().then(resp => {
           if (resp.code === API.CODE_CONST.SUCCESS) {
@@ -95,14 +102,14 @@ export default {
         })
       }
     },
-    goLogin: function () {
+    goLogin: function() {
       this.$router.push('/login')
     }
   },
-  mounted () {
+  mounted() {
     this.openedArray = []
   },
-  activated () {
+  activated() {
     this.$store.dispatch('loginStatus/checkLoginStatus')
   }
 }

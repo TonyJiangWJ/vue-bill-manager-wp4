@@ -32,10 +32,10 @@ export default {
   },
   methods: {
     checkChange: function (payload) {
-      console.log('点击了 ' + payload.label + ', 结果：' + payload.checked)
+      this.$log('点击了 ' + payload.label + ', 结果：' + payload.checked)
       let item = this.groupChildren.filter((item) => item.label === payload.label)
       item[0].checked = payload.checked
-      console.log(this.groupChildren)
+      this.$log(this.groupChildren)
     },
     addNew: function () {
       if (!this.groupChildren) {

@@ -1,3 +1,10 @@
+/*
+ * @Author: TonyJiangWJ
+ * @Date: 2019-08-15 16:52:56
+ * @Last Modified by: TonyJiangWJ
+ * @Last Modified time: 2019-12-25 16:35:57
+ * @Description: 
+ */
 import axios from 'axios'
 import qs from 'qs'
 import JSEncrypt from 'jsencrypt'
@@ -55,6 +62,12 @@ const API = {
    */
   getAssetParents: () => {
     return sendAjax('/list/asset/parent/types/A')
+  },
+  /**
+   * 校验类型编码是否已存在
+   */
+  assetTypeCheck: typeCode => {
+    return sendAjax('/asset/type/check_' + typeCode)
   },
   /**
    * 添加资产类型

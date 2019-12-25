@@ -2,19 +2,19 @@
   <div class="common-container">
     <div>
       <Row type="flex" justify="space-around">
-        <Col :xs="10" :sm="6" :md="5" :lg="4">
+        <i-col :xs="10" :sm="6" :md="5" :lg="4" class="v-gap">
           <DatePicker type="date" placeholder="开始时间" v-model="startDate"></DatePicker>
-        </Col>
-        <Col :xs="10" :sm="6" :md="5" :lg="4">
+        </i-col>
+        <i-col :xs="10" :sm="6" :md="5" :lg="4" class="v-gap">
           <DatePicker type="date" placeholder="结束时间" v-model="endDate"></DatePicker>
-        </Col>
-        <Col :xs="10" :sm="6" :md="5" :lg="4">
-          <Input type="text" placeholder="查询内容" v-model="content"></Input>
-        </Col>
-        <Col :xs="10" :sm="6" :md="5" :lg="4">
-          <Button @click="clear">清空</Button>
-          <Button type="primary" @click="doQuery">查询</Button>
-        </Col>
+        </i-col>
+        <i-col :xs="10" :sm="6" :md="5" :lg="4" class="v-gap">
+          <Input type="text" placeholder="查询内容" v-model="content" />
+        </i-col>
+        <i-col :xs="10" :sm="6" :md="5" :lg="4">
+          <Button @click="clear" class="v-btn">清空</Button>
+          <Button type="primary" @click="doQuery" class="v-btn">查询</Button>
+        </i-col>
       </Row>
     </div>
     <Divider />
@@ -29,7 +29,7 @@
       @on-sort-change="sortData"
     ></Table>
     <cost-record-adder v-model="showCostRecordAdder" @requery-list="query" />
-    <record-detail-drawer :tag-colors="tagColors" v-model="showRecordDetail" :trade-no="selectedTradeNo"  @requery-list="query"/>
+    <record-detail-drawer :tag-colors="tagColors" v-model="showRecordDetail" :trade-no="selectedTradeNo" @requery-list="query" />
     <tag-manage
       :tag-colors="tagColors"
       :record-id-list="selectedCostIds"
@@ -51,17 +51,17 @@
     />
     <Divider />
     <Row>
-      <Col>
-        <Button size="small" type="dashed" @click="toggleTagColumn">{{showTagColumn === true ? '隐藏' : '显示'}}标签</Button>
-        <Button size="small" type="success" ghost @click="addCostRecord">添加账单</Button>
-      </Col>
-      <Col>
-        <Button size="small" type="primary" ghost @click="calSumAmount">计算总金额</Button>
+      <i-col>
+        <Button size="small" type="dashed" @click="toggleTagColumn" class="v-btn">{{showTagColumn === true ? '隐藏' : '显示'}}标签</Button>
+        <Button size="small" type="success" ghost @click="addCostRecord" class="v-btn">添加账单</Button>
+      </i-col>
+      <i-col>
+        <Button size="small" type="primary" ghost @click="calSumAmount" class="v-btn">计算总金额</Button>
         <span>{{sumAmount===0?'':sumAmount}}</span>
-      </Col>
-      <Col>
-        <Button size="small" type="primary" ghost @click="batchManageTags" :disabled="!haveSelectedItem">批量设置标签</Button>
-      </Col>
+      </i-col>
+      <i-col>
+        <Button size="small" type="primary" ghost @click="batchManageTags" :disabled="!haveSelectedItem" class="v-btn">批量设置标签</Button>
+      </i-col>
     </Row>
   </div>
 </template>
@@ -138,24 +138,6 @@ export default {
               row: params.row
             }
           })
-        }
-      },
-      ruleValidate: {
-        createTime: {
-          required: true,
-          message: '交易创建时间不能为空'
-        },
-        money: {
-          required: true,
-          message: '金额不能为空'
-        },
-        target: {
-          required: true,
-          message: '交易对方不能为空'
-        },
-        inOutType: {
-          required: true,
-          message: '收支类型不能为空'
         }
       },
       costRecordColumns: [

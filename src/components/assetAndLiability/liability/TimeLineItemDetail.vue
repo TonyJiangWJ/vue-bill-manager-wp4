@@ -12,17 +12,17 @@
     </div>
     <Modal v-model="liabilityModal" title="资产详情" :width="380">
       <Row type="flex" justify="center">
-        <Col span="10">类别</Col>
-        <Col span="10"><Input type="text" :value="liability.name" :maxlength="20" readonly/></Col>
+        <i-col span="10">类别</i-col>
+        <i-col span="10"><Input type="text" :value="liability.name" :maxlength="20" readonly/></i-col>
       </Row>
       <Row type="flex" justify="center">
-        <Col span="10">金额</Col>
-        <Col span="10"><NumberInput v-model="liabilityAmount" placeholder="金额"/></Col>
+        <i-col span="10">金额</i-col>
+        <i-col span="10"><NumberInput v-model="liabilityAmount" placeholder="金额"/></i-col>
       </Row>
       </Row>
       <Row type="flex" justify="center">
-        <Col span="10">已还金额</Col>
-        <Col span="10"><NumberInput v-model="liabilityPaid" placeholder="已还金额"/></Col>
+        <i-col span="10">已还金额</i-col>
+        <i-col span="10"><NumberInput v-model="liabilityPaid" placeholder="已还金额"/></i-col>
       </Row>
       <div slot="footer">
         <Button type="dashed" @click="liabilityPaid=liabilityAmount">还清</Button>

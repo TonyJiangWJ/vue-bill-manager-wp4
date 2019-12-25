@@ -1,10 +1,10 @@
 <template>
   <Row type="flex" justify="center">
-    <Col span="6">
+    <i-col span="6">
     <check-group v-for="checkboxGroupItem in checkboxGroupList"
       :key="checkboxGroupItem.label"
       :checkbox-group-item="checkboxGroupItem"/>
-    </Col>
+    </i-col>
   </Row>
 </template>
 

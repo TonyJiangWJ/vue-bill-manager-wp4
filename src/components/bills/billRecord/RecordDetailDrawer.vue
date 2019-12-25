@@ -3,111 +3,111 @@
     <Drawer title="账单详情" v-model="innerShowDrawer" :width="drawerWidth">
       <div>
         <Row>
-          <Col span="8">
+          <i-col span="8">
             <p>账单编号:</p>
-          </Col>
-          <Col span="16">{{detail.tradeNo}}</Col>
+          </i-col>
+          <i-col span="16">{{detail.tradeNo}}</i-col>
         </Row>
         <Row>
-          <Col span="8">订单编号:</Col>
-          <Col span="16">{{detail.orderNo}}</Col>
+          <i-col span="8">订单编号:</i-col>
+          <i-col span="16">{{detail.orderNo}}</i-col>
         </Row>
         <Row>
-          <Col span="8">创建时间:</Col>
-          <Col span="16">{{detail.createTime}}</Col>
+          <i-col span="8">创建时间:</i-col>
+          <i-col span="16">{{detail.createTime}}</i-col>
         </Row>
         <Row>
-          <Col span="8">支付时间:</Col>
-          <Col span="16">{{detail.paidTime}}</Col>
+          <i-col span="8">支付时间:</i-col>
+          <i-col span="16">{{detail.paidTime}}</i-col>
         </Row>
         <Row>
-          <Col span="8">修改时间:</Col>
-          <Col span="16">{{detail.modifyTime}}</Col>
+          <i-col span="8">修改时间:</i-col>
+          <i-col span="16">{{detail.modifyTime}}</i-col>
         </Row>
         <Row>
-          <Col span="8">交易对方:</Col>
-          <Col span="16">{{detail.target}}</Col>
+          <i-col span="8">交易对方:</i-col>
+          <i-col span="16">{{detail.target}}</i-col>
         </Row>
         <Row>
-          <Col span="8">金额:</Col>
-          <Col span="16">{{detail.money}}</Col>
+          <i-col span="8">金额:</i-col>
+          <i-col span="16">{{detail.money}}</i-col>
         </Row>
         <Row>
-          <Col span="8">账单状态:</Col>
-          <Col span="16">{{detail.tradeStatus}}</Col>
+          <i-col span="8">账单状态:</i-col>
+          <i-col span="16">{{detail.tradeStatus}}</i-col>
         </Row>
         <Row>
-          <Col span="8">收支类型:</Col>
-          <Col span="16">{{detail.inOutType}}</Col>
+          <i-col span="8">收支类型:</i-col>
+          <i-col span="16">{{detail.inOutType}}</i-col>
         </Row>
         <Row>
-          <Col span="8">订单状态:</Col>
-          <Col span="16">{{detail.orderStatus}}</Col>
+          <i-col span="8">订单状态:</i-col>
+          <i-col span="16">{{detail.orderStatus}}</i-col>
         </Row>
         <Row>
-          <Col span="8">服务手续费:</Col>
-          <Col span="16">{{detail.serviceCost}}</Col>
+          <i-col span="8">服务手续费:</i-col>
+          <i-col span="16">{{detail.serviceCost}}</i-col>
         </Row>
         <Row>
-          <Col span="8">退款:</Col>
-          <Col span="16">{{detail.refundMoney}}</Col>
+          <i-col span="8">退款:</i-col>
+          <i-col span="16">{{detail.refundMoney}}</i-col>
         </Row>
         <Row type="flex" align="middle">
-          <Col span="8">交易类型:</Col>
-          <Col span="16">
+          <i-col span="8">交易类型:</i-col>
+          <i-col span="16">
             <Input type="text" v-model="detail.orderType"></Input>
-          </Col>
+          </i-col>
         </Row>
         <Row type="flex" align="middle">
-          <Col span="8">交易地点:</Col>
-          <Col span="16">
+          <i-col span="8">交易地点:</i-col>
+          <i-col span="16">
             <Input type="text" v-model="detail.location"></Input>
-          </Col>
+          </i-col>
         </Row>
         <Row type="flex" align="middle">
-          <Col span="8">商品名:</Col>
-          <Col span="16">
+          <i-col span="8">商品名:</i-col>
+          <i-col span="16">
             <Input type="text" v-model="detail.goodsName"></Input>
-          </Col>
+          </i-col>
         </Row>
         <Row type="flex" align="middle">
-          <Col span="8">备注:</Col>
-          <Col span="16">
+          <i-col span="8">备注:</i-col>
+          <i-col span="16">
             <Input type="text" v-model="detail.memo"></Input>
-          </Col>
+          </i-col>
         </Row>
         <Row type="flex" align="middle">
-          <Col span="8">是否已删除</Col>
-          <Col span="16">
+          <i-col span="8">是否已删除</i-col>
+          <i-col span="16">
             <Button size="small" @click="toggleDelete" :type="detail.isDeleted==='未删除'?'success':'error'" ghost>{{detail.isDeleted}}</Button>
-          </Col>
+          </i-col>
         </Row>
         <Row type="flex" align="middle">
-          <Col span="8">是否显示</Col>
-          <Col span="16">
+          <i-col span="8">是否显示</i-col>
+          <i-col span="16">
             <Button size="small" @click="toggleHide" :type="detail.isHidden==='显示'?'success':'error'" ghost>{{detail.isHidden}}</Button>
-          </Col>
+          </i-col>
         </Row>
         <Divider />
         <Row type="flex" align="middle">
-          <Col span="8">标签:</Col>
-          <Col span="16">
+          <i-col span="8">标签:</i-col>
+          <i-col span="16">
             <Tag v-for="(tag,index) in detail.tagInfos" type="border" :key="tag.id" :color="tagColors[index % tagColors.length]">{{tag.tagName}}</Tag>
-          </Col>
+          </i-col>
         </Row>
         <Divider />
         <Row type="flex" align="middle">
-          <Col span="8">操作</Col>
-          <Col span="12">
+          <i-col span="8">操作</i-col>
+          <i-col span="12">
             <Row :gutter="16">
-              <Col>
+              <i-col>
                 <Button class="gap-5" type="success" @click="manageRecordTag">关联标签</Button>
-              </Col>
-              <Col>
+              </i-col>
+              <i-col>
                 <Button class="gap-5" type="success" @click="saveRecordChange()">保存修改</Button>
-              </Col>
+              </i-col>
             </Row>
-          </Col>
+          </i-col>
         </Row>
       </div>
     </Drawer>
@@ -241,7 +241,7 @@ export default {
         title: '警告',
         content: '确定要' + (nowStatus ? '显示' : '隐藏') + '该项吗?',
         onOk: function () {
-          self.debug('标记显示')
+          self.$debug('标记显示')
           API.toggleRecordHide({
             nowStatus: nowStatus ? '1' : '0',
             tradeNo: self.detail.tradeNo

@@ -2,29 +2,29 @@
     <div class="login-container">
       <template v-if="!logined">
       <Row type="flex" justify="center" align="middle">
-        <Col span="8">用户名:</Col>
-        <Col span="12">
+        <i-col span="8">用户名:</i-col>
+        <i-col span="12">
           <Tooltip content="请输入用户名" placement="right" :disabled="!showUserNameError" :always="showUserNameError">
             <Input type="text" placeholder="请输入用户名" v-model="userName"/>
           </Tooltip>
-        </Col>
+        </i-col>
       </Row>
       <Row type="flex" justify="center" align="middle">
-        <Col span="8">密&nbsp;&nbsp;&nbsp;码:</Col>
-        <Col span="12">
+        <i-col span="8">密&nbsp;&nbsp;&nbsp;码:</i-col>
+        <i-col span="12">
           <Tooltip :content="loginError?'用户名或密码错误':'密码最短6位'" placement="right" :disabled="!(showUserNameError||loginError)" :always="showPwdError||loginError">
             <Input type="password" placeholder="请输入密码" v-model="password" @on-keydown="listenKeyDown"/>
           </Tooltip>
-        </Col>
+        </i-col>
       </Row>
       <Row type="flex" justify="center" align="middle">
-        <Col span="8"><Button type="success" @click="doLogin">登录</Button></Col>
-        <Col span="8"><Button type="primary" @click="goRegister">注册</Button></Col>
+        <i-col span="8"><Button type="success" @click="doLogin">登录</Button></i-col>
+        <i-col span="8"><Button type="primary" @click="goRegister">注册</Button></i-col>
       </Row>
       </template>
       <template v-else>
         <Row type="flex" justify="center" align="middle">
-          <Col span="8"><Button type="warning"  @click="logout">退出登录</Button></Col>
+          <i-col span="8"><Button type="warning"  @click="logout">退出登录</Button></i-col>
         </Row>
       </template>
   </div>

@@ -1,3 +1,10 @@
+/*
+ * @Author: TonyJiangWJ
+ * @Date: 2019-08-16 15:58:17
+ * @Last Modified by: TonyJiangWJ
+ * @Last Modified time: 2019-12-25 16:58:27
+ * @Description: 
+ */
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
@@ -11,6 +18,7 @@ import LogUtil from '@/js/LogUtil'
 import CommonUtil from '@/js/CommonUtil'
 
 import 'iview/dist/styles/iview.css'
+import '@/assets/global.css'
 
 iView.LoadingBar.config({
   color: '#00fdff'

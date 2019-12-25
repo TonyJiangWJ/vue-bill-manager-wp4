@@ -89,10 +89,10 @@ export default {
       if (isExpand) {
         let self = this
 
-        // console.log('向外传递resize')
+        // this.$log('向外传递resize')
         // self.$emit('resize-handler')
         setTimeout(function() {
-          console.log('向外传递resize')
+          this.$log('向外传递resize')
           self.$emit('resize-handler')
         }, 200)
       }

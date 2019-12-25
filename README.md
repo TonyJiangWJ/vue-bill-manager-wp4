@@ -1,4 +1,5 @@
 # vue-bill-manager-webpack4 个人记账及资产管理
+
 - 基于webpack4和vue2实现的一套个人账单管理系统，后端项目见[BillDubbo](https://github.com/TonyJiangWJ/BillingDubbo)
 - 账单可以直接导入支付宝PC版下载的账单zip文件，也可以直接录入账单信息
 - 针对不同的账单记录可以添加自定义标签，然后进行预算管理或者快速检索
@@ -6,30 +7,19 @@
 - 资产管理功能：管理自己各个APP下的资产、以及分期等负债，通过净资产了解实际资产情况，避免因为分期而大手大脚的花钱。分期列表按月计算，展示每月负债和月底净资产合理安排消费。
 - 其他附加小工具不赘述
 
-## demo运行步骤
-```
-npm install
-```
+## 项目开发部署步骤
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+- 先启动后台项目 见[BillingDubbo](https://github.com/TonyJiangWJ/BillingDubbo)
+- 然后运行`npm install` 安装依赖
+- 修改 `config.js` 中的host信息，RSA公钥信息见[BillingDubbo](https://github.com/TonyJiangWJ/BillingDubbo)
+- 运行项目
 
-### Compiles and minifies for production
-```
-npm run build
-```
+  ```shell
+  npm run serve
+  ```
 
-### Run your tests
-```
-npm run test
-```
+- 打包项目
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+  ```shell
+  npm run build
+  ```

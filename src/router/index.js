@@ -30,7 +30,11 @@ import { debug } from '@/js/LogUtil'
 import API from '@/js/api.js'
 import { needLogin } from '@/js/config.js'
 import store from '@/store'
-
+// 避免同路径push报错：NavigationDuplicated
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 Vue.use(Router)
 
 const router = new Router({
