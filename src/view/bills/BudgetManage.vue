@@ -163,7 +163,8 @@ export default {
             version: budgetInfo.version,
             name: budgetInfo.budgetName,
             yearMonthInfo: budgetInfo.yearMonth,
-            amount: budgetInfo.budgetMoney
+            amount: budgetInfo.budgetMoney,
+            tagInfos: budgetInfo.tagInfos
           }
           API.listBudgetAssignableTags({ budgetId: this.budget.id }).then(resp => {
             if (resp.code === API.CODE_CONST.SUCCESS) {
