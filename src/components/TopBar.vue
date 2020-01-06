@@ -21,6 +21,7 @@
       </template>
       <MenuGroup title="使用">
         <MenuItem name="bills">账单</MenuItem>
+        <MenuItem name="report">收支概览</MenuItem>
         <MenuItem name="budgetManage">预算管理</MenuItem>
         <MenuItem name="assetList">资产列表</MenuItem>
         <MenuItem name="alipayUpload">支付宝账单上传</MenuItem>
@@ -80,6 +81,8 @@ export default {
         this.$router.push('/')
       } else if (name === 'bills') {
         this.$router.push('/bill/record/list')
+      } else if (name === 'report') {
+        this.$router.push('/bill/record/report')
       } else if (name === 'budgetManage') {
         this.$router.push('/bill/budget')
       } else if (name === 'assetList') {

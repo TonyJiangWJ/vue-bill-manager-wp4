@@ -3,29 +3,44 @@
     <Modal v-model="budgetModal" title="预算详情" :width="380">
       <Row v-if="typeof budget.id==='undefined'" type="flex" justify="center">
         <i-col span="10">月份</i-col>
-        <i-col span="10"><DatePicker type="month" v-model="yearMonthInfo" @on-change="setYearMonth"  placeholder="月份"></DatePicker></i-col>
+        <i-col span="10">
+          <DatePicker type="month" v-model="yearMonthInfo" @on-change="setYearMonth" placeholder="月份"></DatePicker>
+        </i-col>
       </Row>
       <Row type="flex" justify="center">
         <i-col span="10">名称</i-col>
-        <i-col span="10"><Input type="text" placeholder="名称" v-model="budget.name" :maxlength="20"/></i-col>
+        <i-col span="10">
+          <Input type="text" placeholder="名称" v-model="budget.name" :maxlength="20" />
+        </i-col>
       </Row>
       <Row type="flex" justify="center">
         <i-col span="10">金额</i-col>
-        <i-col span="10"><NumberInput v-model="budget.amount" placeholder="金额"/></i-col>
+        <i-col span="10">
+          <NumberInput v-model="budget.amount" placeholder="金额" />
+        </i-col>
       </Row>
       <Divider v-if="budget.id" orientation="left">关联标签</Divider>
       <Row type="flex" justify="start">
-        <Tag v-for="(tag,index) in budget.tagInfos" :key="tag.tagId"
+        <Tag
+          v-for="(tag,index) in budget.tagInfos"
+          :key="tag.tagId"
           type="border"
-          closable @on-close="doRemoveTag(tag.tagId)"
-          :color="tagColors[index % tagColors.length]">{{tag.tagName}}</Tag>
+          closable
+          @on-close="doRemoveTag(tag.tagId)"
+          :color="tagColors[index % tagColors.length]"
+        >{{tag.tagName}}</Tag>
       </Row>
       <Divider v-if="budget.id" orientation="left">未关联标签</Divider>
       <Row type="flex" justify="start">
-        <Button v-for="(tag) in assignableTagList" :key="tag.tagId"
-          class='gap-5' icon="ios-add" size="small" type="dashed"
+        <Button
+          v-for="(tag) in assignableTagList"
+          :key="tag.tagId"
+          class="gap-5"
+          icon="ios-add"
+          size="small"
+          type="dashed"
           @click="doAddTag(tag.tagId)"
-          >{{tag.tagName}}</Button>
+        >{{tag.tagName}}</Button>
       </Row>
       <div slot="footer">
         <Button v-if="budget.id && budget.amount == 0" type="dashed" @click="deleteBudget">删除</Button>
@@ -34,14 +49,18 @@
       </div>
     </Modal>
 
-    <Row type='flex' justify="start">
+    <Row type="flex" justify="start">
       <i-col span="4" class="v-gap">预算管理</i-col>
-      <i-col span="6" class="v-gap"><Button type="primary" @click="addBudget" size="small">添加预算</Button></i-col>
+      <i-col span="6" class="v-gap">
+        <Button type="primary" @click="addBudget" size="small">添加预算</Button>
+      </i-col>
     </Row>
     <Row>
-      <i-col span="6" class="v-gap"><Button type="success" ghost @click="loadReport" size="small">重新载入</Button></i-col>
+      <i-col span="6" class="v-gap">
+        <Button type="success" ghost @click="loadReport" size="small">重新载入</Button>
+      </i-col>
     </Row>
-    <Divider/>
+    <Divider />
     <TimelineItem v-for="report in reportModelList" :key="report.yearMonthInfo">
       <div>
         <h3>
@@ -56,17 +75,27 @@
         </h3>
         <transition name="fade">
           <Collapse v-if="show">
-            <Panel v-for="reportItem in report.reportItems"
-              :key="reportItem.id">
-              <span>{{reportItem.name}} ¥{{reportItem.amount|longToString}} {{reportItem.used|longToString}}
-                <span :style="{ color: reportItem.remain>0 ? '#008000' : '#ff0000' }">{{reportItem.remain|longToString}}</span>
+            <Panel v-for="reportItem in report.reportItems" :key="reportItem.id">
+              <span>
+                {{reportItem.name}} ¥{{reportItem.amount|longToString}} {{reportItem.used|longToString}}
+                <span
+                  :style="{ color: reportItem.remain>0 ? '#008000' : '#ff0000' }"
+                >{{reportItem.remain|longToString}}</span>
               </span>
               <div slot="content">
-                <span>预算：¥{{reportItem.amount|longToString}} 支出：￥{{reportItem.used|longToString}}
-                  <span :style="{ color: reportItem.remain>0 ? '#008000' : '#ff0000' }">{{reportItem.remain>=0?'剩余':'超支'}}:{{reportItem.remain|longToString}}</span>
+                <span>
+                  预算：¥{{reportItem.amount|longToString}} 支出：￥{{reportItem.used|longToString}}
+                  <span
+                    :style="{ color: reportItem.remain>0 ? '#008000' : '#ff0000' }"
+                  >{{reportItem.remain>=0?'剩余':'超支'}}:{{reportItem.remain|longToString}}</span>
                 </span>
                 <Button type="success" size="small" ghost @click.stop="showDetail(reportItem)">修改</Button>
-                <Tag type="border" v-for="(tag,index) in reportItem.tagInfos" :key="tag.tagId" :color="tagColors[index % tagColors.length]">{{tag.tagName}}({{tag.amount|longToString}})</Tag>
+                <Tag
+                  type="border"
+                  v-for="(tag,index) in reportItem.tagInfos"
+                  :key="tag.tagId"
+                  :color="tagColors[index % tagColors.length]"
+                >{{tag.tagName}}({{tag.amount|longToString}})</Tag>
               </div>
             </Panel>
           </Collapse>
@@ -84,7 +113,7 @@ export default {
   components: {
     NumberInput
   },
-  data () {
+  data() {
     return {
       budget: {},
       empty: '',
@@ -93,11 +122,24 @@ export default {
       assignableTagList: [],
       show: true,
       budgetModal: false,
-      tagColors: ['primary', 'success', 'warning', 'magenta', 'volcano', 'orange', 'gold', 'yellow', 'lime', 'green', 'cyan', 'blue']
+      tagColors: [
+        'primary',
+        'success',
+        'warning',
+        'magenta',
+        'volcano',
+        'orange',
+        'gold',
+        'yellow',
+        'lime',
+        'green',
+        'cyan',
+        'blue'
+      ]
     }
   },
   filters: {
-    longToString: function (val) {
+    longToString: function(val) {
       if (typeof val === 'undefined' || val === 0) {
         return '0'
       }
@@ -105,26 +147,38 @@ export default {
     }
   },
   methods: {
-    setYearMonth: function (val) {
+    setYearMonth: function(val) {
       this.budget.yearMonthInfo = val
     },
-    showDetail: function (reportItem) {
-      this.budget = Object.assign({}, reportItem)
-
-      this.budgetModal = true
-      this.budget.amount = (reportItem.amount / 100).toFixed(2)
-      API.listBudgetAssignableTags({budgetId: this.budget.id}).then(resp => {
+    showDetail: function(reportItem) {
+      
+      API.getBudgetInfo({
+        id: reportItem.id
+      }).then(resp => {
         if (resp.code === API.CODE_CONST.SUCCESS) {
-          this.assignableTagList = resp.tagInfoList
+          this.budgetModal = true
+          let budgetInfo = resp.budgetInfo
+          this.budget = {
+            id: budgetInfo.id,
+            version: budgetInfo.version,
+            name: budgetInfo.budgetName,
+            yearMonthInfo: budgetInfo.yearMonth,
+            amount: budgetInfo.budgetMoney
+          }
+          API.listBudgetAssignableTags({ budgetId: this.budget.id }).then(resp => {
+            if (resp.code === API.CODE_CONST.SUCCESS) {
+              this.assignableTagList = resp.tagInfoList
+            }
+          })
         }
       })
     },
-    addBudget: function () {
+    addBudget: function() {
       this.budget = {}
       this.budgetModal = true
       this.assignableTagList = []
     },
-    upsertBudget: function () {
+    upsertBudget: function() {
       this.$debug(JSON.stringify(this.budget))
 
       if (typeof this.budget.id === 'undefined') {
@@ -166,7 +220,7 @@ export default {
         })
       }
     },
-    doAddTag: function (tagId) {
+    doAddTag: function(tagId) {
       API.bindTagToBudget({
         budgetId: this.budget.id,
         tagId: tagId
@@ -176,14 +230,14 @@ export default {
           if (typeof this.budget.tagInfos === 'undefined') {
             this.budget.tagInfos = []
           }
-          this.budget.tagInfos.push({tagId: tagId, tagName: this.assignableTagList.find(tag => tag.tagId === tagId).tagName})
+          this.budget.tagInfos.push({ tagId: tagId, tagName: this.assignableTagList.find(tag => tag.tagId === tagId).tagName })
           this.assignableTagList.splice(this.assignableTagList.findIndex(tagInfo => tagInfo.tagId === tagId), 1)
         } else {
           this.$Message.error('更新失败')
         }
       })
     },
-    doRemoveTag: function (tagId) {
+    doRemoveTag: function(tagId) {
       API.deleteTagFromBudget({
         budgetId: this.budget.id,
         tagId: tagId
@@ -198,13 +252,13 @@ export default {
         }
       })
     },
-    deleteBudget: function () {
+    deleteBudget: function() {
       let self = this
       this.$Modal.confirm({
         title: '警告',
         content: '确定要删除该预算吗?',
-        onOk: function () {
-          API.deleteBudget({id: self.budget.id}).then(resp => {
+        onOk: function() {
+          API.deleteBudget({ id: self.budget.id }).then(resp => {
             if (resp.code === API.CODE_CONST.SUCCESS) {
               self.$Message.success('删除成功')
               self.loadReport()
@@ -216,7 +270,7 @@ export default {
         }
       })
     },
-    loadReport: function () {
+    loadReport: function() {
       API.loadBudgetReport({}).then(resp => {
         if (resp.code === API.CODE_CONST.SUCCESS) {
           this.reportModelList = resp.reportModelList
@@ -224,7 +278,7 @@ export default {
       })
     }
   },
-  created () {
+  created() {
     // this.reportModelList = reportModelList
     this.loadReport()
   }

@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2019-08-15 16:52:56
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2019-12-25 16:35:57
+ * @Last Modified time: 2020-01-06 21:42:11
  * @Description: 
  */
 import axios from 'axios'
@@ -177,6 +177,9 @@ const API = {
   updateBudget: data => {
     return sendAjax('/budget/update', data)
   },
+  getBudgetInfo: data => {
+    return sendAjax('/budget/get', data)
+  },
   deleteBudget: data => {
     return sendAjax('/budget/delete', data)
   },
@@ -188,6 +191,12 @@ const API = {
   },
   listBudgetAssignableTags: data => {
     return sendAjax('/budget/tag/assignable/list', data)
+  },
+  loadMonthlyReport: data => {
+    return sendAjax('/report/get', data)
+  },
+  loadDailyReport: data => {
+    return sendAjax('/daily/report/get', data)
   },
   /**
    * 登录
