@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-01-07 10:30:17
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-01-07 11:45:11
+ * @Last Modified time: 2020-01-07 13:12:57
  * @Description: 
  */
 
@@ -43,9 +43,12 @@ module.exports = {
           return args
         })
     }
-    config
-      .plugin('webpack-bundle-analyzer')
-      .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
+    
+    if (process.env.npm_config_report == 'true') {
+      config
+        .plugin('webpack-bundle-analyzer')
+        .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
+    }
   },
   configureWebpack: config => {
     if (isProduction) {
