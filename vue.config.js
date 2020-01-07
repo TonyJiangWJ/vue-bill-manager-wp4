@@ -2,23 +2,23 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-01-07 10:30:17
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-01-07 13:12:57
+ * @Last Modified time: 2020-01-07 18:15:20
  * @Description: 
  */
 
 const isProduction = process.env.NODE_ENV === 'production'
 const cdn = {
   css: [
-    // 'https://cdn.bootcss.com/iview/3.5.0/styles/iview.css'
+    'https://cdn.jsdelivr.net/npm/iview@3.5.4/dist/styles/iview.css'
   ],
   js: [
-    'https://cdn.bootcss.com/vue/2.6.10/vue.runtime.min.js',
-    'https://cdn.bootcss.com/vue-router/3.1.3/vue-router.min.js',
-    'https://cdn.bootcss.com/vuex/3.1.1/vuex.min.js',
-    'https://cdn.bootcss.com/axios/0.19.0/axios.min.js',
-    'https://cdn.bootcss.com/echarts/4.4.0/echarts.common.min.js',
-    'https://cdn.bootcss.com/iview/3.5.0/iview.min.js',
-    'https://cdn.bootcss.com/jsencrypt/3.0.0-rc.1/jsencrypt.min.js',
+    'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js',
+    'https://cdn.jsdelivr.net/npm/vue-router@3.1.3/dist/vue-router.min.js',
+    'https://cdn.jsdelivr.net/npm/vuex@3.1.2/dist/vuex.min.js',
+    'https://cdn.jsdelivr.net/npm/axios@0.19.0/dist/axios.min.js',
+    'https://cdn.jsdelivr.net/npm/echarts@4.6.0/dist/echarts.common.min.js',
+    'https://cdn.jsdelivr.net/npm/iview@3.5.4/dist/iview.min.js',
+    'https://cdn.jsdelivr.net/npm/jsencrypt@3.0.0-rc.1/bin/jsencrypt.min.js',
   ]
 }
 
