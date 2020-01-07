@@ -59,14 +59,14 @@ export default {
     }
   },
   watch: {
-    startMonthDate: function(n, o) {
+    startMonthDate: function(n) {
       if (this.isDate(n)) {
         this.startMonth = this.dateFormat(n, 'yyyy-MM')
       } else {
         this.startMonth = ''
       }
     },
-    endMonthDate: function(n, o) {
+    endMonthDate: function(n) {
       if (this.isDate(n)) {
         this.endMonth = this.dateFormat(n, 'yyyy-MM')
       } else {

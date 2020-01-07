@@ -212,7 +212,7 @@ export default {
     }
   },
   watch: {
-    typeIdentify: function(newVal, o) {
+    typeIdentify: function(newVal) {
       if (newVal === 'L') {
         API.getLiabilityParents().then(resp => {
           if (resp.code === API.CODE_CONST.SUCCESS) {

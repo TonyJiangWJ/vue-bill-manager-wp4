@@ -77,7 +77,6 @@ import { CostRecord } from '@/js/CommonFunctions.js'
 export default {
   name: 'BillRecordList',
   components: {
-    TagListContainer,
     CostRecordAdder,
     RecordDetailDrawer,
     TagManage
@@ -180,7 +179,7 @@ export default {
           ],
           filteredValue: ['支出'],
           filterMultiple: false,
-          filterRemote: function(value, row) {
+          filterRemote: function(value) {
             this.inOutType = value[0]
             this.pageNo = 0
             this.query()
@@ -203,7 +202,7 @@ export default {
           ],
           filteredValue: [0],
           filterMultiple: false,
-          filterRemote: function(value, row) {
+          filterRemote: function(value) {
             this.isDeleted = value[0]
             this.pageNo = 0
             this.query()
@@ -226,7 +225,7 @@ export default {
           ],
           filteredValue: [0],
           filterMultiple: false,
-          filterRemote: function(value, row) {
+          filterRemote: function(value) {
             this.isHidden = value[0]
             this.pageNo = 0
             this.query()

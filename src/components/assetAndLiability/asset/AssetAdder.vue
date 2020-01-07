@@ -79,7 +79,7 @@ export default {
     }
   },
   watch: {
-    showAdderModal: function(newVal, o) {
+    showAdderModal: function(newVal) {
       this.$emit('toggle-show', newVal)
     },
     addAssetParentType: function() {
@@ -90,7 +90,7 @@ export default {
         }
       })
     },
-    value: function (newVal, o) {
+    value: function (newVal) {
       this.showAdderModal = newVal
     }
   },

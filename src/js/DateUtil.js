@@ -1,5 +1,5 @@
 export default {
-  install (Vue, options) {
+  install (Vue) {
     Vue.prototype.dateFormat = function (date, fmt) {
       var o = {
         'M+': date.getMonth() + 1, // 月份

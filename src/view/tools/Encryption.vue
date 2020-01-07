@@ -170,7 +170,7 @@ export default {
   mounted() {
     var clipboard = new ClipboardJS('.clip-btn')
     let self = this
-    clipboard.on('success', function(e) {
+    clipboard.on('success', function() {
       self.$debug('复制成功')
     })
   }

@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2019-12-25 15:36:22
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2019-12-25 15:45:36
+ * @Last Modified time: 2020-01-07 19:49:03
  * @Description: 新增负债信息弹框组件
  -->
 <template>
@@ -74,10 +74,10 @@ export default {
     }
   },
   watch: {
-    showAdderModal: function(newVal, o) {
+    showAdderModal: function(newVal) {
       this.$emit('toggle-show', newVal)
     },
-    value: function(newVal, o) {
+    value: function(newVal) {
       this.showAdderModal = newVal
     },
     liabilityParent: function() {

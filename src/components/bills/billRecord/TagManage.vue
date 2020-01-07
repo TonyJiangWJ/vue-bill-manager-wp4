@@ -88,10 +88,10 @@ export default {
     }
   },
   watch: {
-    showTagManage: function(n, o) {
+    showTagManage: function(n) {
       this.innerShowTagManage = n
     },
-    innerShowTagManage: function(n, o) {
+    innerShowTagManage: function(n) {
       this.$emit('change', n)
     }
   },

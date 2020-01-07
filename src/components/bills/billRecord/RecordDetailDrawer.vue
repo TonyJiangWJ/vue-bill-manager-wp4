@@ -55,25 +55,25 @@
         <Row type="flex" align="middle">
           <i-col span="8">交易类型:</i-col>
           <i-col span="16">
-            <Input type="text" v-model="detail.orderType"></Input>
+            <Input type="text" v-model="detail.orderType"/>
           </i-col>
         </Row>
         <Row type="flex" align="middle">
           <i-col span="8">交易地点:</i-col>
           <i-col span="16">
-            <Input type="text" v-model="detail.location"></Input>
+            <Input type="text" v-model="detail.location"/>
           </i-col>
         </Row>
         <Row type="flex" align="middle">
           <i-col span="8">商品名:</i-col>
           <i-col span="16">
-            <Input type="text" v-model="detail.goodsName"></Input>
+            <Input type="text" v-model="detail.goodsName"/>
           </i-col>
         </Row>
         <Row type="flex" align="middle">
           <i-col span="8">备注:</i-col>
           <i-col span="16">
-            <Input type="text" v-model="detail.memo"></Input>
+            <Input type="text" v-model="detail.memo"/>
           </i-col>
         </Row>
         <Row type="flex" align="middle">
@@ -156,13 +156,13 @@ export default {
     }
   },
   watch: {
-    innerShowDrawer: function (n, o) {
+    innerShowDrawer: function (n) {
       if (n === false) {
         this.$debug('隐藏drawer')
         this.$emit('change', n)
       }
     },
-    showDrawer: function (n, o) {
+    showDrawer: function (n) {
       this.innerShowDrawer = n
     },
     tradeNo: function (n, o) {

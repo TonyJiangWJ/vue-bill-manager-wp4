@@ -19,7 +19,6 @@
         <i-col span="10">金额</i-col>
         <i-col span="10"><NumberInput v-model="liabilityAmount" placeholder="金额"/></i-col>
       </Row>
-      </Row>
       <Row type="flex" justify="center">
         <i-col span="10">已还金额</i-col>
         <i-col span="10"><NumberInput v-model="liabilityPaid" placeholder="已还金额"/></i-col>
@@ -57,7 +56,7 @@ export default {
     }
   },
   methods: {
-    clickTimeLineItem: function (liability) {
+    clickTimeLineItem: function () {
       this.liabilityModal = true
       this.liabilityAmount = (this.liability.amount / 100).toFixed(2)
       this.liabilityPaid = (this.liability.paid / 100).toFixed(2)
