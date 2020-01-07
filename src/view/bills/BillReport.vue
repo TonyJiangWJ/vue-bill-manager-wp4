@@ -12,8 +12,12 @@
         <Button type="primary" @click="doQuery" class="v-btn">查询</Button>
       </i-col>
     </Row>
-    <div id="charts" :style="'text-align: center;width: 100%;height: ' + computedHeight + 'px'" />
-
+    <Row style="margin-top: 1.2rem;">
+      <i-col>
+        <div id="charts" :style="'text-align: center;width: 100%;height: ' + computedHeight + 'px'" />
+      </i-col>
+    </Row>
+    <Divider />
     <Row type="flex" justify="space-around">
       <i-col :xs="8" :sm="6" :md="5" :lg="4" class="v-gap">
         <DatePicker type="date" placeholder="开始时间" v-model="startDate"></DatePicker>
@@ -26,7 +30,11 @@
         <Button type="primary" @click="doQueryDaily" class="v-btn">查询</Button>
       </i-col>
     </Row>
-    <div id="daily-charts" :style="'text-align: center;width: 100%;height: ' + computedHeight + 'px'" />
+    <Row style="margin-top: 1.2rem;">
+      <i-col>
+        <div id="daily-charts" :style="'text-align: center;width: 100%;height: ' + computedHeight + 'px'" />
+      </i-col>
+    </Row>
   </div>
 </template>
 
@@ -227,6 +235,7 @@ export default {
         ]
       }
       this.charts.setOption(option)
+      this.charts.resize()
     },
     loadDailyReportData: function() {
       API.loadDailyReport({
@@ -378,6 +387,7 @@ export default {
         ]
       }
       this.dailyCharts.setOption(option)
+      this.dailyCharts.resize()
     }
   },
   mounted() {
