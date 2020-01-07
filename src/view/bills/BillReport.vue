@@ -149,7 +149,7 @@ export default {
         },
         xAxis: {
           type: 'category',
-          boundaryGap: false,
+          boundaryGap: true,
           data: monthList
         },
         yAxis: {
@@ -237,28 +237,33 @@ export default {
             show: false,
             type: 'pie',
             center: ['75%', '35%'],
-            radius: '28%',
+            radius: ['20%', '35%'],
             z: 100,
             tooltip: {
-              show: false
+              trigger: 'item',
+              formatter: '{b}:<br/> {c}元 {d}%',
             },
             data: [
               {
-                name: '净收入',
+                name: '总净收入',
                 value: totalCleanIncome,
                 label: {
-                  show: true,
-                  position: 'inside',
-                  formatter: '{b}: {c}元 {d}%'
+                  show: false,
+                  position: 'center',
+                  emphasis: {
+                    show: true
+                  }
                 }
               },
               {
-                name: '净支出',
+                name: '总净支出',
                 value: totalCleanCost,
                 label: {
-                  show: true,
-                  position: 'inside',
-                  formatter: '{b}: {c}元 {d}%'
+                  show: false,
+                  position: 'center',
+                  emphasis: {
+                    show: true
+                  }
                 }
               }
             ]
@@ -276,15 +281,19 @@ export default {
             type: 'inside',
             start: 24,
             end: 100
-          },
+          }
+        ]
+      } else {
+        option.dataZoom = [
           {
             show: true,
-            yAxisIndex: 0,
-            filterMode: 'empty',
-            width: 30,
-            height: '80%',
-            showDataShadow: false,
-            left: '93%'
+            start: 0,
+            end: 100
+          },
+          {
+            type: 'inside',
+            start: 0,
+            end: 100
           }
         ]
       }
