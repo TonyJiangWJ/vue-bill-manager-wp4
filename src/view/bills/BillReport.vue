@@ -98,42 +98,42 @@ export default {
       }
       return (dataList.reduce((a, b) => (a = a + b)) / dataList.length).toFixed(2)
     },
-    loadReportData: function() {
-      API.loadMonthlyReport({
-        startMonth: this.startMonth,
-        endMonth: this.endMonth
-      }).then(response => {
-        if (response.code === API.CODE_CONST.SUCCESS) {
-          this.reportList = response.reportList
-          this.initEcharts()
-        }
-      })
+    getSum: function(dataList) {
+      if (!dataList || dataList.length === 0) {
+        return 0
+      }
+      return dataList.reduce((a, b) => (a = a + b)).toFixed(2)
     },
-    initEcharts: function() {
-      this.$debug('初始化echarts')
-
-      if (!(this.reportList && this.reportList.length > 0)) {
+    getChartsOption: function(reportList, daily) {
+      if (!(reportList && reportList.length > 0)) {
         return
       }
-      let monthList = this.reportList.map(r => r.month)
-      let totalCostList = this.reportList.map(r => parseFloat(r.totalCost))
-      let totalIncomeList = this.reportList.map(r => parseFloat(r.totalIncome))
-      let totalCleanCostList = this.reportList.map(r => parseFloat(r.totalCostExceptDeletedAndHidden))
-      let totalCleanIncomeList = this.reportList.map(r => parseFloat(r.totalIncomeExceptDeletedAndHidden))
+      let monthList = reportList.map(r => r.month)
+      let totalCostList = reportList.map(r => parseFloat(r.totalCost))
+      let totalIncomeList = reportList.map(r => parseFloat(r.totalIncome))
+      let totalCleanCostList = reportList.map(r => parseFloat(r.totalCostExceptDeletedAndHidden))
+      let totalCleanIncomeList = reportList.map(r => parseFloat(r.totalIncomeExceptDeletedAndHidden))
       let avgTotalCost = this.getAvg(totalCostList)
       let avgTotalIncome = this.getAvg(totalIncomeList)
       let avgCleanCost = this.getAvg(totalCleanCostList)
       let avgCleanIncome = this.getAvg(totalCleanIncomeList)
-      this.$debug('平均总支出：' + avgTotalCost)
-      if (this.charts === null) {
-        this.charts = echarts.init(document.getElementById('charts'))
-      }
+      let totalCleanCost = this.getSum(totalCleanCostList)
+      let totalCleanIncome = this.getSum(totalCleanIncomeList)
+      this.$debug('平均总支出：' + avgTotalCost + ' 净收入：' + totalCleanIncome + ' 净支出：' + totalCleanCost)
+
       var option = {
         tooltip: {
           trigger: 'axis'
         },
         legend: {
-          data: ['总支出', '总收入', '净支出', '净收入', '平均总支出', '平均总收入', '平均净支出', '平均净收入']
+          data: ['总支出', '总收入', '净支出', '净收入', '平均总支出', '平均总收入', '平均净支出', '平均净收入', '收支占比'],
+          selected: {
+            '总支出': false,
+            '总收入': false,
+            '平均总支出': false,
+            '平均总收入': false,
+            '收支占比': false,
+          }
         },
         grid: {
           left: '3%',
@@ -158,17 +158,17 @@ export default {
         series: [
           {
             name: '总支出',
-            type: 'line',
+            type: daily ? 'bar' : 'line',
             data: totalCostList
           },
           {
             name: '总收入',
-            type: 'line',
+            type: daily ? 'bar' : 'line',
             data: totalIncomeList
           },
           {
             name: '净支出',
-            type: 'line',
+            type: daily ? 'bar' : 'line',
             data: totalCleanCostList,
             itemStyle: {
               normal: {
@@ -181,7 +181,7 @@ export default {
           },
           {
             name: '净收入',
-            type: 'line',
+            type: daily ? 'bar' : 'line',
             data: totalCleanIncomeList,
             itemStyle: {
               normal: {
@@ -231,70 +231,42 @@ export default {
               }
             },
             data: new Array(monthList.length).fill(avgCleanIncome)
+          },
+          {
+            name: '收支占比',
+            show: false,
+            type: 'pie',
+            center: ['75%', '35%'],
+            radius: '28%',
+            z: 100,
+            tooltip: {
+              show: false
+            },
+            data: [
+              {
+                name: '净收入',
+                value: totalCleanIncome,
+                label: {
+                  show: true,
+                  position: 'inside',
+                  formatter: '{b}: {c}元 {d}%'
+                }
+              },
+              {
+                name: '净支出',
+                value: totalCleanCost,
+                label: {
+                  show: true,
+                  position: 'inside',
+                  formatter: '{b}: {c}元 {d}%'
+                }
+              }
+            ]
           }
         ]
       }
-      this.charts.setOption(option)
-      this.charts.resize()
-    },
-    loadDailyReportData: function() {
-      API.loadDailyReport({
-        startDate: this.dateFormat(this.startDate, 'yyyy-MM-dd'),
-        endDate: this.dateFormat(this.endDate, 'yyyy-MM-dd')
-      }).then(response => {
-        if (response.code === API.CODE_CONST.SUCCESS) {
-          this.dailyReportList = response.reportList
-          this.initDailyEcharts()
-        }
-      })
-    },
-    initDailyEcharts: function() {
-      this.$debug('初始化echarts')
-
-      if (!(this.dailyReportList && this.dailyReportList.length > 0)) {
-        return
-      }
-      let monthList = this.dailyReportList.map(r => r.month)
-      let totalCostList = this.dailyReportList.map(r => parseFloat(r.totalCost))
-      let totalIncomeList = this.dailyReportList.map(r => parseFloat(r.totalIncome))
-      let totalCleanCostList = this.dailyReportList.map(r => parseFloat(r.totalCostExceptDeletedAndHidden))
-      let totalCleanIncomeList = this.dailyReportList.map(r => parseFloat(r.totalIncomeExceptDeletedAndHidden))
-      let avgTotalCost = this.getAvg(totalCostList)
-      let avgTotalIncome = this.getAvg(totalIncomeList)
-      let avgCleanCost = this.getAvg(totalCleanCostList)
-      let avgCleanIncome = this.getAvg(totalCleanIncomeList)
-      this.$debug('平均总支出：' + avgTotalCost)
-      if (this.dailyCharts === null) {
-        this.dailyCharts = echarts.init(document.getElementById('daily-charts'))
-      }
-      var option = {
-        tooltip: {
-          trigger: 'axis'
-        },
-        legend: {
-          data: ['总支出', '总收入', '净支出', '净收入', '平均总支出', '平均总收入', '平均净支出', '平均净收入']
-        },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          top: '15%',
-          containLabel: true
-        },
-        toolbox: {
-          feature: {
-            saveAsImage: {}
-          }
-        },
-        xAxis: {
-          type: 'category',
-          boundaryGap: true,
-          data: monthList
-        },
-        yAxis: {
-          type: 'value'
-        },
-        dataZoom: [
+      if (daily) {
+        option.dataZoom = [
           {
             show: true,
             start: 24,
@@ -314,79 +286,56 @@ export default {
             showDataShadow: false,
             left: '93%'
           }
-        ],
-        series: [
-          {
-            name: '总支出',
-            type: 'bar',
-            data: totalCostList
-          },
-          {
-            name: '总收入',
-            type: 'bar',
-            data: totalIncomeList
-          },
-          {
-            name: '净支出',
-            type: 'bar',
-            data: totalCleanCostList,
-            itemStyle: {
-              normal: {
-                label: {
-                  show: true,
-                  position: 'top'
-                }
-              }
-            }
-          },
-          {
-            name: '净收入',
-            type: 'bar',
-            data: totalCleanIncomeList
-          },
-          {
-            name: '平均总支出',
-            type: 'line',
-            lineStyle: {
-              normal: {
-                type: 'dashed'
-              }
-            },
-            data: new Array(monthList.length).fill(avgTotalCost)
-          },
-          {
-            name: '平均总收入',
-            type: 'line',
-            lineStyle: {
-              normal: {
-                type: 'dashed'
-              }
-            },
-            data: new Array(monthList.length).fill(avgTotalIncome)
-          },
-          {
-            name: '平均净支出',
-            type: 'line',
-            lineStyle: {
-              normal: {
-                type: 'dashed'
-              }
-            },
-            data: new Array(monthList.length).fill(avgCleanCost)
-          },
-          {
-            name: '平均净收入',
-            type: 'line',
-            lineStyle: {
-              normal: {
-                type: 'dashed'
-              }
-            },
-            data: new Array(monthList.length).fill(avgCleanIncome)
-          }
         ]
       }
-      this.dailyCharts.setOption(option)
+      return option
+    },
+    loadReportData: function() {
+      API.loadMonthlyReport({
+        startMonth: this.startMonth,
+        endMonth: this.endMonth
+      }).then(response => {
+        if (response.code === API.CODE_CONST.SUCCESS) {
+          this.reportList = response.reportList
+          this.initEcharts()
+        }
+      })
+    },
+    initEcharts: function() {
+      this.$debug('初始化echarts')
+
+      if (!(this.reportList && this.reportList.length > 0)) {
+        return
+      }
+
+      if (this.charts === null) {
+        this.charts = echarts.init(document.getElementById('charts'))
+      }
+
+      this.charts.setOption(this.getChartsOption(this.reportList))
+      this.charts.resize()
+    },
+    loadDailyReportData: function() {
+      API.loadDailyReport({
+        startDate: this.dateFormat(this.startDate, 'yyyy-MM-dd'),
+        endDate: this.dateFormat(this.endDate, 'yyyy-MM-dd')
+      }).then(response => {
+        if (response.code === API.CODE_CONST.SUCCESS) {
+          this.dailyReportList = response.reportList
+          this.initDailyEcharts()
+        }
+      })
+    },
+    initDailyEcharts: function() {
+      this.$debug('初始化echarts')
+
+      if (!(this.dailyReportList && this.dailyReportList.length > 0)) {
+        return
+      }
+      if (this.dailyCharts === null) {
+        this.dailyCharts = echarts.init(document.getElementById('daily-charts'))
+      }
+      this.dailyCharts.setOption(this.getChartsOption(this.dailyReportList, true))
       this.dailyCharts.resize()
     }
   },
