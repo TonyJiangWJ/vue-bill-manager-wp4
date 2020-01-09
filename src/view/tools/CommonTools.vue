@@ -1,3 +1,10 @@
+<!--
+ * @Author: TonyJiangWJ
+ * @Date: 2019-12-25 18:43:15
+ * @Last Modified by: TonyJiangWJ
+ * @Last Modified time: 2020-01-09 15:39:31
+ * @Description: 
+ -->
 <template>
   <div>
     <Row>
@@ -98,6 +105,9 @@
       <i-col span="8">
         <Input type="text" v-model="md5source" placeholder="明文" />
       </i-col>
+      <i-col span="8">
+        <Button type="primary" @click="encodeMd5">加密</Button>
+      </i-col>
     </Row>
     <Row>
       <i-col span="8" offset="8">
@@ -129,6 +139,29 @@
     </Row>
     <Divider />
     <Row>
+      <i-col span="8">AES加密</i-col>
+      <i-col span="8">
+        <Input type="textarea" :rows="2" placeholder="请输入AES秘钥" v-model="aesKey" />
+      </i-col>
+    </Row>
+    <Row>
+      <i-col span="8" offset="8">
+        <Input type="textarea" :rows="6" placeholder="明文" v-model="aesDecryptContent" />
+      </i-col>
+      <i-col span="8">
+        <Button @click="doAesEncrypt" type="primary">加密</Button>
+      </i-col>
+    </Row>
+    <Row>
+      <i-col span="8" offset="8">
+        <Input type="textarea" :rows="6" placeholder="密文" v-model="aesEncryptContent" />
+      </i-col>
+      <i-col span="8">
+        <Button @click="doAesDecrypt" type="primary">解密</Button>
+      </i-col>
+    </Row>
+    <Divider />
+    <Row>
       <i-col span="8">RSA加密</i-col>
       <i-col span="8">
         <Input type="textarea" :rows="4" placeholder="publicKey" v-model="publicKey" />
@@ -144,7 +177,7 @@
     </Row>
     <Row>
       <i-col span="8" offset="8">
-        <Input type="textarea" :rows="6" placeholder="明文" v-model="rsaDecryptContent" />
+        <Input type="textarea" :rows="6" placeholder="明文，最大长度117位" v-model="rsaDecryptContent" :maxlength="117" />
       </i-col>
       <i-col span="8">
         <Button @click="pubEncryptRsa" type="primary">公钥加密</Button>
@@ -156,6 +189,15 @@
       </i-col>
       <i-col span="8">
         <Button @click="priDecryptRsa" type="primary">私钥解密</Button>
+      </i-col>
+    </Row>
+    <Row>
+      <i-col span="8" offset="8">
+        <Input type="textarea" :rows="3" placeholder="签名" v-model="rsaSignature" />
+      </i-col>
+      <i-col span="8">
+        <Button @click="doRsaSign" type="primary" size="small" class="v-btn">生成签名</Button>
+        <Button @click="doVerifyRsaSign" type="primary" size="small" class="v-btn">验证签名</Button>
       </i-col>
     </Row>
     <Divider />
@@ -183,6 +225,7 @@
 import { Base64 } from 'js-base64'
 import { md5 } from 'md5js'
 import JSEncrypt from 'jsencrypt'
+import CryptoJS from 'crypto-js'
 
 export default {
   name: 'CommonTools',
@@ -207,9 +250,13 @@ export default {
       privateKey: '',
       rsaEncryptContent: '',
       rsaDecryptContent: '',
+      rsaSignature: '',
       srcStr: '',
       destStr: '',
-      nowDateTime: this.dateFormat(new Date(), 'yyyy-MM-dd HH:mm:ss')
+      nowDateTime: this.dateFormat(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+      aesKey: '',
+      aesEncryptContent: '',
+      aesDecryptContent: ''
     }
   },
   methods: {
@@ -277,6 +324,36 @@ export default {
       this.md5_32 = md5(source, 32)
       this.md5_16 = md5(source)
     },
+    doAesEncrypt: function() {
+      let aesEncrypt = CryptoJS.AES.encrypt('this.decryptedStr', '123456')
+      this.$debug('test encrypt:' + aesEncrypt)
+      if (this.$isNotEmpty(this.aesKey)) {
+        if (this.$isNotEmpty(this.aesDecryptContent)) {
+          // debugger
+          this.$debug('明文：' + this.aesDecryptContent + ' 秘钥：' + this.aesKey)
+          this.aesEncryptContent = CryptoJS.AES.encrypt(this.aesDecryptContent, this.aesKey).toString()
+        } else {
+          this.$Message.error('请输入明文信息')
+        }
+      } else {
+        this.$Message.error('请输入AES秘钥')
+      }
+    },
+    doAesDecrypt: function() {
+      if (this.$isNotEmpty(this.aesKey)) {
+        if (this.$isNotEmpty(this.aesEncryptContent)) {
+          try {
+            this.aesDecryptContent = CryptoJS.AES.decrypt(this.aesEncryptContent, this.aesKey).toString(CryptoJS.enc.Utf8)
+          } catch (e) {
+            this.$Message.error('秘钥不正确')
+          }
+        } else {
+          this.$Message.error('请输入密文信息')
+        }
+      } else {
+        this.$Message.error('请输入AES秘钥')
+      }
+    },
     generateRsaKeys: function() {
       var encrypt = new JSEncrypt()
       this.publicKey = encrypt.getPublicKey()
@@ -284,13 +361,69 @@ export default {
     },
     pubEncryptRsa: function() {
       var encrypt = new JSEncrypt()
+      if (!this.$isNotEmpty(this.publicKey)) {
+        this.$Message.error('请先生成或输入公钥')
+        return
+      }
       encrypt.setPublicKey(this.publicKey)
+      if (!this.$isNotEmpty(this.rsaDecryptContent)) {
+        this.$Message.error('请先生输入明文')
+        return
+      }
       this.rsaEncryptContent = encrypt.encrypt(this.rsaDecryptContent)
     },
     priDecryptRsa: function() {
       var encrypt = new JSEncrypt()
+      if (!this.$isNotEmpty(this.privateKey)) {
+        this.$Message.error('请先生成或输入私钥')
+        return
+      }
       encrypt.setPrivateKey(this.privateKey)
+      if (!this.$isNotEmpty(this.rsaEncryptContent)) {
+        this.$Message.error('请先生输入密文')
+        return
+      }
       this.rsaDecryptContent = encrypt.decrypt(this.rsaEncryptContent)
+    },
+    doRsaSign: function () {
+      if (!this.$isNotEmpty(this.rsaEncryptContent)) {
+        this.$Message.error('请生成或输入密文')
+        return
+      }
+      if (!this.$isNotEmpty(this.privateKey)) {
+        this.$Message.error('请输入私钥或生成私钥')
+        return
+      }
+      this.rsaSignature = this.signature(this.rsaEncryptContent)
+    },
+    doVerifyRsaSign: function () {
+      if (!this.$isNotEmpty(this.rsaEncryptContent)) {
+        this.$Message.error('请输入密文')
+        return
+      }
+      if (!this.$isNotEmpty(this.rsaSignature)) {
+        this.$Message.error('请输入签名')
+        return
+      }
+      if (!this.$isNotEmpty(this.publicKey)) {
+        this.$Message.error('请输入公钥或生成公钥')
+        return
+      }
+      if(this.verify(this.rsaEncryptContent, this.rsaSignature)) {
+        this.$Message.success('验证成功')
+      } else {
+        this.$Message.error('验证失败')
+      }
+    },
+    signature: function(content) {
+      let sign = new JSEncrypt()
+      sign.setPrivateKey(this.privateKey)
+      return sign.sign(content, CryptoJS.SHA256, 'sha256')
+    },
+    verify: function(content, signature) {
+      let verify = new JSEncrypt()
+      verify.setPublicKey(this.publicKey)
+      return verify.verify(content, signature, CryptoJS.SHA256)
     },
     escapeForCN: function() {
       var src = this.srcStr

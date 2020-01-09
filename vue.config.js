@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-01-07 10:30:17
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-01-07 18:15:20
+ * @Last Modified time: 2020-01-09 15:43:33
  * @Description: 
  */
 
@@ -19,6 +19,7 @@ const cdn = {
     'https://cdn.jsdelivr.net/npm/echarts@4.6.0/dist/echarts.common.min.js',
     'https://cdn.jsdelivr.net/npm/iview@3.5.4/dist/iview.min.js',
     'https://cdn.jsdelivr.net/npm/jsencrypt@3.0.0-rc.1/bin/jsencrypt.min.js',
+    'https://cdn.jsdelivr.net/npm/crypto-js@3.1.9-1/crypto-js.js',
   ]
 }
 
@@ -60,12 +61,17 @@ module.exports = {
         'axios': 'axios',
         'iview': 'iview',
         'jsencrypt': 'JSEncrypt',
-        'echarts': 'echarts'
+        'echarts': 'echarts',
+        'crypto-js': 'CryptoJS'
       }
     } else {
       // 为开发环境修改配置...
     }
   },
   // 生产环境是否生成 sourceMap 文件
-  productionSourceMap: false
+  productionSourceMap: false,
+  devServer: {
+    // eslint 蒙层
+    overlay: false
+  }
 }

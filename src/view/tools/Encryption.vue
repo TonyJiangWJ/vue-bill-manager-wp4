@@ -31,7 +31,20 @@
         <Input type="textarea" :rows="4" v-model="decryptedStr" placeholder="明文" />
       </i-col>
     </Row>
-    <Row justify="center" type="flex">
+    <Row justify="center" type="flex" align="middle">
+      <i-col span="8">
+        <Row justify="center" type="flex" align="middle">
+          <i-col>
+            <span>是否验证签名:</span>
+          </i-col>
+          <i-col>
+            <i-switch v-model="verifySignature">
+              <span slot="open">是</span>
+              <span slot="close">否</span>
+            </i-switch>
+          </i-col>
+        </Row>
+      </i-col>
       <i-col span="4">
         <Button @click="encrypt" type="primary">加密</Button>
       </i-col>
@@ -81,6 +94,7 @@
 
 <script>
 import JSEncrypt from 'jsencrypt'
+import CryptoJS from 'crypto-js'
 import ClipboardJS from 'clipboard'
 
 export default {
@@ -92,7 +106,8 @@ export default {
       targetPubKey: '',
       myPubKey: '',
       myPrivateKey: '',
-      privateKeyStatus: false
+      privateKeyStatus: false,
+      verifySignature: false
     }
   },
   methods: {
@@ -110,33 +125,52 @@ export default {
         this.myPrivateKey = encrypt.getPrivateKey()
       }
     },
+    messageError: function(content) {
+      this.$Message.error({
+        background: true,
+        content: content
+      })
+    },
+    generateRandomAesKey: function() {
+      return parseInt(Math.random(new Date().getTime()) * Math.pow(10, 16)).toString(16)
+    },
+    signature: function(content) {
+      let sign = new JSEncrypt()
+      sign.setPrivateKey(this.myPrivateKey)
+      return sign.sign(content, CryptoJS.SHA256, 'sha256')
+    },
+    verify: function(content, signature) {
+      let verify = new JSEncrypt()
+      verify.setPublicKey(this.targetPubKey)
+      return verify.verify(content, signature, CryptoJS.SHA256)
+    },
     encrypt: function() {
       this.$debug('加密')
       var encrypt = new JSEncrypt()
+      if (typeof this.decryptedStr === 'undefined' || this.decryptedStr === '') {
+        this.messageError('请输入明文再加密')
+        return
+      }
       if (this.targetPubKey) {
         encrypt.setPublicKey(this.targetPubKey)
 
-        var contents = this.decryptedStr
-        var contentArray = []
-        while (contents.length > 117) {
-          contentArray.push(contents.substring(0, 117))
-          contents = contents.substring(117)
-        }
-        if (contents.length > 0) {
-          contentArray.push(contents)
-        }
-        var result = ''
-        for (var i = 0; i < contentArray.length; i++) {
-          result += encrypt.encrypt(contentArray[i])
-          if (i < contentArray.length - 1) {
-            result += ';'
-          }
-        }
+        let aesKey = this.generateRandomAesKey()
+        let aesEncrypt = CryptoJS.AES.encrypt(this.decryptedStr, aesKey)
 
+        let encryptedAesKey = encrypt.encrypt(aesKey)
+        this.$debug('encrypt aes key length:' + encryptedAesKey.length)
+
+        let result = encryptedAesKey + aesEncrypt
+        if (this.verifySignature) {
+          let signature = this.signature(result)
+          this.$debug('sign for result: ' + signature)
+          this.$debug('signature length: ' + signature.length)
+          result = signature + result
+        }
         this.encryptedStr = result
         this.$debug('明文：' + this.decryptedStr + '结果：' + this.encryptedStr)
       } else {
-        alert('请输入对方的公钥')
+        this.messageError('请输入对方的公钥')
       }
     },
     decrypt: function() {
@@ -144,23 +178,43 @@ export default {
       if (this.myPrivateKey) {
         var encrypt = new JSEncrypt()
         encrypt.setPrivateKey(this.myPrivateKey)
-
-        var encryptContents = this.encryptedStr
-        var contentArray = encryptContents.split(';')
-        var result = ''
-        for (var i = 0; i < contentArray.length; i++) {
-          result += encrypt.decrypt(contentArray[i])
-          if (result === 'false') {
-            alert('请检查传递给对方的公钥是否正确')
+        let encryptedContent = this.encryptedStr
+        if (encryptedContent.length < 172) {
+          this.messageError('密文不正确')
+          return
+        }
+        if (this.verifySignature) {
+          if (encryptedContent.length < 172 * 2) {
+            this.messageError('密文不正确')
+            return
+          }
+          let signature = encryptedContent.substring(0, 172)
+          encryptedContent = encryptedContent.substring(172)
+          if (!this.verify(encryptedContent, signature)) {
+            this.messageError('签名不正确')
             return
           }
         }
-        this.decryptedStr = result
-        if (this.decryptedStr === false) {
-          alert('请检查传递给对方的公钥是否正确')
+
+        let encryptedAesKey = encryptedContent.substring(0, 172)
+        let aesKey = encrypt.decrypt(encryptedAesKey)
+        if (aesKey === 'false') {
+          this.messageError('请检查传递给对方的公钥是否正确')
+          return
+        }
+        encryptedContent = encryptedContent.substring(172)
+        try {
+          let result = CryptoJS.AES.decrypt(encryptedContent, aesKey).toString(CryptoJS.enc.Utf8)
+          this.decryptedStr = result
+        } catch (e) {
+          this.messageError('密文解密失败，请检查对方公钥是否正确以及双方是否开启签名')
+          return
+        }
+        if (!this.decryptedStr) {
+          this.messageError('请检查传递给对方的公钥是否正确')
         }
       } else {
-        alert('请先生成本地密钥对')
+        this.messageError('请先生成本地密钥对')
       }
     },
     togglePrivateKey: function() {
@@ -171,7 +225,7 @@ export default {
     var clipboard = new ClipboardJS('.clip-btn')
     let self = this
     clipboard.on('success', function() {
-      self.$debug('复制成功')
+      self.$Message.success('复制成功')
     })
   }
 }

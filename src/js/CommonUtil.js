@@ -32,5 +32,9 @@ export default {
       }
       return val.toFixed(2)
     }
+
+    Vue.prototype.$isNotEmpty = (val) => {
+      return typeof val !== 'undefined' && val !== null && val !== ''
+    }
   }
 }
