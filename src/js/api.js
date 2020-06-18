@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2019-08-15 16:52:56
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-01-06 21:42:11
+ * @Last Modified time: 2020-06-17 17:09:06
  * @Description: 
  */
 import axios from 'axios'
@@ -116,6 +116,12 @@ const API = {
   },
   toggleRecordDelete: (data) => {
     return sendAjax('/record/toggle/delete', data)
+  },
+  batchUpdateHide: data => {
+    return sendAjax('/record/batch/hide', data)
+  },
+  batchUpdateDelete: data => {
+    return sendAjax('/record/batch/delete', data)
   },
   /**
    * 加载账单标签

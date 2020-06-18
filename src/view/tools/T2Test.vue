@@ -76,7 +76,7 @@ export default {
       functionId: '',
       testServerUrl: '',
       defaultHost: '127.0.0.1',
-      checkFunction: '/common/cep?functionId=',
+      checkFunction: '/unittest/cep?cmdId=get&functionId=',
       showService: '/manager/cep?pluginId=jres.cepcore&commandName=queryProcServices',
       showConnection: '/manager/cep?pluginId=jres.t2channel&commandName=queryAllConnections',
       hostsHistoryList: [],
@@ -84,6 +84,12 @@ export default {
     }
   },
   methods: {
+    persistentHistory() {
+      localStorage.setItem(
+        't2_history',
+        JSON.stringify({ hosts: this.hostsHistoryList, ports: this.portHistoryList })
+      )
+    },
     pushHistory() {
       if (this.hostsHistoryList.indexOf(this.host) === -1) {
         this.hostsHistoryList.push(this.host)
@@ -91,6 +97,7 @@ export default {
       if (this.portHistoryList.indexOf(this.port) === -1) {
         this.portHistoryList.push(this.port)
       }
+      this.persistentHistory()
     },
     getAllConnect: function() {
       this.pushHistory()
@@ -106,7 +113,7 @@ export default {
     },
     checkFunc: function() {
       this.pushHistory()
-      this.testServerUrl = this.getHost() + this.port + this.checkFunction + this.funcId
+      this.testServerUrl = this.getHost() + this.port + this.checkFunction + this.functionId
     },
     refresh: function() {
       var target = this.testServerUrl
@@ -133,12 +140,22 @@ export default {
       if (index !== -1) {
         this.hostsHistoryList.splice(index, 1)
       }
+      this.persistentHistory()
     },
     removePort: function(port) {
       let index = this.portHistoryList.indexOf(port)
       if (index !== -1) {
         this.portHistoryList.splice(index, 1)
       }
+      this.persistentHistory()
+    }
+  },
+  created () {
+    let storedHistoryInfo = localStorage.getItem('t2_history')
+    if (storedHistoryInfo) {
+      storedHistoryInfo = JSON.parse(storedHistoryInfo)
+      this.hostsHistoryList = storedHistoryInfo.hosts
+      this.portHistoryList = storedHistoryInfo.ports
     }
   }
 }

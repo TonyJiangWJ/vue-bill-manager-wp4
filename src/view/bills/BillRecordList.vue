@@ -62,6 +62,14 @@
       <i-col>
         <Button size="small" type="primary" ghost @click="batchManageTags" :disabled="!haveSelectedItem" class="v-btn">批量设置标签</Button>
       </i-col>
+      <i-col>
+        <Button size="small" type="primary" ghost @click="batchDeleted" :disabled="!haveSelectedItem" class="v-btn">批量删除</Button>
+        <Button size="small" type="primary" ghost @click="batchUndeleted" :disabled="!haveSelectedItem" class="v-btn">批量取消删除</Button>
+      </i-col>
+      <i-col>
+        <Button size="small" type="primary" ghost @click="batchHidden" :disabled="!haveSelectedItem" class="v-btn">批量隐藏</Button>
+        <Button size="small" type="primary" ghost @click="batchShow" :disabled="!haveSelectedItem" class="v-btn">批量显示</Button>
+      </i-col>
     </Row>
   </div>
 </template>
@@ -83,7 +91,6 @@ export default {
   },
   data() {
     return {
-      haveSelectedItem: false,
       startDate: '',
       endDate: '',
       content: '',
@@ -249,9 +256,13 @@ export default {
       ]
     }
   },
+  computed: {
+    haveSelectedItem: function() {
+      return this.selectedCostIds !== 'undefined' && this.selectedCostIds.length > 0
+    }
+  },
   methods: {
     selectChanged: function() {
-      this.haveSelectedItem = this.checkHaveItemSelection()
       this.selectedCostIds = this.$refs.selection.getSelection().map(elem => elem.id)
     },
     checkHaveItemSelection: function() {
@@ -294,6 +305,68 @@ export default {
       } else {
         this.selectedCostIds = []
       }
+    },
+    executeBatchDelete: function (request) {
+      API.batchUpdateDelete(request).then(resp => {
+        if (resp.code === API.CODE_CONST.SUCCESS) {
+          this.$Message.success('修改成功')
+          this.query()
+        } else {
+          this.$Message.error('修改失败，' + resp.msg)
+        }
+      })
+    },
+    executeBatchHide: function (request) {
+      API.batchUpdateHide(request).then(resp => {
+        if (resp.code === API.CODE_CONST.SUCCESS) {
+          this.$Message.success('修改成功')
+          this.query()
+        } else {
+          this.$Message.error('修改失败，' + resp.msg)
+        }
+      })
+    },
+    confirmAndExecute: function(msg, execFunc) {
+      this.$Modal.confirm({
+        title: '警告',
+        content: '确定要' + msg + '吗?',
+        onOk: function() {
+          this.$debug('标记 ' + msg)
+          execFunc()
+        }
+      })
+    },
+    batchDeleted: function() {
+      this.confirmAndExecute('批量删除这些记录', () =>
+        this.executeBatchDelete({
+          costIds: this.selectedCostIds,
+          isDeleted: 1
+        })
+      )
+    },
+    batchUndeleted: function() {
+      this.confirmAndExecute('批量取消删除这些记录', () =>
+        this.executeBatchDelete({
+          costIds: this.selectedCostIds,
+          isDeleted: 0
+        })
+      )
+    },
+    batchHidden: function() {
+      this.confirmAndExecute('批量隐藏这些记录', () =>
+        this.executeBatchHide({
+          costIds: this.selectedCostIds,
+          isHidden: 1
+        })
+      )
+    },
+    batchShow: function() {
+      this.confirmAndExecute('批量显示这些记录', () =>
+        this.executeBatchHide({
+          costIds: this.selectedCostIds,
+          isHidden: 0
+        })
+      )
     },
     calSumAmount: function() {
       this.sumAmount = 0

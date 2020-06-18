@@ -334,7 +334,7 @@ export default {
       newInHandSalary: 0,
       balanceBetweenNewOld: 0,
       customProvidentPrecent: 12,
-      newTaxLadderTips: '',
+      newTaxLadderTips: '无需缴税',
       newTaxCurrentLadder: '',
       oldTaxLadderTips: '',
       oldTaxCurrentLadder: '',
@@ -377,11 +377,11 @@ export default {
       this.balanceBetweenNewOld = (this.newInHandSalary - this.inHandSalary).toFixed(2)
     },
     getPercent: function(subclass, total) {
-      return subclass !== 0 && total !== 0 ? ((subclass / total) * 100).toFixed(2) + '%' : null
+      return subclass !== 0 && total !== 0 ? ((subclass / total) * 100).toFixed(2) + '%' : '0%'
     },
     calTaxFee: function() {
       let taxAmount = this.forTax - this.taxPoint
-      this.taxFee = this.getTaxFeeByStep(taxAmount, oldTaxLadder)
+      this.taxFee = taxAmount > 0 ? this.getTaxFeeByStep(taxAmount, oldTaxLadder) : 0
     },
     getTaxFee: function(taxAmount, step, preStep, type) {
       if (preStep === null) {
@@ -406,7 +406,7 @@ export default {
     },
     calNewTaxFee: function() {
       let taxAmount = this.forTax - this.config.newTaxPoint
-      this.newTaxFee = this.getTaxFeeByStep(taxAmount, newTaxLadder)
+      this.newTaxFee = taxAmount > 0 ? this.getTaxFeeByStep(taxAmount, newTaxLadder) : 0
     },
     getTaxFeeByStep: function(taxAmount, taxLadder) {
       let taxFee = 0
@@ -434,6 +434,9 @@ export default {
       if (this.providentFundPoint > this.config.maxProvidnetFundPoint) {
         this.providentFundPoint = this.config.maxProvidnetFundPoint
       }
+    },
+    zeroIfNagative: function (value) {
+      return  value < 0 ? 0 : value
     }
   },
   computed: {
@@ -474,14 +477,14 @@ export default {
       return this.getPercent(this.forTax, this.beforeTax)
     },
     forTaxStr: function() {
-      return this.forTax === 0 ? null : this.forTax - this.config.newTaxPoint + '/' + (this.forTax - this.taxPoint)
+      return this.forTax <= 0 ? 0 : this.zeroIfNagative(this.forTax - this.config.newTaxPoint) + '/' + this.zeroIfNagative(this.forTax - this.taxPoint)
     },
     forTaxPercentStr: function() {
-      return this.forTax === 0
-        ? null
-        : this.getPercent(this.forTax - this.config.newTaxPoint, this.beforeTax) +
+      return this.forTax <= 0
+        ? 0
+        : this.getPercent(this.zeroIfNagative(this.forTax - this.config.newTaxPoint), this.beforeTax) +
             '/' +
-            this.getPercent(this.forTax - this.taxPoint, this.beforeTax)
+            this.getPercent(this.zeroIfNagative(this.forTax - this.taxPoint), this.beforeTax)
     }
   },
   watch: {

@@ -1,5 +1,5 @@
 export const hostDev = 'http://localhost:1310'
-export const hostRelease = 'http://47.110.40.234'
+export const hostRelease = 'http://tonyjiangwj.natapp1.cc'
 export const useBrowserHost = false
 export const pathDev = '/bootDemo'
 export const pathRelease = '/api/bootDemo'
