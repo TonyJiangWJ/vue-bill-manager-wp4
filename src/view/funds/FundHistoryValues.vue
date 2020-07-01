@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-06-28 21:54:55
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-01 15:42:57
+ * @Last Modified time: 2020-07-02 02:00:59
  * @Description: 
 --> 
 <template>
@@ -112,14 +112,15 @@ export default {
           type: 'expand',
           width: 50,
           render: (h, params) => {
+            let that = this
             return h(FundDetailsExpand, {
               props: {
                 fundCode: params.row.fundCode,
                 detailFunds: this.groupedDetailFunds[params.row.fundCode]
               },
               on: {
-                'reload-funds': function() {
-                  this.doQuery()
+                reloadFunds: function () {
+                  that.doQuery()
                 }
               }
             })

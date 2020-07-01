@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-07-01 14:37:43
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-01 16:10:27
+ * @Last Modified time: 2020-07-02 01:59:33
  * @Description: 
 --> 
 <template>
@@ -155,13 +155,14 @@ export default {
     },
     remove: function(row) {
       this.$debug('delete row info:' + JSON.stringify(row))
+      let that = this
       this.$Modal.confirm({
         title: '确定要删除：' + row.fundName + ' 吗？',
         onOk: function() {
           API.deleteFundInfo({ id: row.id }).then(resp => {
             if (resp.code === API.CODE_CONST.SUCCESS) {
               this.$Message.success('删除成功')
-              this.$emit('reload-funds')
+              that.$emit('reloadFunds')
             } else {
               this.$Message.error('删除失败 ' + resp.msg)
             }

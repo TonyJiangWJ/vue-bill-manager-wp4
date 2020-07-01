@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-06-29 22:01:55
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-02 01:03:58
+ * @Last Modified time: 2020-07-02 01:33:23
  * @Description: 
 --> 
 
@@ -114,8 +114,8 @@ export default {
         purchaseValue: this.purchaseValue,
         purchaseCost: this.purchaseCost,
         purchaseFee: this.purchaseFee,
-        purchaseDate: this.purchaseDate,
-        purchaseConfirmedDate: this.purchaseConfirmedDate
+        purchaseDate: this.dateFormat(this.purchaseDate, 'yyyy-MM-dd'),
+        purchaseConfirmedDate: this.dateFormat(this.purchaseConfirmedDate, 'yyyy-MM-dd')
       }).then(resp => {
         if (resp.code === API.CODE_CONST.SUCCESS) {
           this.$emit('reload-fund-info')
