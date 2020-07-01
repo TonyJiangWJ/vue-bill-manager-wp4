@@ -121,7 +121,7 @@ export default {
       let totalCleanIncome = this.getSum(totalCleanIncomeList)
       this.$debug('平均总支出：' + avgTotalCost + ' 净收入：' + totalCleanIncome + ' 净支出：' + totalCleanCost)
 
-      var option = {
+      let option = {
         tooltip: {
           trigger: 'axis'
         },

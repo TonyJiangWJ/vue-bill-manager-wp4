@@ -25,6 +25,7 @@
         <MenuItem name="budgetManage">预算管理</MenuItem>
         <MenuItem name="assetList">资产列表</MenuItem>
         <MenuItem name="alipayUpload">支付宝账单上传</MenuItem>
+        <MenuItem name="fundHistory">基金估值</MenuItem>
       </MenuGroup>
       <MenuGroup title="用户">
         <MenuItem v-if="logined" name="logout">退出登录</MenuItem>
@@ -89,6 +90,8 @@ export default {
         this.$router.push('/assetList')
       } else if (name === 'alipayUpload') {
         this.$router.push('/bill/alipay/upload')
+      } else if (name === 'fundHistory') {
+        this.$router.push('/funds/history')
       } else if (name === 'logout') {
         this.logout()
       } else if (name === 'goLogin') {
@@ -96,14 +99,18 @@ export default {
       }
     },
     logout: function() {
-      if (confirm('确定退出登录吗?')) {
-        API.logout().then(resp => {
-          if (resp.code === API.CODE_CONST.SUCCESS) {
-            // window.localStorage.removeItem('logined')
-            this.$router.push('/login')
-          }
-        })
-      }
+      let that = this
+      this.$Modal.confirm({
+        title: '确定退出登录吗?',
+        onOk: function() {
+          API.logout().then(resp => {
+            if (resp.code === API.CODE_CONST.SUCCESS) {
+              // window.localStorage.removeItem('logined')
+              that.$router.push('/login')
+            }
+          })
+        }
+      })
     },
     goLogin: function() {
       this.$router.push('/login')

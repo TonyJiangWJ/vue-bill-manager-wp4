@@ -1,7 +1,7 @@
 export default {
   install (Vue) {
     Vue.prototype.dateFormat = function (date, fmt) {
-      var o = {
+      let o = {
         'M+': date.getMonth() + 1, // 月份
         'd+': date.getDate(), // 日
         'h+': date.getHours() % 12 === 0 ? 12 : date.getHours() % 12, // 小时
@@ -11,7 +11,7 @@ export default {
         'q+': Math.floor((date.getMonth() + 3) / 3), // 季度
         'S': date.getMilliseconds() // 毫秒
       }
-      var week = {
+      let week = {
         '0': '\u65e5',
         '1': '\u4e00',
         '2': '\u4e8c',
@@ -26,7 +26,7 @@ export default {
       if (/(E+)/.test(fmt)) {
         fmt = fmt.replace(RegExp.$1, ((RegExp.$1.length > 1) ? (RegExp.$1.length > 2 ? '\u661f\u671f' : '\u5468') : '') + week[date.getDay() + ''])
       }
-      for (var k in o) {
+      for (let k in o) {
         if (new RegExp('(' + k + ')').test(fmt)) {
           fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)))
         }

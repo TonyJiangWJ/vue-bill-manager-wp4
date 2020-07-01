@@ -38,16 +38,16 @@ export default {
   },
   methods: {
     convertSql: function() {
-      var source = this.sqlSourceStr
+      let source = this.sqlSourceStr
       try {
-        var sql = /.*Preparing.*:(.*)>?/
+        let sql = /.*Preparing.*:(.*)>?/
           .exec(source)[1]
           .trim()
           .replace(/\s+/g, ' ')
-        var params = /Parameters.*:\s*\[(.*)]/.exec(source)[1]
-        var paramsList = params.split(/,[\s]*/)
-        for (var i = 0; i < paramsList.length; i++) {
-          var param = paramsList[i]
+        let params = /Parameters.*:\s*\[(.*)]/.exec(source)[1]
+        let paramsList = params.split(/,[\s]*/)
+        for (let i = 0; i < paramsList.length; i++) {
+          let param = paramsList[i]
           sql = sql
             .replace(/\?/, "'" + param + "'")
             .replace(/limit.*'(\d+)',.*'(\d+)'/, 'limit $1, $2')
@@ -62,7 +62,7 @@ export default {
     }
   },
   mounted() {
-    var clipboard = new ClipboardJS('.clip-btn')
+    let clipboard = new ClipboardJS('.clip-btn')
 
     clipboard.on('success', function(e) {
       this.$log('Action:', e.action)

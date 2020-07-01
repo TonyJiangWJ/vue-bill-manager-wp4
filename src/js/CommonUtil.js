@@ -7,7 +7,8 @@ export default {
      * 检测并返回合法的数字值，保留两位小数
      * exp: 101a1,11b1.226.01 returns 101111.23
      */
-    Vue.prototype.$checkNumic = function (valStr) {
+    Vue.prototype.$checkNumic = function (valStr, fixedStep) {
+      fixedStep = isNaN(fixedStep) ? 2 : fixedStep
       if (typeof valStr === 'undefined' || valStr === null || valStr === '') {
         return ''
       }
@@ -30,7 +31,7 @@ export default {
         }
         debug('format val ' + val)
       }
-      return val.toFixed(2)
+      return val.toFixed(fixedStep)
     }
 
     Vue.prototype.$isNotEmpty = (val) => {

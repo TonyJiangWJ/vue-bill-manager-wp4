@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2019-08-15 16:52:56
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-06-17 17:09:06
+ * @Last Modified time: 2020-07-02 00:58:25
  * @Description: 
  */
 import axios from 'axios'
@@ -204,6 +204,21 @@ const API = {
   loadDailyReport: data => {
     return sendAjax('/daily/report/get', data)
   },
+  loadFundHistoryValues: data => {
+    return sendAjax('/fund/history/value/get', data)
+  },
+  loadFundChangeInfos: data => {
+    return sendAjax('/fund/changed/get', data)
+  },
+  addFundInfo: data => {
+    return sendAjax('/fund/info/put', data)
+  },
+  deleteFundInfo: data => {
+    return sendAjax('/fund/info/delete', data)
+  },
+  queryFundInfo: data => {
+    return sendAjax('/fund/info/query', data)
+  },
   /**
    * 登录
    */
@@ -273,9 +288,9 @@ export default API
  * @returns {string|*|PromiseLike<ArrayBuffer>}
  */
 function getRsaCipher (str, pubKey) {
-  var encrypt = new JSEncrypt()
+  let encrypt = new JSEncrypt()
   encrypt.setPublicKey(pubKey)
-  var timestamp = new Date().getTime()
+  let timestamp = new Date().getTime()
   return encrypt.encrypt(timestamp + str)
 }
 

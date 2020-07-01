@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     checkJson: function() {
-      var json = JSON.object
+      let json = JSON.object
       try {
         json = JSON.parse(this.sourceStr)
         this.targetStr = JSON.stringify(json, null, 4)

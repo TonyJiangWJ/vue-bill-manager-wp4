@@ -112,18 +112,24 @@ export default {
   },
   methods: {
     generateKeys: function() {
-      var flag = true
       if (this.myPrivateKey) {
-        if (!confirm('确定生成新的密钥对吗？此操作之后原先的加密内容将无法解密')) {
-          flag = false
-        }
+        let that = this
+        this.$Modal.confirm({
+          title: '确定生成新的密钥对吗？',
+          content: '此操作之后原先的加密内容将无法解密',
+          onOk: function() {
+            that.doGenerateKeys()
+          }
+        })
+      } else {
+        this.doGenerateKeys()
       }
-      if (flag) {
+    },
+    doGenerateKeys: function () {
         this.$debug('生成密钥对')
-        var encrypt = new JSEncrypt()
+        let encrypt = new JSEncrypt()
         this.myPubKey = encrypt.getPublicKey()
         this.myPrivateKey = encrypt.getPrivateKey()
-      }
     },
     messageError: function(content) {
       this.$Message.error({
@@ -146,7 +152,7 @@ export default {
     },
     encrypt: function() {
       this.$debug('加密')
-      var encrypt = new JSEncrypt()
+      let encrypt = new JSEncrypt()
       if (typeof this.decryptedStr === 'undefined' || this.decryptedStr === '') {
         this.messageError('请输入明文再加密')
         return
@@ -176,7 +182,7 @@ export default {
     decrypt: function() {
       this.$debug('解密')
       if (this.myPrivateKey) {
-        var encrypt = new JSEncrypt()
+        let encrypt = new JSEncrypt()
         encrypt.setPrivateKey(this.myPrivateKey)
         let encryptedContent = this.encryptedStr
         if (encryptedContent.length < 172) {
@@ -222,7 +228,7 @@ export default {
     }
   },
   mounted() {
-    var clipboard = new ClipboardJS('.clip-btn')
+    let clipboard = new ClipboardJS('.clip-btn')
     let self = this
     clipboard.on('success', function() {
       self.$Message.success('复制成功')

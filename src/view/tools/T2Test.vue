@@ -116,7 +116,7 @@ export default {
       this.testServerUrl = this.getHost() + this.port + this.checkFunction + this.functionId
     },
     refresh: function() {
-      var target = this.testServerUrl
+      let target = this.testServerUrl
       this.testServerUrl = ''
       setTimeout(function() {
         this.testServerUrl = target

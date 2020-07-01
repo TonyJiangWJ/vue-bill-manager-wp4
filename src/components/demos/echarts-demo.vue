@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2019-12-25 18:43:15
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-01-06 15:05:45
+ * @Last Modified time: 2020-07-01 11:04:53
  * @Description: 
  -->
 <template>
@@ -45,8 +45,8 @@ export default {
         let avgCleanCost = this.getAvg(totalCleanCostList)
         let avgCleanIncome = this.getAvg(totalCleanIncomeList)
         this.$debug('平均总支出：' + avgTotalCost)
-        var myChart = echarts.init(document.getElementById('demo-charts'))
-        var option = {
+        let myChart = echarts.init(document.getElementById('demo-charts'))
+        let option = {
           title: {
             text: '月度支出'
           },

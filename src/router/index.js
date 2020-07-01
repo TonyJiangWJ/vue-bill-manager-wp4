@@ -20,6 +20,7 @@ import BudgetManage from '@/view/bills/BudgetManage'
 import Login from '@/view/Login'
 import Register from '@/view/Register'
 import AssetTypes from '@/view/AssetTypes'
+import FundHistoryValues from '@/view/funds/FundHistoryValues'
 
 import TableDemo from '@/components/demos/TableDemo'
 import TableExpandDemo from '@/components/demos/TableExpandDemo'
@@ -111,6 +112,11 @@ const router = new Router({
         name: 'BudgetManage',
         component: BudgetManage
       }]
+    },
+    {
+      path: '/funds/history',
+      name: 'FundHistoryValues',
+      component: FundHistoryValues
     },
     {
       path: '/login',

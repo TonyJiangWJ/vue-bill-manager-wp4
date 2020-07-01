@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2019-10-24 16:57:17
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2019-12-25 16:48:02
+ * @Last Modified time: 2020-07-01 13:44:23
  * @Description: 
  -->
 <template>
@@ -18,10 +18,14 @@ export default {
   },
   props: {
     value: {
-      type: String
+      type: [String, Number]
     },
     placeholder: {
       type: String
+    },
+    fixed: {
+      type: Number,
+      default: 2
     }
   },
   data() {
@@ -36,7 +40,7 @@ export default {
   },
   methods: {
     checkAmount: function () {
-      this.innerValue = this.$checkNumic(this.innerValue)
+      this.innerValue = this.$checkNumic(this.innerValue, this.fixed)
       this.$emit('update-value', this.innerValue)
     }
   },

@@ -458,7 +458,7 @@ export default {
           this.$debug('请求成功')
           this.costRecordList = []
           if (typeof resp.costRecordList !== 'undefined' && resp.costRecordList.length > 0) {
-            for (var i = 0; i < resp.costRecordList.length; i++) {
+            for (let i = 0; i < resp.costRecordList.length; i++) {
               if (this.selectedCostIds && this.selectedCostIds.length > 0) {
                 let dataItem = new CostRecord(resp.costRecordList[i])
                 if (this.selectedCostIds.indexOf(dataItem.id) > -1) {

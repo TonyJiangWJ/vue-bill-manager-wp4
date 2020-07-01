@@ -261,7 +261,7 @@ export default {
   },
   methods: {
     ttString: function() {
-      var stamp = this.timestamp13
+      let stamp = this.timestamp13
       stamp = parseFloat(stamp)
       this.timeString = this.dateFormat(new Date(stamp), 'yyyy-MM-dd HH:mm:ss')
     },
@@ -278,18 +278,18 @@ export default {
       this.convertedStr = this.convertUtf8(this.unicodeStr)
     },
     convertUtf8: function(encodeStr) {
-      var regex = /(\\u)([\dabcdefABCDEF]{4})/
+      let regex = /(\\u)([\dabcdefABCDEF]{4})/
       while (regex.test(encodeStr)) {
-        var matchList = regex.exec(encodeStr)
-        var c = matchList[2]
-        var s = String.fromCharCode(parseInt(c, 16))
+        let matchList = regex.exec(encodeStr)
+        let c = matchList[2]
+        let s = String.fromCharCode(parseInt(c, 16))
         encodeStr = encodeStr.replace(regex, s)
       }
       return encodeStr
     },
     backUnicode: function() {
-      var simpleStr = escape(this.convertedStr)
-      var regex = /%(u[\dabcdefABCDEF]{4})/
+      let simpleStr = escape(this.convertedStr)
+      let regex = /%(u[\dabcdefABCDEF]{4})/
       while (regex.test(simpleStr)) {
         simpleStr = simpleStr.replace(regex, '\\$1')
       }
@@ -297,30 +297,30 @@ export default {
       this.unicodeStr = simpleStr
     },
     calDayBtw: function() {
-      var startDateStr = this.startDate
-      var endDateStr = this.endDate
-      var timeBetween = (new Date(endDateStr) - new Date(startDateStr)) / (3600 * 24 * 1000)
+      let startDateStr = this.startDate
+      let endDateStr = this.endDate
+      let timeBetween = (new Date(endDateStr) - new Date(startDateStr)) / (3600 * 24 * 1000)
       this.displayDays = '间隔时间：' + timeBetween
       this.daysBtw = timeBetween
     },
     calTargetDate: function() {
-      var startDate = new Date(this.startDate)
-      var days = this.daysBtw
-      var targetDate = new Date(startDate.getTime() + 3600 * 24 * 1000 * parseInt(days))
+      let startDate = new Date(this.startDate)
+      let days = this.daysBtw
+      let targetDate = new Date(startDate.getTime() + 3600 * 24 * 1000 * parseInt(days))
       this.endDate = this.dateFormat(new Date(targetDate), 'yyyy-MM-dd')
       this.endDateDisplay = this.dateFormat(new Date(targetDate), 'yyyy-MM-dd')
       this.displayDays = this.dateFormat(new Date(targetDate), 'yyyy-MM-dd EE')
     },
     encodeBase64: function() {
-      var encodeStr = Base64.encode(this.base64Source)
+      let encodeStr = Base64.encode(this.base64Source)
       this.encoded64 = encodeStr
     },
     decodeBase64: function() {
-      var decodeStr = Base64.decode(this.encoded64)
+      let decodeStr = Base64.decode(this.encoded64)
       this.base64Source = decodeStr
     },
     encodeMd5: function() {
-      var source = this.md5source
+      let source = this.md5source
       this.md5_32 = md5(source, 32)
       this.md5_16 = md5(source)
     },
@@ -355,12 +355,12 @@ export default {
       }
     },
     generateRsaKeys: function() {
-      var encrypt = new JSEncrypt()
+      let encrypt = new JSEncrypt()
       this.publicKey = encrypt.getPublicKey()
       this.privateKey = encrypt.getPrivateKey()
     },
     pubEncryptRsa: function() {
-      var encrypt = new JSEncrypt()
+      let encrypt = new JSEncrypt()
       if (!this.$isNotEmpty(this.publicKey)) {
         this.$Message.error('请先生成或输入公钥')
         return
@@ -373,7 +373,7 @@ export default {
       this.rsaEncryptContent = encrypt.encrypt(this.rsaDecryptContent)
     },
     priDecryptRsa: function() {
-      var encrypt = new JSEncrypt()
+      let encrypt = new JSEncrypt()
       if (!this.$isNotEmpty(this.privateKey)) {
         this.$Message.error('请先生成或输入私钥')
         return
@@ -426,15 +426,15 @@ export default {
       return verify.verify(content, signature, CryptoJS.SHA256)
     },
     escapeForCN: function() {
-      var src = this.srcStr
+      let src = this.srcStr
       this.destStr = src.replace(/\s/g, '')
     },
     escapeForEN: function() {
-      var src = this.srcStr
+      let src = this.srcStr
       this.destStr = src.replace(/(\n)|(\r\n)/g, '')
     },
     toggleMd32Case: function() {
-      var str = this.md5_32
+      let str = this.md5_32
       if (/[a-z]/.test(str)) {
         this.md5_32 = str.toUpperCase()
       } else {
@@ -442,7 +442,7 @@ export default {
       }
     },
     toggleMd16Case: function() {
-      var str = this.md5_16
+      let str = this.md5_16
       if (/[a-z]/.test(str)) {
         this.md5_16 = str.toUpperCase()
       } else {
@@ -450,13 +450,13 @@ export default {
       }
     },
     copyNowDateTime: function() {
-      var timeStr = this.nowDateTime
-      var time = new Date().getTime()
+      let timeStr = this.nowDateTime
+      let time = new Date().getTime()
       this.timeString = timeStr
       this.timestamp13 = time
     },
     intervalRefresh: function() {
-      var self = this
+      let self = this
       setInterval(function() {
         self.nowDateTime = self.dateFormat(new Date(), 'yyyy-MM-dd HH:mm:ss')
       }, 1000)
