@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-06-28 21:54:55
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-02 02:00:59
+ * @Last Modified time: 2020-07-08 03:42:13
  * @Description: 
 --> 
 <template>
@@ -14,6 +14,15 @@
       <i-col :xs="10" :sm="10" :md="10" :lg="8">
         <Button @click="clear" class="v-btn">清空</Button>
         <Button type="primary" @click="doQuery" class="v-btn">查询</Button>
+      </i-col>
+    </Row>
+    <Divider />
+    <Row v-if="fundHistoryResp && fundHistoryResp.length > 0">
+      <i-col :md="4" :xs="8">
+        <Button size="small" @click="showAllCharts" class="v-btn">显示所有线</Button>
+      </i-col>
+      <i-col :md="4" :xs="8">
+        <Button size="small" @click="hideAllCharts" class="v-btn">隐藏所有线</Button>
       </i-col>
     </Row>
     <Row style="margin-top: 1.2rem;">
@@ -50,22 +59,37 @@
       <i-col span="6" :class="parseFloat(summaryInfo.todayIncrease) > 0 ? 'green':'red'">{{summaryInfo.todayIncrease}}({{summaryInfo.todayIncreaseRate}}%)</i-col>
     </Row>
     <Divider />
-    <Row>
-      <i-col span="4">
+    <Row type="flex" justify="center" align="middle" class="mg-btm">
+      <i-col :md="4" :sm="8" :xs="8">
         <Button size="small" type="primary" ghost @click="showFundInfoAdder=true" class="v-btn">添加基金</Button>
       </i-col>
-      <i-col span="4">
-        <Button size="small" type="primary" ghost @click="showFundInfoImporter=true" class="v-btn">批量导入基金</Button>
+      <i-col :md="8" :sm="8" :xs="14">
+        <Tooltip placement="top">
+          <Icon type="ios-help-circle-outline" size="25" />
+          <div slot="content">
+            <p>[{</p>
+            <p>"fundCode": "基金编码",</p>
+            <p>"fundName": "基金名称",</p>
+            <p>"purchaseDate": "买入日期",</p>
+            <p>"confirmDate": "买入确认日期",</p>
+            <p>"purchaseValue": "买入单位净值",</p>
+            <p>"purchaseAmount": "买入份额",</p>
+            <p>"purchaseCost": "买入总支出",</p>
+            <p>"purchaseFee": "买入手续费"</p>
+            <p>}]</p>
+          </div>
+        </Tooltip>
+        <span style="margin-left:0.5rem;margin-bottom: 0.5rem;">批量导入基金:</span>
+        <i-switch style="margin-left:0.5rem;margin-bottom: 0.2rem;" v-model="showFundInfoImporter" />
       </i-col>
     </Row>
-    <Row>
-      <fund-import />
-    </Row>
-    <Table stripe border :columns="summaryFundsColumns" :data="summaryFunds"></Table>
+    <fund-import v-if="showFundInfoImporter" @reload-funds="doQuery" />
+    <fund-summary :summary-info="summaryInfo" :detail-funds="detailFunds" :summary-funds="summaryFunds" @reload-funds="doQuery" />
     <Divider />
-    <fund-any-can-sale :detail-funds="detailFunds" :fund-history-resp="fundHistoryResp" />
+    <fund-any-can-sale :detail-funds="detailFunds" :summary-funds="summaryFunds" @reload-funds="doQuery" :assessment-date="assessmentDate" />
 
-    <fund-info-adder v-model="showFundInfoAdder" @reload-fund-info="loadFundChanges" />
+    <fund-info-adder v-model="showFundInfoAdder" @reload-funds="doQuery" />
+    <fund-detail-edit-drawer @reload-funds="doQuery" />
   </div>
 </template>
 
@@ -75,16 +99,16 @@ import API from '@/js/api.js'
 import FundInfoAdder from '@/components/funds/FundInfoAdder'
 import FundImport from '@/components/funds/FundImport'
 import FundAnyCanSale from '@/components/funds/FundAnyCanSale'
-// eslint-disable-next-line
-import FundDetailsExpand from '@/components/funds/FundDetailsExpand'
+import FundSummary from '@/components/funds/FundSummary'
+import FundDetailEditDrawer from '@/components/funds/FundDetailEditDrawer'
 export default {
   name: 'FundHistoryValues',
   components: {
     FundInfoAdder,
     FundImport,
     FundAnyCanSale,
-    // eslint-disable-next-line
-    FundDetailsExpand
+    FundSummary,
+    FundDetailEditDrawer
   },
   data() {
     return {
@@ -94,6 +118,7 @@ export default {
       computedHeight: 800,
       fundHistoryResp: null,
       showFundInfoAdder: false,
+      showFundInfoImporter: false,
       summaryFunds: [],
       detailFunds: [],
       summaryInfo: {
@@ -106,103 +131,12 @@ export default {
         assessmentIncreaseRate: '',
         todayIncrease: '',
         todayIncreaseRate: ''
-      },
-      summaryFundsColumns: [
-        {
-          type: 'expand',
-          width: 50,
-          render: (h, params) => {
-            let that = this
-            return h(FundDetailsExpand, {
-              props: {
-                fundCode: params.row.fundCode,
-                detailFunds: this.groupedDetailFunds[params.row.fundCode]
-              },
-              on: {
-                reloadFunds: function () {
-                  that.doQuery()
-                }
-              }
-            })
-          }
-        },
-        {
-          title: '基金名称',
-          key: 'fundName'
-        },
-        {
-          title: '基金编码',
-          key: 'fundCode'
-        },
-        {
-          title: '持有总成本',
-          key: 'purchaseCost'
-        },
-        {
-          title: '持有份额',
-          key: 'purchaseAmount'
-        },
-        {
-          title: '确认增长',
-          key: 'confirmedIncrease',
-          render: (h, params) => {
-            return h(
-              'span',
-              {
-                class: parseFloat(params.row.confirmedIncrease) >= 0 ? 'green' : 'red'
-              },
-              params.row.confirmedIncrease + '(' + params.row.confirmedIncreaseRate + '%)'
-            )
-          }
-        },
-        {
-          title: '今日增长',
-          key: 'todayIncrease',
-          render: (h, params) => {
-            return h(
-              'span',
-              {
-                class: parseFloat(params.row.todayIncrease) >= 0 ? 'green' : 'red'
-              },
-              params.row.todayIncrease + '(' + params.row.todayIncreaseRate + '%)'
-            )
-          }
-        },
-        {
-          title: '估算增长',
-          key: 'assessmentIncrease',
-          render: (h, params) => {
-            return h(
-              'span',
-              {
-                class: parseFloat(params.row.assessmentIncrease) >= 0 ? 'green' : 'red'
-              },
-              params.row.assessmentIncrease + '(' + params.row.assessmentIncreaseRate + '%)'
-            )
-          }
-        }
-      ]
-    }
-  },
-  computed: {
-    groupedDetailFunds: function() {
-      if (this.detailFunds && this.detailFunds.length > 0) {
-        let groupedFunds = {}
-        this.detailFunds.forEach(fund => {
-          let { fundCode } = fund
-          let { [fundCode]: groupList = [] } = groupedFunds
-          groupList.push(fund)
-          groupedFunds[fundCode] = groupList
-        })
-        return groupedFunds
-      } else {
-        return {}
       }
     }
   },
   watch: {
     assessmentDateQuery: function(n) {
-      if (this.isDate(n)) {
+      if (this.$isDate(n)) {
         this.assessmentDate = this.dateFormat(n, 'yyyy-MM-dd')
       } else {
         this.assessmentDate = ''
@@ -210,9 +144,6 @@ export default {
     }
   },
   methods: {
-    isDate: function(val) {
-      return Object.prototype.toString.call(val) === '[object Date]'
-    },
     getChartsOption: function(fundHistoryResp) {
       let s = 0
       let minIdx = {},
@@ -235,6 +166,7 @@ export default {
       })
       this.$debug('minIdx:' + JSON.stringify(minIdx))
       this.$debug('maxIdx:' + JSON.stringify(maxIdx))
+      let width = document.documentElement.clientWidth
       let option = {
         dataZoom: [
           {
@@ -243,7 +175,7 @@ export default {
             start: 0,
             end: 100,
             xAxisIndex: [0],
-            bottom: '15%'
+            bottom: '10%'
           }
         ],
         title: {
@@ -253,12 +185,15 @@ export default {
           trigger: 'item'
         },
         legend: {
+          type: width >= 700 ? 'plain' : 'scroll',
+          pageIconSize: 30,
+          data: Object.keys(fundHistoryResp.increaseRateMapping),
           bottom: '2%'
         },
         grid: {
           left: '3%',
           right: '4%',
-          bottom: '20%',
+          bottom: '15%',
           containLabel: true
         },
         xAxis: {
@@ -378,33 +313,44 @@ export default {
       this.$el.charts.setOption(this.getChartsOption(this.fundHistoryResp))
       this.$el.charts.resize()
     },
-    remove: function(row) {
-      this.$debug('delete row info:' + JSON.stringify(row))
-      this.$Modal.confirm({
-        title: '确定要删除：' + row.fundName + ' 吗？',
-        onOk: function() {
-          API.deleteFundInfo({ id: row.id }).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
-              this.$Message.success('删除成功')
-              this.loadFundChanges()
-            } else {
-              this.$Message.error('删除失败 ' + resp.msg)
-            }
-          })
+    toggleCharts: function(show) {
+      if (this.$el.charts !== null) {
+        let option = this.getChartsOption(this.fundHistoryResp)
+        let attrs = this.$el.charts.getOption().legend[0].data
+        this.$debug('attrs: {}', JSON.stringify(attrs))
+        let obj = {}
+        for (var key in attrs) {
+          obj[attrs[key]] = show
         }
-      })
+        this.$debug('obj: {}', JSON.stringify(obj))
+        option.legend.selected = obj
+        this.$el.charts.setOption(option)
+      }
+    },
+    showAllCharts: function() {
+      this.toggleCharts(true)
+    },
+    hideAllCharts: function() {
+      this.toggleCharts(false)
     }
   },
   mounted() {
     this.$el.charts = null
     let that = this
     that.$debug('mounted')
-    that.loadData()
-    that.loadFundChanges()
+    that.doQuery()
     this.autoLoadInterval = setInterval(function() {
-      that.$debug('每一分钟定时轮询')
-      that.loadData()
-      that.loadFundChanges()
+      let currentTime = new Date()
+      if (
+        (currentTime.getHours() >= 9 && currentTime.getHours() <= 14) ||
+        (currentTime.getHours() === 15 && currentTime.getMinutes() <= 20)
+      ) {
+        that.$debug('每一分钟定时轮询')
+        that.doQuery()
+      } else {
+        that.$debug('超过定时轮询时间段，不执行轮询')
+        clearInterval(that.autoLoadInterval)
+      }
     }, 60000)
     window.onresize = function() {
       that.computedHeight = 800
@@ -415,10 +361,6 @@ export default {
       }
       that.$el.charts.resize()
     }
-    this.summaryFundsColumns.map(column => {
-      this.$set(column, 'minWidth', 150)
-      this.$set(column, 'align', 'center')
-    })
   },
   destroyed() {
     this.$debug('离开页面，准备关闭定时器：{}', this.autoLoadInterval)
@@ -435,5 +377,8 @@ export default {
 }
 .green {
   color: green !important;
+}
+.mg-btm {
+  margin-bottom: 0.5rem;
 }
 </style>

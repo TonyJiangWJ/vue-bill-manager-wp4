@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import iView from 'iview'
+import iView from 'view-design'
 // import HelloWorld from '@/view/HelloWorld'
 import Tools from '@/view/Tools'
 import T2Test from '@/view/tools/T2Test'

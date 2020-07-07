@@ -1,6 +1,10 @@
 export default {
   install (Vue) {
     Vue.prototype.dateFormat = function (date, fmt) {
+      fmt = fmt || 'yyyy-MM-dd HH:mm:ss'
+      if (Object.prototype.toString.call(date) !== '[object Date]') {
+        return date
+      }
       let o = {
         'M+': date.getMonth() + 1, // 月份
         'd+': date.getDate(), // 日

@@ -60,14 +60,14 @@ export default {
   },
   watch: {
     startMonthDate: function(n) {
-      if (this.isDate(n)) {
+      if (this.$isDate(n)) {
         this.startMonth = this.dateFormat(n, 'yyyy-MM')
       } else {
         this.startMonth = ''
       }
     },
     endMonthDate: function(n) {
-      if (this.isDate(n)) {
+      if (this.$isDate(n)) {
         this.endMonth = this.dateFormat(n, 'yyyy-MM')
       } else {
         this.endMonth = ''
@@ -75,9 +75,6 @@ export default {
     }
   },
   methods: {
-    isDate: function(val) {
-      return Object.prototype.toString.call(val) === '[object Date]'
-    },
     clear: function() {
       this.startMonthDate = ''
       this.endMonthDate = ''

@@ -2,60 +2,38 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-06-29 22:01:55
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-02 01:33:23
+ * @Last Modified time: 2020-07-08 01:57:04
  * @Description: 
 --> 
 
 <template>
-  <Modal v-model="innerShowAdderModal" title="添加基金信息" :width="380" @on-ok="doAddFundInfo">
-    <Row type="flex" justify="center">
-      <i-col span="10">基金代码</i-col>
-      <i-col span="10">
-        <Input v-model="fundCode" type="text" placeholder="基金代码" />
-      </i-col>
-    </Row>
-    <Row type="flex" justify="center">
-      <i-col span="10">基金名称</i-col>
-      <i-col span="10">
-        <Input v-model="fundName" type="text" placeholder="基金名称" />
-      </i-col>
-    </Row>
-    <Row type="flex" justify="center">
-      <i-col span="10">买入单位净值</i-col>
-      <i-col span="10">
-        <NumberInput v-model="purchaseValue" placeholder="买入单位净值" :fixed="4" />
-      </i-col>
-    </Row>
-    <Row type="flex" justify="center">
-      <i-col span="10">买入确认份额</i-col>
-      <i-col span="10">
-        <NumberInput v-model="purchaseAmount" placeholder="买入确认份额" :fixed="2" />
-      </i-col>
-    </Row>
-    <Row type="flex" justify="center">
-      <i-col span="10">买入总支出</i-col>
-      <i-col span="10">
-        <NumberInput v-model="purchaseCost" placeholder="买入总支出" />
-      </i-col>
-    </Row>
-    <Row type="flex" justify="center">
-      <i-col span="10">买入手续费</i-col>
-      <i-col span="10">
-        <NumberInput v-model="purchaseFee" placeholder="买入手续费" />
-      </i-col>
-    </Row>
-    <Row type="flex" justify="center">
-      <i-col span="10">买入日期</i-col>
-      <i-col span="10">
-        <DatePicker type="date" placeholder="买入日期" v-model="purchaseDate" style="width:100%" />
-      </i-col>
-    </Row>
-    <Row type="flex" justify="center">
-      <i-col span="10">买入确认日期</i-col>
-      <i-col span="10">
-        <DatePicker type="date" placeholder="买入确认日期" v-model="purchaseConfirmedDate" style="width:100%" />
-      </i-col>
-    </Row>
+  <Modal v-model="innerShowAdderModal" title="添加基金信息" :width="400" @on-ok="doAddFundInfo">
+    <Form ref="newRecord" :model="fundInfo" label-position="right" :label-width="120" :rules="ruleValidate">
+      <FormItem label="基金代码" prop="fundCode">
+        <Input v-model="fundInfo.fundCode" type="text" placeholder="基金代码" />
+      </FormItem>
+      <FormItem label="基金名称" prop="fundName">
+        <Input v-model="fundInfo.fundName" type="text" placeholder="基金名称" />
+      </FormItem>
+      <FormItem label="买入单位净值" prop="purchaseValue">
+        <NumberInput v-model="fundInfo.purchaseValue" placeholder="买入单位净值" :fixed="4" />
+      </FormItem>
+      <FormItem label="买入确认份额" prop="purchaseAmount">
+        <NumberInput v-model="fundInfo.purchaseAmount" placeholder="买入确认份额" :fixed="2" />
+      </FormItem>
+      <FormItem label="买入总支出" prop="purchaseCost">
+        <NumberInput v-model="fundInfo.purchaseCost" placeholder="买入总支出" />
+      </FormItem>
+      <FormItem label="买入手续费" prop="purchaseFee">
+        <NumberInput v-model="fundInfo.purchaseFee" placeholder="买入手续费" />
+      </FormItem>
+      <FormItem label="买入日期" prop="purchaseDate">
+        <DatePicker type="date" placeholder="买入日期" v-model="fundInfo.purchaseDate" style="width:100%" />
+      </FormItem>
+      <FormItem label="买入确认日期" prop="purchaseConfirmDate">
+        <DatePicker type="date" placeholder="买入确认日期" v-model="fundInfo.purchaseConfirmDate" style="width:100%" />
+      </FormItem>
+    </Form>
   </Modal>
 </template>
 
@@ -79,14 +57,42 @@ export default {
   },
   data() {
     return {
-      fundCode: '',
-      fundName: '',
-      purchaseValue: '',
-      purchaseAmount: '',
-      purchaseCost: '',
-      purchaseFee: '',
-      purchaseDate: '',
-      purchaseConfirmedDate: '',
+      fundInfo: {
+        fundCode: '',
+        fundName: '',
+        purchaseValue: '',
+        purchaseAmount: '',
+        purchaseCost: '',
+        purchaseFee: '',
+        purchaseDate: '',
+        purchaseConfirmDate: ''
+      },
+      ruleValidate: {
+        fundCode: {
+          required: true
+        },
+        fundName: {
+          required: true
+        },
+        purchaseValue: {
+          required: true
+        },
+        purchaseAmount: {
+          required: true
+        },
+        purchaseCost: {
+          required: true
+        },
+        purchaseFee: {
+          required: true
+        },
+        purchaseDate: {
+          required: true
+        },
+        purchaseConfirmDate: {
+          required: true
+        }
+      },
       innerShowAdderModal: this.value
     }
   },
@@ -98,30 +104,41 @@ export default {
       this.innerShowAdderModal = newVal
     },
     fundCode: function(newVal) {
-      API.queryFundInfo({ fundCode: newVal }).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
-          this.fundName = resp.fundName
-        }
-      })
+      if (newVal.length >= 6) {
+        API.queryFundInfo({ fundCode: newVal }).then(resp => {
+          if (resp.code === API.CODE_CONST.SUCCESS) {
+            this.fundInfo.fundName = resp.fundName
+          }
+        })
+      }
+    }
+  },
+  computed: {
+    fundCode: function () {
+      return this.fundInfo.fundCode
     }
   },
   methods: {
     doAddFundInfo: function() {
-      API.addFundInfo({
-        fundCode: this.fundCode,
-        fundName: this.fundName,
-        purchaseAmount: this.purchaseAmount,
-        purchaseValue: this.purchaseValue,
-        purchaseCost: this.purchaseCost,
-        purchaseFee: this.purchaseFee,
-        purchaseDate: this.dateFormat(this.purchaseDate, 'yyyy-MM-dd'),
-        purchaseConfirmedDate: this.dateFormat(this.purchaseConfirmedDate, 'yyyy-MM-dd')
-      }).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
-          this.$emit('reload-fund-info')
-          this.$Message.success('添加成功')
-        } else {
-          this.$Message.success('添加失败 ' + resp.msg)
+      this.$refs['newRecord'].validate(valid => {
+        if (valid) {
+          this.fundInfo.purchaseDate = this.dateFormat(this.fundInfo.purchaseDate, 'yyyy-MM-dd')
+          this.fundInfo.purchaseConfirmDate = this.dateFormat(this.fundInfo.purchaseConfirmDate, 'yyyy-MM-dd')
+          // TODO 校验是否已经存在
+          API.addFundInfo(this.fundInfo).then(resp => {
+            if (resp.code === API.CODE_CONST.SUCCESS) {
+              this.$emit('reload-funds')
+              this.$Message.success('添加成功')
+              this.fundInfo.purchaseValue = ''
+              this.fundInfo.purchaseAmount = ''
+              this.fundInfo.purchaseCost = ''
+              this.fundInfo.purchaseFee = ''
+              this.fundInfo.purchaseDate = ''
+              this.fundInfo.purchaseConfirmDate = ''
+            } else {
+              this.$Message.success('添加失败 ' + resp.msg)
+            }
+          })
         }
       })
     }

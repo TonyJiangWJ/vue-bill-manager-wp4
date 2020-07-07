@@ -156,7 +156,7 @@ export default {
           title: '创建时间',
           sortable: 'custom',
           key: 'createTime',
-          minWidth: 150
+          minWidth: 180
         },
         {
           title: '金额',

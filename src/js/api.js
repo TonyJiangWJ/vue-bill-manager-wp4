@@ -2,13 +2,13 @@
  * @Author: TonyJiangWJ
  * @Date: 2019-08-15 16:52:56
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-02 00:58:25
+ * @Last Modified time: 2020-07-07 01:49:56
  * @Description: 
  */
 import axios from 'axios'
 import qs from 'qs'
 import JSEncrypt from 'jsencrypt'
-import iView from 'iview'
+import iView from 'view-design'
 import {
   host,
   rsaPubKey,
@@ -219,6 +219,18 @@ const API = {
   queryFundInfo: data => {
     return sendAjax('/fund/info/query', data)
   },
+  updateFundInfo: data => {
+    return sendAjax('/fund/info/update', data)
+  },
+  preMarkAsSold: data => {
+    return sendAjax('/fund/pre/mark/as/sold', data)
+  },
+  checkAllFundsStatus: data => {
+    return sendAjax('/fund/check/all/status', data, { arrayFormat: 'indices', allowDots: true, encode: true })
+  },
+  batchAddFunds: data => {
+    return sendAjax('/fund/batch/add', data, { arrayFormat: 'indices', allowDots: true, encode: true })
+  },
   /**
    * 登录
    */
@@ -300,7 +312,8 @@ function errorLog (e) {
 }
 
 // 发送ajax请求
-function sendAjax (url, data) {
+function sendAjax (url, data, qsOption) {
+  qsOption = qsOption || {}
   debug('request data:' + JSON.stringify(data))
   iView.LoadingBar.start()
   let usingHost = host
@@ -312,7 +325,7 @@ function sendAjax (url, data) {
     }
     debug('使用当前路径host:' + usingHost)
   }
-  return axios.post(`${usingHost}${basePath}${url}`, qs.stringify(data))
+  return axios.post(`${usingHost}${basePath}${url}`, qs.stringify(data, qsOption))
     .then((response) => {
       if (response.data.code === API.CODE_CONST.NOT_LOGIN) {
         debug('未登录')

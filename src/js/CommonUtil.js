@@ -1,3 +1,10 @@
+/*
+ * @Author: TonyJiangWJ
+ * @Date: 2020-07-02 02:12:16
+ * @Last Modified by: TonyJiangWJ
+ * @Last Modified time: 2020-07-06 13:49:15
+ * @Description: 
+ */ 
 import { debug } from '@/js/LogUtil.js'
 
 export default {
@@ -36,6 +43,10 @@ export default {
 
     Vue.prototype.$isNotEmpty = (val) => {
       return typeof val !== 'undefined' && val !== null && val !== ''
+    }
+    // 判断是否是日期类型
+    Vue.prototype.$isDate = (val) => {
+      return Object.prototype.toString.call(val) === '[object Date]'
     }
   }
 }
