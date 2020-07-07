@@ -101,12 +101,12 @@
 /* eslint-disable */
     import tableHead from './table-head.vue';
     import tableBody from './table-body.vue';
-    import Spin from 'iview/src/components/spin/spin.vue';
-    import { oneOf, getStyle, deepCopy, getScrollBarSize } from 'iview/src/utils/assist';
-    import { on, off } from 'iview/src/utils/dom';
-    import Csv from 'iview/src/utils/csv';
+    import Spin from 'view-design/src/components/spin/spin.vue';
+    import { oneOf, getStyle, deepCopy, getScrollBarSize } from 'view-design/src/utils/assist';
+    import { on, off } from 'view-design/src/utils/dom';
+    import Csv from 'view-design/src/utils/csv';
     import ExportCsv from './export-csv';
-    import Locale from 'iview/src/mixins/locale';
+    import Locale from 'view-design/src/mixins/locale';
     import elementResizeDetectorMaker from 'element-resize-detector';
     import { getAllColumns, convertToRows, convertColumnOrder, getRandomStr } from './util';
 

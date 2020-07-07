@@ -30,9 +30,9 @@
 <script>
 /* eslint-disable */
     import TableExpand from './expand';
-    import Icon from 'iview/src/components/icon/icon.vue';
-    import Checkbox from 'iview/src/components/checkbox/checkbox.vue';
-    import Tooltip from 'iview/src/components/tooltip/tooltip.vue';
+    import Icon from 'view-design/src/components/icon/icon.vue';
+    import Checkbox from 'view-design/src/components/checkbox/checkbox.vue';
+    import Tooltip from 'view-design/src/components/tooltip/tooltip.vue';
 
     export default {
         name: 'TableCell',

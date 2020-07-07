@@ -70,13 +70,13 @@
 </template>
 <script>
 /* eslint-disable */
-    import CheckboxGroup from 'iview/src/components/checkbox/checkbox-group.vue';
-    import Checkbox from 'iview/src/components/checkbox/checkbox.vue';
-    import Poptip from 'iview/src/components/poptip/poptip.vue';
-    import iButton from 'iview/src/components/button/button.vue';
+    import CheckboxGroup from 'view-design/src/components/checkbox/checkbox-group.vue';
+    import Checkbox from 'view-design/src/components/checkbox/checkbox.vue';
+    import Poptip from 'view-design/src/components/poptip/poptip.vue';
+    import iButton from 'view-design/src/components/button/button.vue';
     import renderHeader from './header';
     import Mixin from './mixin';
-    import Locale from 'iview/src/mixins/locale';
+    import Locale from 'view-design/src/mixins/locale';
 
     export default {
         name: 'TableHead',

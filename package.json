@@ -14,7 +14,7 @@
     "core-js": "^2.6.11",
     "echarts": "^4.8.0",
     "eslint-plugin-html": "^4.0.5",
-    "iview": "^3.5.4",
+    "view-design": "^4.2.0",
     "jquery": "^3.5.1",
     "js-base64": "^2.5.2",
     "jsencrypt": "^3.0.0-beta.1",

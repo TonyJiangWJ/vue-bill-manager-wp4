@@ -2,24 +2,24 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-01-07 10:30:17
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-01-09 15:43:33
+ * @Last Modified time: 2020-07-03 14:33:12
  * @Description: 
  */
 
 const isProduction = process.env.NODE_ENV === 'production'
 const cdn = {
   css: [
-    'https://cdn.jsdelivr.net/npm/iview@3.5.4/dist/styles/iview.css'
+    'https://cdn.jsdelivr.net/npm/view-design@4.3.0-rc.4/dist/styles/iview.css'
   ],
   js: [
     'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js',
-    'https://cdn.jsdelivr.net/npm/vue-router@3.1.3/dist/vue-router.min.js',
-    'https://cdn.jsdelivr.net/npm/vuex@3.1.2/dist/vuex.min.js',
-    'https://cdn.jsdelivr.net/npm/axios@0.19.0/dist/axios.min.js',
-    'https://cdn.jsdelivr.net/npm/echarts@4.6.0/dist/echarts.common.min.js',
-    'https://cdn.jsdelivr.net/npm/iview@3.5.4/dist/iview.min.js',
+    'https://cdn.jsdelivr.net/npm/vue-router@3.3.4/dist/vue-router.min.js',
+    'https://cdn.jsdelivr.net/npm/vuex@3.4.0/dist/vuex.min.js',
+    'https://cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js',
+    'https://cdn.jsdelivr.net/npm/echarts@4.8.0/dist/echarts.common.min.js',
+    'https://cdn.jsdelivr.net/npm/view-design@4.2.0/dist/iview.min.js',
     'https://cdn.jsdelivr.net/npm/jsencrypt@3.0.0-rc.1/bin/jsencrypt.min.js',
-    'https://cdn.jsdelivr.net/npm/crypto-js@3.1.9-1/crypto-js.js',
+    'https://cdn.jsdelivr.net/npm/crypto-js@3.3.0/crypto-js.js',
   ]
 }
 
@@ -59,7 +59,7 @@ module.exports = {
         'vuex': 'Vuex',
         'vue-router': 'VueRouter',
         'axios': 'axios',
-        'iview': 'iview',
+        'view': 'view-design',
         'jsencrypt': 'JSEncrypt',
         'echarts': 'echarts',
         'crypto-js': 'CryptoJS'

@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { deepCopy } from 'iview/src/utils/assist'
+import { deepCopy } from 'view-design/src/utils/assist'
 
 const convertColumnOrder = (columns, fixedType) => {
   let list = []
