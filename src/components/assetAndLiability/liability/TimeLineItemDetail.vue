@@ -34,12 +34,8 @@
 
 <script>
 import API from '@/js/api'
-import NumberInput from '@/components/common/NumberInput'
 export default {
   name: 'TimeLineItemDetail',
-  components: {
-    NumberInput
-  },
   props: {
     liability: {}
   },

@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2019-10-24 16:57:17
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-01 13:44:23
+ * @Last Modified time: 2020-07-15 18:55:06
  * @Description: 
  -->
 <template>
@@ -26,6 +26,14 @@ export default {
     fixed: {
       type: Number,
       default: 2
+    },
+    formatter: {
+      type: Function,
+      default: val => val
+    },
+    parser: {
+      type: Function,
+      default: val => val
     }
   },
   data() {
@@ -35,13 +43,15 @@ export default {
   },
   watch: {
     value: function (newVal) {
-      this.innerValue = newVal
+      this.innerValue = this.formatter(newVal)
     }
   },
   methods: {
     checkAmount: function () {
-      this.innerValue = this.$checkNumic(this.innerValue, this.fixed)
-      this.$emit('update-value', this.innerValue)
+      let tempVal = this.parser(this.innerValue)
+      tempVal = this.$checkNumic(tempVal, this.fixed)
+      this.$emit('update-value', tempVal)
+      this.innerValue = this.formatter(tempVal)
     }
   },
 }

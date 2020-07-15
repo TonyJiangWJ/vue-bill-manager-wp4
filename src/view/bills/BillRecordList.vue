@@ -80,7 +80,7 @@ import TagListContainer from '@/components/bills/TagListContainer.vue'
 import CostRecordAdder from '@/components/bills/billRecord/CostRecordAdder'
 import RecordDetailDrawer from '@/components/bills/billRecord/RecordDetailDrawer'
 import TagManage from '@/components/bills/billRecord/TagManage'
-import { CostRecord } from '@/js/CommonFunctions.js'
+import { CostRecord } from '@/js/CostRecord.js'
 
 export default {
   name: 'BillRecordList',

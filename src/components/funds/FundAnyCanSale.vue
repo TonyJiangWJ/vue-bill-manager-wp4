@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-06-30 09:36:32
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-07 16:30:22
+ * @Last Modified time: 2020-07-08 15:47:30
  * @Description: 
 --> 
 <template>
@@ -18,8 +18,16 @@
       <i-col :md="8" :xs="10">
         <Slider v-model="targetIncreaseRateProcess" :tip-format="format"></Slider>
       </i-col>
-      <i-col :md="4" :xs="6">
+      <i-col :md="3" :xs="5">
         <NumberInput :fixed="1" v-model="targetIncreaseRate" class="mg-left-1" />
+      </i-col>
+      <i-col span="1">
+        <Tooltip placement="top">
+          <Icon type="ios-flash" size="20" @click="refreshProcess" class="mg-top"/>
+          <div slot="content">
+            刷新精确输入数据到进度条，有可能会丢失精度
+          </div>
+        </Tooltip>
       </i-col>
     </Row>
     <Row class="padding2">
@@ -62,13 +70,9 @@
 
 <script>
 import API from '@/js/api.js'
-import NumberInput from '@/components/common/NumberInput'
 
 export default {
   name: 'FundAnyCanSale',
-  components: {
-    NumberInput
-  },
   props: {
     detailFunds: {
       type: Array,
@@ -180,6 +184,12 @@ export default {
           })
         }
       })
+    },
+    refreshProcess: function () {
+      let newPrecent = parseInt((this.targetIncreaseRate / 25.0 * 100).toFixed(0))
+      if (this.targetIncreaseRateProcess !== newPrecent) {
+        this.targetIncreaseRateProcess = newPrecent
+      }
     }
   },
   computed: {
@@ -263,12 +273,6 @@ export default {
     targetIncreaseRateProcess: function(n) {
       let newRate = ((25 * parseFloat(n)) / 100).toFixed(1)
       this.targetIncreaseRate = newRate
-    },
-    targetIncreaseRate: function (n) {
-      let newPrecent = parseInt((n / 25.0 * 100).toFixed(0))
-      if (this.targetIncreaseRateProcess !== newPrecent) {
-        this.targetIncreaseRateProcess = newPrecent
-      }
     }
   },
   filters: {

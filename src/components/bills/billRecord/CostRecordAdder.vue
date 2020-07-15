@@ -36,13 +36,9 @@
 <script>
 
 import API from '@/js/api.js'
-import NumberInput from '@/components/common/NumberInput.vue'
 
 export default {
   name: "CostRecordAdder",
-  components: {
-    NumberInput
-  },
   model: {
     prop: 'showAddModal',
     event: 'change'

@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2019-08-15 16:52:56
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-07 01:49:56
+ * @Last Modified time: 2020-07-15 00:44:28
  * @Description: 
  */
 import axios from 'axios'
@@ -230,6 +230,9 @@ const API = {
   },
   batchAddFunds: data => {
     return sendAjax('/fund/batch/add', data, { arrayFormat: 'indices', allowDots: true, encode: true })
+  },
+  preSalePortion: data => {
+    return sendAjax('/fund/pre/sale/portion', data)
   },
   /**
    * 登录

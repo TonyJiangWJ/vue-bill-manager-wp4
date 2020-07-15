@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-07-06 14:02:14
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-08 01:56:37
+ * @Last Modified time: 2020-07-15 19:09:43
  * @Description: 
 --> 
 <template>
@@ -65,6 +65,12 @@
           <i-col>
             <Button class="gap-5" type="error" @click="handleDelete">删除</Button>
           </i-col>
+          <i-col>
+            <Button class="gap-5" type="warning" @click="handlePreSale">预标记卖出</Button>
+          </i-col>
+          <i-col>
+            <Button class="gap-5" type="success" @click="handleSold">标记已卖出</Button>
+          </i-col>
         </Row>
       </i-col>
     </Row>
@@ -72,12 +78,8 @@
 </template>
 <script>
 import API from '@/js/api.js'
-import NumberInput from '@/components/common/NumberInput'
 export default {
   name: 'FundDetailEditDrawer',
-  components: {
-    NumberInput
-  },
   data() {
     return {
       innerShow: false,
@@ -98,9 +100,9 @@ export default {
   watch: {
     innerShow: function(n) {
       if (n === true) {
-        this.$store.commit('fundManager/showDrawer')
+        this.$store.commit('fundManager/showEditDrawer')
       } else {
-        this.$store.commit('fundManager/hideDrawer')
+        this.$store.commit('fundManager/hideEditDrawer')
       }
     },
     storeShowDrawer: function(n) {
@@ -154,7 +156,18 @@ export default {
           `<tr><th>基金买入支出:</th><td>${this.fundInfo.purchaseCost}</td></tr>` +
           `<tr><th>基金买入手续费:</th><td>${this.fundInfo.purchaseFee}</td></tr></table>`,
         onOk: function() {
-          API.updateFundInfo(that.fundInfo).then(resp => {
+          API.updateFundInfo({
+            id: that.fundInfo.id,
+            fundName: that.fundInfo.fundName,
+            fundCode: that.fundInfo.fundCode,
+            purchaseDate: that.fundInfo.purchaseDate,
+            purchaseConfirmDate: that.fundInfo.purchaseConfirmDate,
+            purchaseCost: that.fundInfo.purchaseCost,
+            purchaseAmount: that.fundInfo.purchaseAmount,
+            purchaseValue: that.fundInfo.fundPurchaseValue,
+            purchaseFee: that.fundInfo.purchaseFee,
+            version: that.fundInfo.version
+          }).then(resp => {
             if (resp && resp.code === API.CODE_CONST.SUCCESS) {
               that.$Message.success('修改成功')
               that.$emit('reload-funds')
@@ -185,6 +198,12 @@ export default {
           })
         }
       })
+    },
+    handlePreSale: function () {
+      this.$store.commit('fundManager/showPreSaleDrawer')
+    },
+    handleSold: function () {
+      // this.$store.commit('fundManager/showPreSaleDrawer')
     }
   }
 }

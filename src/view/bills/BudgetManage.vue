@@ -107,12 +107,8 @@
 
 <script>
 import API from '@/js/api.js'
-import NumberInput from '@/components/common/NumberInput'
 export default {
   name: 'BudgetManage',
-  components: {
-    NumberInput
-  },
   data() {
     return {
       budget: {},

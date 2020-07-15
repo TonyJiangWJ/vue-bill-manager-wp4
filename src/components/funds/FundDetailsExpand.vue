@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-07-01 14:37:43
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-06 15:53:14
+ * @Last Modified time: 2020-07-15 00:40:39
  * @Description: 
 --> 
 <template>
@@ -22,6 +22,10 @@ export default {
     fundCode: {
       type: String,
       default: ''
+    },
+    colorType: {
+      type: String,
+      default: '1'
     }
   },
   data() {
@@ -54,7 +58,7 @@ export default {
             return h(
               'span',
               {
-                class: parseFloat(params.row.confirmedIncrease) >= 0 ? 'green' : 'red'
+                class: parseFloat(params.row.confirmedIncrease) >= 0 ? this.increaseClass : this.decreaseClass
               },
               params.row.confirmedIncrease + '(' + params.row.confirmedIncreaseRate + '%)'
             )
@@ -67,7 +71,7 @@ export default {
             return h(
               'span',
               {
-                class: parseFloat(params.row.todayIncrease) >= 0 ? 'green' : 'red'
+                class: parseFloat(params.row.todayIncrease) >= 0 ? this.increaseClass : this.decreaseClass
               },
               params.row.todayIncrease + '(' + params.row.todayIncreaseRate + '%)'
             )
@@ -80,7 +84,7 @@ export default {
             return h(
               'span',
               {
-                class: parseFloat(params.row.assessmentIncrease) >= 0 ? 'green' : 'red'
+                class: parseFloat(params.row.assessmentIncrease) >= 0 ? this.increaseClass : this.decreaseClass
               },
               params.row.assessmentIncrease + '(' + params.row.assessmentIncreaseRate + '%)'
             )
@@ -89,11 +93,19 @@ export default {
       ]
     }
   },
+  computed: {
+    increaseClass: function () {
+      return 'green'
+    },
+    decreaseClass: function () {
+      return 'red'
+    }
+  },
   methods: {
     handleEdit: function(row, index) {
       this.$debug('edit target: {} purchaseValue: {}', index, row.fundPurchaseValue)
       this.$store.commit('fundManager/setCurrentEdit', row)
-      this.$store.commit('fundManager/showDrawer')
+      this.$store.commit('fundManager/showEditDrawer')
     }
   },
   mounted() {

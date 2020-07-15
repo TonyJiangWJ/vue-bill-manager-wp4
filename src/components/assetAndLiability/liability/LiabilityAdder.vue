@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2019-12-25 15:36:22
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-06-29 22:39:27
+ * @Last Modified time: 2020-07-15 19:10:01
  * @Description: 新增负债信息弹框组件
  -->
 <template>
@@ -45,12 +45,8 @@
 </template>
 <script>
 import API from '@/js/api.js'
-import NumberInput from '@/components/common/NumberInput'
 export default {
   name: 'LiablilityAdder',
-  components: {
-    NumberInput
-  },
   model: {
     prop: 'value',
     event: 'toggle-show'

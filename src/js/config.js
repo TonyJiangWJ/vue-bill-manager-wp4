@@ -12,7 +12,10 @@ export const rsaPubKey = isDev ? rsaPubKeyDev : rsaPubKeyRelease
 export const host = isDev ? hostDev : hostRelease
 export const basePath = isDev ? pathDev : pathRelease
 // 需要登录的路由路径
-export const needLogin = ['/bills',
+export const needLogin = [
+  '/bills',
   '/assetList', '/asset/type',
-  '/bill/record/list', '/bill/record/report', '/bill/alipay/upload', '/bill/budget']
+  '/bill/record/list', '/bill/record/report', '/bill/alipay/upload', '/bill/budget',
+  '/funds/history'
+]
 export const enableLog = isDev

@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2019-12-25 15:18:24
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2019-12-25 15:44:57
+ * @Last Modified time: 2020-07-15 19:09:50
  * @Description: 添加资产信息弹出框组件
  -->
 <template>
@@ -49,12 +49,8 @@
 
 <script>
 import API from '@/js/api.js'
-import NumberInput from '@/components/common/NumberInput'
 export default {
   name: 'AssetAdder',
-  components: {
-    NumberInput
-  },
   model: {
     prop: 'value',
     event: 'toggle-show'

@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-07-01 11:08:10
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-08 03:43:33
+ * @Last Modified time: 2020-07-15 22:56:34
  * @Description: 
 --> 
 <template>
@@ -23,8 +23,11 @@
         <Input v-model="importFundJsonStr" type="textarea" :autosize="false" :rows="5" />
       </i-col>
     </Row>
-    <Row v-if="importFundJsonStr">
+    <Row>
       <i-col :md="6" :xs="8">
+        <Button size="small" class="v-btn" @click="addRow">增加一行</Button>
+      </i-col>
+      <i-col :md="6" :xs="8"  v-if="importFundJsonStr">
         <Button size="small" class="v-btn" @click="reflushStr">重新转换字符串</Button>
       </i-col>
     </Row>
@@ -41,11 +44,11 @@
         </template>
 
         <template slot-scope="{ row, index }" slot="purchaseDate">
-          <DatePicker type="date" v-model="edit.purchaseDate" style="width:100%" v-if="editIndex === index" />
+          <DatePicker :transfer="true" type="date" v-model="edit.purchaseDate" style="width:100%" v-if="editIndex === index" />
           <span v-else>{{ row.purchaseDate }}</span>
         </template>
         <template slot-scope="{ row, index }" slot="confirmDate">
-          <DatePicker type="date" v-model="edit.confirmDate" style="width:100%" v-if="editIndex === index" />
+          <DatePicker :transfer="true" type="date" v-model="edit.confirmDate" style="width:100%" v-if="editIndex === index" />
           <span v-else>{{ row.confirmDate }}</span>
         </template>
         <template slot-scope="{ row, index }" slot="purchaseValue">
@@ -71,9 +74,9 @@
             <Button size="small" class="v-btn" style="margin-left: 0.5rem;" @click="editIndex = -1">取消</Button>
           </div>
           <div v-else>
-            <Button size="small" class="v-btn" @click="handleEdit(row, index)">修改</Button>
+            <Button size="small" class="v-btn" @click="handleEdit(row, index)" v-if="editIndex === -1">修改</Button>
             <Button size="small" class="v-btn" type="warning" @click="handleForceAdd(row)" v-if="row.exist">强制提交</Button>
-            <Button size="small" class="v-btn" type="error" @click="handleDelete(row, index)">删除</Button>
+            <Button size="small" class="v-btn" type="error" @click="handleDelete(row, index)" v-if="editIndex === -1">删除</Button>
           </div>
         </template>
       </Table>
@@ -82,13 +85,9 @@
 </template>
 
 <script>
-import NumberInput from '@/components/common/NumberInput'
 import API from '@/js/api.js'
 export default {
   name: 'FundImport',
-  components: {
-    NumberInput
-  },
   data() {
     return {
       importFundJsonStr: '',
@@ -160,6 +159,21 @@ export default {
       this.importFundJsonStr = ''
       this.importFundJsonStr = originStr
     },
+    addRow: function () {
+      let cleanFundInfo = {
+        fundCode: '',
+        fundName: '',
+        purchaseDate: '',
+        confirmDate: '',
+        purchaseValue: '',
+        purchaseAmount: '',
+        purchaseCost: '',
+        purchaseFee: ''
+      }
+      this.editFundList.push(cleanFundInfo)
+      Object.assign(this.edit, cleanFundInfo)
+      this.editIndex = this.editFundList.length - 1
+    },
     removeExistFunds: function() {
       this.editFundList = this.editFundList.filter(fundInfo => !fundInfo.exist)
     },
@@ -198,9 +212,14 @@ export default {
         return Promise.resolve(this.editFundList)
       })
     },
+    isValidFund: function (fundInfo) {
+      let emptyKey = Object.keys(fundInfo).filter(key => !this.$isNotEmpty(fundInfo[key]))
+      this.$debug(['empty keys: {}', JSON.stringify(emptyKey)])
+      return !emptyKey || emptyKey.length === 0
+    },
     checkAndSaveFunds: function() {
       this.checkAllFundsStatus().then(fundList => {
-        let requestList = fundList.filter(fundInfo => !fundInfo.exist)
+        let requestList = fundList.filter(fundInfo => !fundInfo.exist && this.isValidFund(fundInfo))
         if (requestList && requestList.length > 0) {
           requestList.forEach(fundInfo => (fundInfo.purchaseConfirmDate = fundInfo.confirmDate))
           API.batchAddFunds({

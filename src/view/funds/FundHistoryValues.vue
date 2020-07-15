@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-06-28 21:54:55
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-08 03:42:13
+ * @Last Modified time: 2020-07-15 00:30:52
  * @Description: 
 --> 
 <template>
@@ -40,7 +40,7 @@
       <i-col span="6">确认增长：</i-col>
       <i-col
         span="6"
-        :class="parseFloat(summaryInfo.confirmedIncrease) > 0 ? 'green':'red'"
+        :class="parseFloat(summaryInfo.confirmedIncrease) > 0 ? increaseClass : decreaseClass"
       >{{summaryInfo.confirmedIncrease}}({{summaryInfo.confirmedIncreaseRate}}%)</i-col>
     </Row>
     <Row>
@@ -49,14 +49,14 @@
       <i-col span="6">估算增长：</i-col>
       <i-col
         span="6"
-        :class="parseFloat(summaryInfo.assessmentIncrease) > 0 ? 'green':'red'"
+        :class="parseFloat(summaryInfo.assessmentIncrease) > 0 ? increaseClass : decreaseClass"
       >{{summaryInfo.assessmentIncrease}}({{summaryInfo.assessmentIncreaseRate}}%)</i-col>
     </Row>
     <Row>
       <i-col span="6">总手续费：</i-col>
       <i-col span="6">{{summaryInfo.totalFee}}</i-col>
       <i-col span="6">今日增长：</i-col>
-      <i-col span="6" :class="parseFloat(summaryInfo.todayIncrease) > 0 ? 'green':'red'">{{summaryInfo.todayIncrease}}({{summaryInfo.todayIncreaseRate}}%)</i-col>
+      <i-col span="6" :class="parseFloat(summaryInfo.todayIncrease) > 0 ? increaseClass : decreaseClass">{{summaryInfo.todayIncrease}}({{summaryInfo.todayIncreaseRate}}%)</i-col>
     </Row>
     <Divider />
     <Row type="flex" justify="center" align="middle" class="mg-btm">
@@ -90,6 +90,7 @@
 
     <fund-info-adder v-model="showFundInfoAdder" @reload-funds="doQuery" />
     <fund-detail-edit-drawer @reload-funds="doQuery" />
+    <fund-part-sale-drawer @reload-funds="doQuery" />
   </div>
 </template>
 
@@ -101,6 +102,7 @@ import FundImport from '@/components/funds/FundImport'
 import FundAnyCanSale from '@/components/funds/FundAnyCanSale'
 import FundSummary from '@/components/funds/FundSummary'
 import FundDetailEditDrawer from '@/components/funds/FundDetailEditDrawer'
+import FundPartSaleDrawer from '@/components/funds/FundPartSaleDrawer'
 export default {
   name: 'FundHistoryValues',
   components: {
@@ -108,10 +110,12 @@ export default {
     FundImport,
     FundAnyCanSale,
     FundSummary,
-    FundDetailEditDrawer
+    FundDetailEditDrawer,
+    FundPartSaleDrawer
   },
   data() {
     return {
+      colorType: '1',
       autoLoadInterval: null,
       assessmentDate: this.dateFormat(new Date(), 'yyyy-MM-dd'),
       assessmentDateQuery: this.dateFormat(new Date(), 'yyyy-MM-dd'),
@@ -134,6 +138,14 @@ export default {
       }
     }
   },
+  computed: {
+    increaseClass: function () {
+      return 'green'
+    },
+    decreaseClass: function () {
+      return 'red'
+    }
+  },
   watch: {
     assessmentDateQuery: function(n) {
       if (this.$isDate(n)) {
@@ -151,6 +163,13 @@ export default {
       // 计算每个系列最大值和最小值的下标
       Object.keys(fundHistoryResp.increaseRateMapping).forEach(key => {
         let rateList = fundHistoryResp.increaseRateMapping[key]
+        if (rateList.length < fundHistoryResp.length) {
+          rateList = Array(fundHistoryResp.length - rateList.length + 1)
+            .join(',0')
+            .split(',')
+            .slice(1)
+            .concat(rateList)
+        }
         let max = -100,
           min = 100
         for (let i = 0; i < rateList.length; i++) {
@@ -163,6 +182,8 @@ export default {
             minIdx[key] = i
           }
         }
+        // 重新设置前置补零后的增长曲线数组
+        fundHistoryResp.increaseRateMapping[key] = rateList
       })
       this.$debug('minIdx:' + JSON.stringify(minIdx))
       this.$debug('maxIdx:' + JSON.stringify(maxIdx))
@@ -229,17 +250,7 @@ export default {
                 }
               }
             },
-            data: (() => {
-              let fundRateList = fundHistoryResp.increaseRateMapping[k]
-              if (fundRateList.length < fundHistoryResp.length) {
-                fundRateList = Array(fundHistoryResp.length - fundRateList.length + 1)
-                  .join(',0')
-                  .split(',')
-                  .slice(1)
-                  .concat(fundRateList)
-              }
-              return fundRateList
-            })()
+            data: fundHistoryResp.increaseRateMapping[k]
           }
         })
       }

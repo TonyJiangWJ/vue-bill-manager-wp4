@@ -27,7 +27,6 @@ import TableExpandDemo from '@/components/demos/TableExpandDemo'
 import CheckGroupDemo from '@/components/demos/check-group-demo'
 import EchartsDemo from '@/components/demos/echarts-demo'
 
-import { debug } from '@/js/LogUtil'
 import API from '@/js/api.js'
 import { needLogin } from '@/js/config.js'
 import store from '@/store'
@@ -172,14 +171,8 @@ router.beforeEach((to, from, next) => {
     } else {
       API.checkLoginStatus().then((resp) => {
         if (!resp || resp.code !== API.CODE_CONST.SUCCESS) {
-          let pushParams = {
-            name: 'Login',
-            params: {
-              redirect: '#' + to.path
-            }
-          }
-          debug(JSON.stringify(pushParams))
-          router.push(pushParams)
+          store.commit('loginStatus/setRedirect', to.path)
+          router.push('/login')
           iView.LoadingBar.finish()
         } else {
           next()

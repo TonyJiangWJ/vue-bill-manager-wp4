@@ -40,13 +40,9 @@
 
 <script>
 import API from '@/js/api.js'
-import NumberInput from '@/components/common/NumberInput.vue'
 
 export default {
   name: 'AssetItemDetail',
-  components: {
-    NumberInput
-  },
   props: {
     asset: {
       type: Object

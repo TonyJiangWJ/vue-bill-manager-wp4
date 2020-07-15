@@ -40,9 +40,7 @@ export default {
       showPwdError: false,
       loginError: false,
       userName: '',
-      password: '',
-      // logined: false,
-      redirect: ''
+      password: ''
     }
   },
   computed: {
@@ -73,13 +71,15 @@ export default {
           this.$debug('登录成功')
           this.loginError = false
           this.$store.commit('loginStatus/setLogin')
-          if (this.redirect !== '') {
-            this.$router.push(this.redirect)
+          let redirect = this.$store.getters['loginStatus/redirect']
+          this.$debug('转发路径：' + redirect)
+          if (redirect !== '') {
+            this.$router.push(redirect)
           } else {
             this.$router.push('/')
           }
         } else {
-          this.$debug('登录失败')
+          this.$debug('登录失败:{}', resp.msg)
           this.loginError = true
           this.showPwdError = true
         }
@@ -120,19 +120,6 @@ export default {
   },
   created () {
     this.$store.dispatch('loginStatus/checkLoginStatus')
-  },
-  mounted () {
-    let redirect
-    if (this.$route.params) {
-      this.$debug('有参数')
-      redirect = this.$route.params.redirect
-    } else {
-      this.$debug('无参数')
-    }
-    if (typeof redirect !== 'undefined' && redirect !== '') {
-      this.redirect = redirect.substring(1)
-    }
-    this.$debug('转发路径：' + this.redirect)
   }
 }
 </script>

@@ -39,12 +39,8 @@
 
 <script>
 import API from '@/js/api.js'
-import NumberInput from '@/components/common/NumberInput'
 export default {
   name: 'FundInfoAdder',
-  components: {
-    NumberInput
-  },
   model: {
     value: 'value',
     event: 'toggle-show'

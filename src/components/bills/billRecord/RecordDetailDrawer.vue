@@ -121,7 +121,7 @@
 
 import API from '@/js/api.js'
 import TagManage from '@/components/bills/billRecord/TagManage.vue'
-import { CostRecord } from '@/js/CommonFunctions.js'
+import { CostRecord } from '@/js/CostRecord.js'
 
 export default {
   name: "RecordDetailDrawer",
