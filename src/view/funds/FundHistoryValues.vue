@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-06-28 21:54:55
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-15 00:30:52
+ * @Last Modified time: 2020-07-18 10:42:50
  * @Description: 
 --> 
 <template>
@@ -46,7 +46,7 @@
     <Row>
       <i-col span="6">总持有金额：</i-col>
       <i-col span="6">{{summaryInfo.totalHold}}</i-col>
-      <i-col span="6">估算增长：</i-col>
+      <i-col span="6">估算总增长：</i-col>
       <i-col
         span="6"
         :class="parseFloat(summaryInfo.assessmentIncrease) > 0 ? increaseClass : decreaseClass"
@@ -55,9 +55,23 @@
     <Row>
       <i-col span="6">总手续费：</i-col>
       <i-col span="6">{{summaryInfo.totalFee}}</i-col>
-      <i-col span="6">今日增长：</i-col>
+      <i-col span="6">当日增长：</i-col>
       <i-col span="6" :class="parseFloat(summaryInfo.todayIncrease) > 0 ? increaseClass : decreaseClass">{{summaryInfo.todayIncrease}}({{summaryInfo.todayIncreaseRate}}%)</i-col>
     </Row>
+    <Row v-if="$isNotEmpty(summaryInfo.lastDayConfirmedIncrease)">
+      <i-col offset="12" span="6">上日增长：</i-col>
+      <i-col span="6" :class="parseFloat(summaryInfo.lastDayConfirmedIncrease) > 0 ? increaseClass : decreaseClass">{{summaryInfo.lastDayConfirmedIncrease}}({{summaryInfo.lastDayConfirmedIncreaseRate}}%)</i-col>
+    </Row>
+    <template v-if="$isNotEmpty(summaryInfo.actualIncrease)">
+    <Row>
+      <i-col offset="12" span="6">确认当日增长：</i-col>
+      <i-col span="6" :class="parseFloat(summaryInfo.todayConfirmedIncrease) > 0 ? increaseClass : decreaseClass">{{summaryInfo.todayConfirmedIncrease}}({{summaryInfo.todayConfirmedIncreaseRate}}%)</i-col>
+    </Row>
+    <Row>
+      <i-col offset="12" span="6">确认当日总增长：</i-col>
+      <i-col span="6" :class="parseFloat(summaryInfo.actualIncrease) > 0 ? increaseClass : decreaseClass">{{summaryInfo.actualIncrease}}({{summaryInfo.actualIncreaseRate}}%)</i-col>
+    </Row>
+    </template>
     <Divider />
     <Row type="flex" justify="center" align="middle" class="mg-btm">
       <i-col :md="4" :sm="8" :xs="8">
@@ -134,7 +148,13 @@ export default {
         assessmentIncrease: '',
         assessmentIncreaseRate: '',
         todayIncrease: '',
-        todayIncreaseRate: ''
+        todayIncreaseRate: '',
+        lastDayConfirmedIncrease: '',
+        lastDayConfirmedIncreaseRate: '',
+        todayConfirmedIncrease: '',
+        todayConfirmedIncreaseRate: '',
+        actualIncrease: '',
+        actualIncreaseRate: ''
       }
     }
   },

@@ -2,18 +2,20 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-07-01 14:37:43
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-15 00:40:39
+ * @Last Modified time: 2020-07-18 10:43:00
  * @Description: 
 --> 
 <template>
   <div>
-    <Table stripe border :columns="detailFundsColumns" :data="detailFunds" @on-row-click="handleEdit"></Table>
+    <Table stripe border :columns="fundColumns" :data="innerFundDatas" @on-sort-change="sortChange" @on-row-click="handleEdit"></Table>
   </div>
 </template>
 
 <script>
+import FundChangeMixin from '@/components/funds/fund-change-mixin.js'
 export default {
   name: 'FundDetailsExpand',
+  mixins: [FundChangeMixin],
   props: {
     detailFunds: {
       type: Array,
@@ -26,6 +28,14 @@ export default {
     colorType: {
       type: String,
       default: '1'
+    },
+    hasLastDayConfirmed: {
+      type: Boolean,
+      default: false
+    },
+    hasActualIncrease: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -34,6 +44,48 @@ export default {
         {
           title: '买入成本',
           key: 'purchaseCost'
+        },
+        {
+          title: '确认增长',
+          sortable: 'custom',
+          key: 'confirmedIncrease',
+          render: (h, params) => {
+            return h(
+              'span',
+              {
+                class: parseFloat(params.row.confirmedIncrease) >= 0 ? this.increaseClass : this.decreaseClass
+              },
+              params.row.confirmedIncrease + '(' + params.row.confirmedIncreaseRate + '%)'
+            )
+          }
+        },
+        {
+          title: '当日增长',
+          sortable: 'custom',
+          key: 'todayIncrease',
+          render: (h, params) => {
+            return h(
+              'span',
+              {
+                class: parseFloat(params.row.todayIncrease) >= 0 ? this.increaseClass : this.decreaseClass
+              },
+              params.row.todayIncrease + '(' + params.row.todayIncreaseRate + '%)'
+            )
+          }
+        },
+        {
+          title: '估算总增长',
+          sortable: 'custom',
+          key: 'assessmentIncrease',
+          render: (h, params) => {
+            return h(
+              'span',
+              {
+                class: parseFloat(params.row.assessmentIncrease) >= 0 ? this.increaseClass : this.decreaseClass
+              },
+              params.row.assessmentIncrease + '(' + params.row.assessmentIncreaseRate + '%)'
+            )
+          }
         },
         {
           title: '买入单位净值',
@@ -50,43 +102,54 @@ export default {
         {
           title: '买入确认时间',
           key: 'purchaseConfirmDate'
-        },
+        }
+      ],
+      lastDayIncreaseColumn: {
+        title: '上日增长',
+        sortable: 'custom',
+        key: 'lastDayConfirmedIncrease',
+        minWidth: 150,
+        align: 'center',
+        render: (h, params) => {
+          return h(
+            'span',
+            {
+              class: parseFloat(params.row.lastDayConfirmedIncrease) >= 0 ? 'green' : 'red'
+            },
+            params.row.lastDayConfirmedIncrease + '(' + parseFloat(params.row.lastDayConfirmedIncreaseRate).toFixed(2) + '%)'
+          )
+        }
+      },
+      actualIncreaseColumns: [
         {
-          title: '确认增长',
-          key: 'confirmedIncrease',
+          title: '确认当日增长',
+          key: 'todayConfirmedIncrease',
+          minWidth: 150,
+          align: 'center',
+          sortable: 'custom',
           render: (h, params) => {
             return h(
               'span',
               {
-                class: parseFloat(params.row.confirmedIncrease) >= 0 ? this.increaseClass : this.decreaseClass
+                class: parseFloat(params.row.todayConfirmedIncrease) >= 0 ? 'green' : 'red'
               },
-              params.row.confirmedIncrease + '(' + params.row.confirmedIncreaseRate + '%)'
+              params.row.todayConfirmedIncrease + '(' + parseFloat(params.row.todayConfirmedIncreaseRate).toFixed(2) + '%)'
             )
           }
         },
         {
-          title: '今日增长',
-          key: 'todayIncrease',
+          title: '确认总增长',
+          key: 'todayActualIncrease',
+          minWidth: 150,
+          align: 'center',
+          sortable: 'custom',
           render: (h, params) => {
             return h(
               'span',
               {
-                class: parseFloat(params.row.todayIncrease) >= 0 ? this.increaseClass : this.decreaseClass
+                class: parseFloat(params.row.todayActualIncrease) >= 0 ? 'green' : 'red'
               },
-              params.row.todayIncrease + '(' + params.row.todayIncreaseRate + '%)'
-            )
-          }
-        },
-        {
-          title: '估算增长',
-          key: 'assessmentIncrease',
-          render: (h, params) => {
-            return h(
-              'span',
-              {
-                class: parseFloat(params.row.assessmentIncrease) >= 0 ? this.increaseClass : this.decreaseClass
-              },
-              params.row.assessmentIncrease + '(' + params.row.assessmentIncreaseRate + '%)'
+              params.row.todayActualIncrease + '(' + parseFloat(params.row.todayActualIncreaseRate).toFixed(2) + '%)'
             )
           }
         }
@@ -94,11 +157,20 @@ export default {
     }
   },
   computed: {
-    increaseClass: function () {
+    increaseClass: function() {
       return 'green'
     },
-    decreaseClass: function () {
+    decreaseClass: function() {
       return 'red'
+    }
+  },
+  watch: {
+    detailFunds: {
+      handler(n) {
+        this.setInnerFundDatas(n)
+      },
+      deep: true,
+      immediate: true
     }
   },
   methods: {
@@ -113,6 +185,8 @@ export default {
       this.$set(column, 'minWidth', 150)
       this.$set(column, 'align', 'center')
     })
+    this.setInnerFundColumns(this.detailFundsColumns)
+    this.removeColumnsIfNeeded()
   }
 }
 </script>

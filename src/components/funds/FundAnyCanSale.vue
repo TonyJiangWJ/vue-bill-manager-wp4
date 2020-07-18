@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-06-30 09:36:32
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-08 15:47:30
+ * @Last Modified time: 2020-07-17 23:06:30
  * @Description: 
 --> 
 <template>
@@ -18,12 +18,12 @@
       <i-col :md="8" :xs="10">
         <Slider v-model="targetIncreaseRateProcess" :tip-format="format"></Slider>
       </i-col>
-      <i-col :md="3" :xs="5">
+      <i-col :md="3" :xs="4">
         <NumberInput :fixed="1" v-model="targetIncreaseRate" class="mg-left-1" />
       </i-col>
       <i-col span="1">
         <Tooltip placement="top">
-          <Icon type="ios-flash" size="20" @click="refreshProcess" class="mg-top"/>
+          <Icon type="ios-flash" size="20" @click="refreshProcess" class="mg-top mg-left-1"/>
           <div slot="content">
             刷新精确输入数据到进度条，有可能会丢失精度
           </div>
@@ -106,14 +106,14 @@ export default {
           }
         },
         {
-          title: '今日增长',
+          title: '当日增长',
           key: 'todayIncrease',
           render: (h, params) => {
             return h('span', params.row.todayIncrease + '(' + params.row.todayIncreaseRate + '%)')
           }
         },
         {
-          title: '估算增长',
+          title: '估算总增长',
           key: 'assessmentIncrease',
           render: (h, params) => {
             return h('span', params.row.assessmentIncrease + '(' + params.row.assessmentIncreaseRate + '%)')

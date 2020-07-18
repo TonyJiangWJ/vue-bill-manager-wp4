@@ -2,25 +2,25 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-07-02 11:02:52
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-02 16:38:44
+ * @Last Modified time: 2020-07-18 09:35:54
  * @Description: 
 --> 
 <template>
   <div>
-    <Table stripe border :columns="summaryFundsColumns" :data="innerSummaryFunds" @on-sort-change="sortChange"
-      @on-expand="handleExpand"
-    ></Table>
+    <Table stripe border :columns="fundColumns" :data="innerFundDatas" @on-sort-change="sortChange" @on-expand="handleExpand"></Table>
   </div>
 </template>
 <script>
 // eslint-disable-next-line
 import FundDetailsExpand from '@/components/funds/FundDetailsExpand'
+import FundChangeMixin from '@/components/funds/fund-change-mixin.js'
 export default {
   name: 'FundSummary',
   components: {
     // eslint-disable-next-line
     FundDetailsExpand
   },
+  mixins: [FundChangeMixin],
   props: {
     summaryFunds: {
       type: Array,
@@ -42,17 +42,20 @@ export default {
           assessmentIncrease: '',
           assessmentIncreaseRate: '',
           todayIncrease: '',
-          todayIncreaseRate: ''
+          todayIncreaseRate: '',
+          lastDayIncrease: '',
+          lastDayIncreaseRate: '',
+          todayConfirmedIncrease: '',
+          todayConfirmedIncreaseRate: '',
+          actualIncrease: '',
+          actualIncreaseRate: ''
         }
       }
     }
   },
   data() {
     return {
-      sortKey: '',
-      sortOrder: 1,
       expendedFunds: {},
-      innerSummaryFunds: this.summaryFunds,
       summaryFundsColumns: [
         {
           type: 'expand',
@@ -62,6 +65,8 @@ export default {
             return h(FundDetailsExpand, {
               props: {
                 fundCode: params.row.fundCode,
+                hasActualIncrease: this.hasActualIncrease,
+                hasLastDayConfirmed: this.hasLastDayConfirmed,
                 detailFunds: this.groupedDetailFunds[params.row.fundCode]
               },
               on: {
@@ -75,21 +80,6 @@ export default {
         {
           title: '基金名称',
           key: 'fundName'
-        },
-        {
-          title: '基金编码',
-          key: 'fundCode',
-          sortable: 'custom'
-        },
-        {
-          title: '持有总成本',
-          key: 'purchaseCost',
-          sortable: 'custom'
-        },
-        {
-          title: '持有份额',
-          key: 'purchaseAmount',
-          sortable: 'custom'
         },
         {
           title: '确认增长',
@@ -106,7 +96,7 @@ export default {
           sortable: 'custom'
         },
         {
-          title: '今日增长',
+          title: '当日增长',
           key: 'todayIncrease',
           render: (h, params) => {
             return h(
@@ -120,7 +110,7 @@ export default {
           sortable: 'custom'
         },
         {
-          title: '估算增长',
+          title: '估算总增长',
           key: 'assessmentIncrease',
           render: (h, params) => {
             return h(
@@ -132,6 +122,71 @@ export default {
             )
           },
           sortable: 'custom'
+        },
+        {
+          title: '基金编码',
+          key: 'fundCode',
+          sortable: 'custom'
+        },
+        {
+          title: '持有总成本',
+          key: 'purchaseCost',
+          sortable: 'custom'
+        },
+        {
+          title: '持有份额',
+          key: 'purchaseAmount',
+          sortable: 'custom'
+        }
+      ],
+      lastDayIncreaseColumn: {
+        title: '上日增长',
+        sortable: 'custom',
+        key: 'lastDayConfirmedIncrease',
+        minWidth: 150,
+        align: 'center',
+        render: (h, params) => {
+          return h(
+            'span',
+            {
+              class: parseFloat(params.row.lastDayConfirmedIncrease) >= 0 ? 'green' : 'red'
+            },
+            params.row.lastDayConfirmedIncrease + '(' + parseFloat(params.row.lastDayConfirmedIncreaseRate).toFixed(2) + '%)'
+          )
+        }
+      },
+      actualIncreaseColumns: [
+        {
+          title: '确认当日增长',
+          key: 'todayConfirmedIncrease',
+          minWidth: 150,
+          align: 'center',
+          sortable: 'custom',
+          render: (h, params) => {
+            return h(
+              'span',
+              {
+                class: parseFloat(params.row.todayConfirmedIncrease) >= 0 ? 'green' : 'red'
+              },
+              params.row.todayConfirmedIncrease + '(' + parseFloat(params.row.todayConfirmedIncreaseRate).toFixed(2) + '%)'
+            )
+          }
+        },
+        {
+          title: '确认总增长',
+          key: 'todayActualIncrease',
+          minWidth: 150,
+          align: 'center',
+          sortable: 'custom',
+          render: (h, params) => {
+            return h(
+              'span',
+              {
+                class: parseFloat(params.row.todayActualIncrease) >= 0 ? 'green' : 'red'
+              },
+              params.row.todayActualIncrease + '(' + parseFloat(params.row.todayActualIncreaseRate).toFixed(2) + '%)'
+            )
+          }
         }
       ]
     }
@@ -150,17 +205,27 @@ export default {
       } else {
         return {}
       }
+    },
+    hasLastDayConfirmed: function() {
+      return this.$isNotEmpty(this.summaryInfo.lastDayConfirmedIncrease)
+    },
+    hasActualIncrease: function() {
+      return this.$isNotEmpty(this.summaryInfo.actualIncrease)
     }
   },
   watch: {
-    summaryFunds: function(n) {
-      this.innerSummaryFunds = this.copyArrayInfo(n)
-      if (this.innerSummaryFunds && this.innerSummaryFunds.length > 0) {
-        // 更新已展开信息
-        this.$debug('更新已展开信息：{}', JSON.stringify(this.expendedFunds))
-        this.innerSummaryFunds.forEach(fund => fund._expanded = this.expendedFunds[fund.fundCode])
-        this.handleInnerSort()
-      }
+    summaryFunds: {
+      handler(n) {
+        this.setInnerFundDatas(n)
+        if (this.innerFundDatas && this.innerFundDatas.length > 0) {
+          // 更新已展开信息
+          this.$debug('更新已展开信息：{}', JSON.stringify(this.expendedFunds))
+          this.innerFundDatas.forEach(fund => (fund._expanded = this.expendedFunds[fund.fundCode]))
+          this.handleInnerSort()
+        }
+      },
+      deep: true,
+      immediate: true
     }
   },
   methods: {
@@ -176,7 +241,7 @@ export default {
     handleInnerSort: function() {
       this.$debug('执行排序：「{},{}」', this.sortKey, this.sortOrder)
       if (this.$isNotEmpty(this.sortKey)) {
-        this.innerSummaryFunds = this.innerSummaryFunds.sort((a, b) => {
+        this.innerFundDatas = this.innerFundDatas.sort((a, b) => {
           let { [this.sortKey]: compareV1 } = a,
             { [this.sortKey]: compareV2 } = b
           if (!isNaN(compareV1)) {
@@ -198,7 +263,7 @@ export default {
       }
       this.handleInnerSort()
     },
-    handleExpand: function (row, status) {
+    handleExpand: function(row, status) {
       this.$debug('更新展开状态 {} status: {}', row.fundCode, status)
       this.expendedFunds[row.fundCode] = status
     }
@@ -208,6 +273,9 @@ export default {
       this.$set(column, 'minWidth', 150)
       this.$set(column, 'align', 'center')
     })
+    this.$debug('mounted, lastDay: {} actual: {}', this.hasLastDayConfirmed, this.hasActualIncrease)
+    this.setInnerFundColumns(this.summaryFundsColumns)
+    this.removeColumnsIfNeeded()
   }
 }
 </script>
