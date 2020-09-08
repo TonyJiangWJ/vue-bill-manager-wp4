@@ -81,7 +81,7 @@ export default {
     addAssetParentType: function() {
       this.addAssetChildType = ''
       API.getChildByParent({ id: this.addAssetParentType }).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           this.assetChildList = resp.assetTypes
         }
       })
@@ -105,7 +105,7 @@ export default {
         available: this.available
       }
       API.addAsset(request).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           this.$emit('reload-asset-info')
           this.$debug('添加成功')
           this.resetAsset()
@@ -115,7 +115,7 @@ export default {
   },
   mounted() {
     API.getAssetParents().then(resp => {
-      if (resp.code === API.CODE_CONST.SUCCESS) {
+      if (this.$isSuccess(resp)) {
         this.assetParentList = resp.assetTypes
       }
     })

@@ -65,7 +65,7 @@ export default {
         paid: (this.liabilityPaid * 100).toFixed(0)
       }
       API.updateLiability(request).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           this.$debug('更新成功')
           this.$emit('reloadAssetInfo')
         }

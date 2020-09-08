@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2019-08-15 16:52:56
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-15 00:44:28
+ * @Last Modified time: 2020-09-03 15:24:27
  * @Description: 
  */
 import axios from 'axios'
@@ -210,6 +210,9 @@ const API = {
   loadFundChangeInfos: data => {
     return sendAjax('/fund/changed/get', data)
   },
+  loadFundHistoryNetValues: data => {
+    return sendAjax('/fund/history/net/values', data)
+  },
   addFundInfo: data => {
     return sendAjax('/fund/info/put', data)
   },
@@ -221,6 +224,9 @@ const API = {
   },
   updateFundInfo: data => {
     return sendAjax('/fund/info/update', data)
+  },
+  enhanceFundInfo: data => {
+    return sendAjax('/fund/info/enhance', data)
   },
   preMarkAsSold: data => {
     return sendAjax('/fund/pre/mark/as/sold', data)

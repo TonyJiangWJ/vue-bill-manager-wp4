@@ -188,7 +188,7 @@ export default {
       return API.checkAllFundsStatus({
         fundCheckList: requestFundList
       }).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           if (resp.existsList && resp.existsList.length > 0) {
             this.$debug(JSON.stringify(resp.existsList))
             const existsList = resp.existsList
@@ -225,7 +225,7 @@ export default {
           API.batchAddFunds({
             fundInfoList: requestList
           }).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
+            if (this.$isSuccess(resp)) {
               this.$Message.success('批量新增成功')
               this.$emit('reload-funds')
             } else {
@@ -254,7 +254,7 @@ export default {
           Object.assign(request, row)
           request.purchaseConfirmDate = request.confirmDate
           API.addFundInfo(request).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
+            if (this.$isSuccess(resp)) {
               this.$emit('reload-funds')
               this.$Message.success('添加成功')
             } else {

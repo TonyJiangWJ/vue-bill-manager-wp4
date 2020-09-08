@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-07-06 14:02:14
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-15 19:09:43
+ * @Last Modified time: 2020-09-08 19:31:45
  * @Description: 
 --> 
 <template>
@@ -168,7 +168,7 @@ export default {
             purchaseFee: that.fundInfo.purchaseFee,
             version: that.fundInfo.version
           }).then(resp => {
-            if (resp && resp.code === API.CODE_CONST.SUCCESS) {
+            if (this.$isSuccess(resp)) {
               that.$Message.success('修改成功')
               that.$emit('reload-funds')
             } else {
@@ -189,7 +189,7 @@ export default {
           `<p>买入支出：${this.fundInfo.purchaseCost}</p>`,
         onOk: function() {
           API.deleteFundInfo({ id: that.fundInfo.id }).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
+            if (this.$isSuccess(resp)) {
               this.$Message.success('删除成功')
               that.$emit('reload-funds')
             } else {

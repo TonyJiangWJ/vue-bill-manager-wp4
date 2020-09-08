@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-06-28 21:54:55
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-18 10:42:50
+ * @Last Modified time: 2020-09-03 16:38:07
  * @Description: 
 --> 
 <template>
@@ -292,7 +292,7 @@ export default {
       API.loadFundChangeInfos({
         assessmentDate: this.assessmentDate
       }).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           Object.keys(this.summaryInfo).forEach(key => {
             this.$set(this.summaryInfo, key, resp[key])
           })

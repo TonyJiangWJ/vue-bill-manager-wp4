@@ -79,7 +79,7 @@ export default {
     liabilityParent: function() {
       this.liabilityChildType = ''
       API.getChildByParent({ id: this.liabilityParent }).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           this.liabilityChildList = resp.assetTypes
         }
       })
@@ -102,7 +102,7 @@ export default {
         installment: this.installment
       }
       API.addLiability(request).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           this.$emit('reload-asset-info')
           this.$debug('添加成功')
           this.resetLiability()
@@ -112,7 +112,7 @@ export default {
   },
   mounted() {
     API.getLiabilityParents().then(resp => {
-      if (resp.code === API.CODE_CONST.SUCCESS) {
+      if (this.$isSuccess(resp)) {
         this.liabilityParentList = resp.assetTypes
       }
     })

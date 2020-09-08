@@ -83,8 +83,12 @@ export default {
       innerShowTagManage: this.showTagManage,
       addTagModal: false,
       removeTagMode: false,
-      showTagColumn: false,
-      allTagList: []
+      showTagColumn: false
+    }
+  },
+  computed: {
+    allTagList: function() {
+      return this.$store.getters['tagManager/tagList']
     }
   },
   watch: {
@@ -102,9 +106,9 @@ export default {
         costIds: this.recordIdList
       }
       API.batchAddTagToRecords(request).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           API.loadCommunalTagsFromRecords(request).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
+            if (this.$isSuccess(resp)) {
               this.$debug(resp.tagInfoModels)
               this.communalTags = resp.tagInfoModels
             } else {
@@ -121,9 +125,9 @@ export default {
         costIds: this.recordIdList
       }
       API.batchRemoveTagFromRecords(request).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           API.loadCommunalTagsFromRecords(request).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
+            if (this.$isSuccess(resp)) {
               this.$debug(resp.tagInfoModels)
               this.communalTags = resp.tagInfoModels
             } else {
@@ -147,11 +151,11 @@ export default {
           API.deleteTag({
             tagId: tagId
           }).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
+            if (this.$isSuccess(resp)) {
               self.$debug('删除成功')
               self.getAllTagList()
               API.loadRecordTagList({ tradeNo: self.detail.tradeNo }).then(resp => {
-                if (resp.code === API.CODE_CONST.SUCCESS) {
+                if (this.$isSuccess(resp)) {
                   self.detail.tagInfos = resp.tagInfoModels
                 } else if (resp.code === API.CODE_CONST.DATA_NOT_EXIST) {
                   self.detail.tagInfos = []
@@ -174,11 +178,12 @@ export default {
         tagName: this.newTag.tagName
       }
       API.tagNameUnique(request).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           API.addTag(request).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
+            if (this.$isSuccess(resp)) {
               this.$debug('添加成功')
               this.getAllTagList()
+              this.$emit('reload-tags')
               this.newTag.tagName = ''
             } else {
               this.$Message.warning('标签名称添加失败，' + resp.msg)
@@ -197,12 +202,7 @@ export default {
       }
     },
     getAllTagList: function() {
-      API.loadAllTagList({}).then(resp => {
-        this.allTagList = []
-        if (resp.code === API.CODE_CONST.SUCCESS) {
-          this.allTagList = resp.tagInfoList
-        }
-      })
+      this.$store.dispatch('tagManager/reloadAllTags')
     }
   },
   mounted() {

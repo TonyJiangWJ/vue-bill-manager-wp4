@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-01-07 10:30:17
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-03 14:33:12
+ * @Last Modified time: 2020-07-24 16:37:06
  * @Description: 
  */
 
@@ -59,7 +59,7 @@ module.exports = {
         'vuex': 'Vuex',
         'vue-router': 'VueRouter',
         'axios': 'axios',
-        'view': 'view-design',
+        'view-design': 'iview',
         'jsencrypt': 'JSEncrypt',
         'echarts': 'echarts',
         'crypto-js': 'CryptoJS'

@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2019-08-15 16:52:56
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-13 09:36:16
+ * @Last Modified time: 2020-08-05 22:07:37
  * @Description: 
  */ 
 import API from '@/js/api.js'
@@ -24,7 +24,7 @@ const getters = {
 const actions = {
   checkLoginStatus: ({commit}) => {
     API.checkLoginStatus().then(resp => {
-      if (resp.code === API.CODE_CONST.SUCCESS) {
+      if (resp && resp.code === API.CODE_CONST.SUCCESS) {
         commit('setLogin')
       } else {
         commit('setLogout')

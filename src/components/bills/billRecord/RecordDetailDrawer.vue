@@ -190,7 +190,7 @@ export default {
         tradeNo: this.tradeNo
       }
       API.loadRecordDetail(request).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           this.detail = new CostRecord(resp.recordDetail)
         } else {
           this.detail = {}
@@ -207,7 +207,7 @@ export default {
         orderType: this.detail.orderType
       }
       API.updateRecord(request).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           this.$emit('requery-list')
         }
       })
@@ -225,7 +225,7 @@ export default {
             nowStatus: nowStatus ? '1' : '0',
             tradeNo: self.detail.tradeNo
           }).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
+            if (this.$isSuccess(resp)) {
               self.detail.isDeleted = newStatus
               self.$emit('requery-list')
             }
@@ -246,7 +246,7 @@ export default {
             nowStatus: nowStatus ? '1' : '0',
             tradeNo: self.detail.tradeNo
           }).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
+            if (this.$isSuccess(resp)) {
               self.detail.isHidden = newStatus
               self.$emit('requery-list')
             }

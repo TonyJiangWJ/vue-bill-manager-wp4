@@ -11,9 +11,9 @@
     </Row>
     <Row type="flex" justify="start">
       <i-col offset="4">
-        <Button size="small" type="primary" @click="getAllConnect">查看所有连接</Button>
-        <Button size="small" type="primary" @click="getAllService">查看所有服务</Button>
-        <Button size="small" type="primary" @click="checkAll">测试服务列表</Button>
+        <Button size="small" type="primary" @click="getAllConnect" class="v-btn">查看所有连接</Button>
+        <Button size="small" type="primary" @click="getAllService" class="v-btn">查看所有服务</Button>
+        <Button size="small" type="primary" @click="checkAll" class="v-btn">测试服务列表</Button>
       </i-col>
     </Row>
     <Row :gutter="16">
@@ -21,9 +21,9 @@
       <i-col span="6">
         <Input type="text" v-model="functionId" />
       </i-col>
-      <i-col span="4">
-        <Button size="small" @click="checkFunc" type="primary">测试接口</Button>
-        <Button size="small" @click="refresh">刷新</Button>
+      <i-col span="6">
+        <Button size="small" @click="checkFunc" type="primary" class="v-btn">测试接口</Button>
+        <Button size="small" @click="refresh" class="v-btn">刷新</Button>
       </i-col>
     </Row>
     <template v-if="hostsHistoryList.length>0">

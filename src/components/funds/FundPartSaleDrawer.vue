@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-07-14 23:52:46
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-15 19:10:31
+ * @Last Modified time: 2020-09-08 19:31:54
  * @Description: 
 --> 
 <template>
@@ -162,6 +162,7 @@ export default {
       let that = this
       this.$Modal.confirm({
         title: '确定要标记为卖出吗？',
+        // content: `基金名称：${that.fundInfo.fundName} 预计收益：`,
         onOk: function () {
           API.preSalePortion({
             id: that.fundInfo.id,
@@ -169,7 +170,7 @@ export default {
             saleAmount: that.saleAmount,
             saleFeeRate: that.saleFeeRate
           }).then(resp => {
-            if (resp && resp.code === API.CODE_CONST.SUCCESS) {
+            if (this.$isSuccess(resp)) {
               that.$Message.success('修改成功')
               that.$emit('reload-funds')
             } else {

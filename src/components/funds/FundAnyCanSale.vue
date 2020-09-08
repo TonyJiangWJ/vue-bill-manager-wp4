@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-06-30 09:36:32
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-17 23:06:30
+ * @Last Modified time: 2020-07-29 18:13:41
  * @Description: 
 --> 
 <template>
@@ -31,12 +31,16 @@
       </i-col>
     </Row>
     <Row class="padding2">
-      <i-col>目前过滤持有短于7天的，默认收取卖出手续费为0.5% 目标收益率=估算增长率-手续费比例</i-col>
+      <i-col>目前过滤持有短于7天的，默认收取卖出手续费为0.5% 目标收益率=减去手续费后的估算收益/买入成本</i-col>
     </Row>
     <Row class="padding2" v-if="showCanSold">
       <i-col :md="8" :xs="24">
         <span>只显示当日增长是正的：</span>
         <i-switch v-model="showOnlyIncreased" />
+      </i-col>
+      <i-col :md="8" :xs="24">
+        <span>过滤持有短于7天的：</span>
+        <i-switch v-model="filterLessThenSeven" />
       </i-col>
     </Row>
     <template v-if="showCanSold">
@@ -44,8 +48,8 @@
         <div v-for="soldFund in canSoldFunds" :key="soldFund.fundCode">
           <Row>
             <i-col>
-              基金名称：({{soldFund.fundCode}}){{soldFund.fundName}} 总计份额：{{soldFund.totalAmount}} 预计卖出总收益：{{(soldFund.totalIncrease * 0.995).toFixed(2)}}
-              ({{(soldFund.totalIncrease * 100 / soldFund.totalCost - 0.5).toFixed(2)}}%)
+              基金名称：({{soldFund.fundCode}}){{soldFund.fundName}} 总计份额：{{soldFund.totalAmount}} 预计卖出总收益：{{soldFund.totalIncome}}
+              ({{(soldFund.totalIncome / soldFund.totalCost * 100).toFixed(2)}}%)
               总持有份额：{{soldFund.totalPurchaseAmount}} 卖出后剩余份额：{{soldFund.totalPurchaseAmount - soldFund.totalAmount | toFixed2}}
             </i-col>
           </Row>
@@ -91,6 +95,7 @@ export default {
     return {
       showCanSold: false,
       showOnlyIncreased: true,
+      filterLessThenSeven: true,
       targetIncreaseRate: 6,
       targetIncreaseRateProcess: 24,
       soldFundDetailColumns: [
@@ -102,30 +107,33 @@ export default {
           title: '确认增长',
           key: 'confirmedIncrease',
           render: (h, params) => {
-            return h('span', params.row.confirmedIncrease + '(' + params.row.confirmedIncreaseRate + '%)')
+            return h('span', `${params.row.confirmedIncrease}(${params.row.confirmedIncreaseRate}%)`)
           }
         },
         {
           title: '当日增长',
           key: 'todayIncrease',
           render: (h, params) => {
-            return h('span', params.row.todayIncrease + '(' + params.row.todayIncreaseRate + '%)')
+            return h('span', `${params.row.todayIncrease}(${params.row.todayIncreaseRate}%)`)
           }
         },
         {
           title: '估算总增长',
           key: 'assessmentIncrease',
           render: (h, params) => {
-            return h('span', params.row.assessmentIncrease + '(' + params.row.assessmentIncreaseRate + '%)')
+            return h('span', `${params.row.assessmentIncrease}(${params.row.assessmentIncreaseRate}%)`)
           }
         },
         {
           title: '估算卖出收益',
           key: 'assessmentIncrease',
           render: (h, params) => {
+            let income = this.calculateIncome(params.row)
+            let incomeRate = this.calculateIncomeRate(params.row)
             return h(
               'span',
-              (params.row.assessmentIncrease * 0.995).toFixed(2) + '(' + (params.row.assessmentIncreaseRate - 0.5).toFixed(2) + '%)'
+              `${income.toFixed(2)}` +
+              `(${incomeRate.toFixed(2)}%)`
             )
           }
         },
@@ -133,7 +141,7 @@ export default {
           title: '买入成本',
           key: 'purchaseCost',
           render: (h, params) => {
-            return h('span', params.row.purchaseCost + '(' + params.row.purchaseAmount + ')')
+            return h('span', `${params.row.purchaseCost}(${params.row.purchaseAmount})`)
           }
         },
         {
@@ -151,6 +159,17 @@ export default {
     format(val) {
       return '目标收益率: ' + ((parseFloat(val) * 25) / 100).toFixed(1) + '%'
     },
+    calculateIncome: (fund) => {
+      let currentValue = fund.assessmentValue * fund.purchaseAmount
+      return currentValue * 0.995 - fund.purchaseCost
+    },
+    calculateSaleFee: fund => {
+      let currentValue = fund.assessmentValue * fund.purchaseAmount
+      return currentValue * 0.995
+    },
+    calculateIncomeRate(fund) {
+      return this.calculateIncome(fund) / fund.purchaseCost * 100
+    },
     reduceAdder: (a, b) => {
       a += b
       return a
@@ -162,8 +181,8 @@ export default {
         content:
           `基金代码：${canSoldFund.fundCode} 总份额：${canSoldFund.totalAmount} 卖出后剩余份额：${(
             canSoldFund.totalPurchaseAmount - canSoldFund.totalAmount
-          ).toFixed(2)}` +
-          ` 预计收益：${(canSoldFund.totalIncrease * 0.995).toFixed(2)} 预计手续费：${(canSoldFund.totalAmount * canSoldFund.assessmentValue * 0.005).toFixed(
+          ).toFixed(2)}\n` +
+          ` 预计到手：${(parseFloat(canSoldFund.totalIncome) + parseFloat(canSoldFund.totalCost)).toFixed(2)} 预计收益：${canSoldFund.totalIncome} 预计手续费：${(canSoldFund.totalAmount * canSoldFund.assessmentValue * 0.005).toFixed(
             2
           )}`,
         onOk: function() {
@@ -175,7 +194,7 @@ export default {
             fundSoldFeeRate: 0.5,
             assessmentDate: that.assessmentDate
           }).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
+            if (this.$isSuccess(resp)) {
               that.$Message.success('标记成功')
               that.$emit('reload-funds')
             } else {
@@ -227,9 +246,8 @@ export default {
           let fundDetails = this.groupedFundDetails[key]
           if (fundDetails && fundDetails.length > 0) {
             canSold[key] = fundDetails.filter(fund => {
-              let dateCheck = new Date(fund.purchaseConfirmDate) < thresholdDate
-              // 默认收取0.5% 手续费
-              let increaseCheck = parseFloat(fund.assessmentIncreaseRate - 0.5) > this.targetIncreaseRate
+              let dateCheck = !this.filterLessThenSeven || new Date(fund.purchaseConfirmDate) < thresholdDate
+              let increaseCheck = this.calculateIncomeRate(fund) > this.targetIncreaseRate
               return dateCheck && increaseCheck
             })
           }
@@ -250,6 +268,12 @@ export default {
                 .map(f => parseFloat(f.assessmentIncrease))
                 .reduce(this.reduceAdder, 0)
                 .toFixed(2),
+              totalIncome: fundList
+                .map(fund => {
+                  return this.calculateIncome(fund)
+                })
+                .reduce(this.reduceAdder, 0)
+                .toFixed(2),  
               totalCost: fundList
                 .map(f => parseFloat(f.purchaseCost))
                 .reduce(this.reduceAdder, 0)

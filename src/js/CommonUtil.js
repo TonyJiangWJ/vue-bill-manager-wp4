@@ -2,10 +2,11 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-07-02 02:12:16
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-06 13:49:15
+ * @Last Modified time: 2020-07-22 11:43:13
  * @Description: 
  */ 
 import { debug } from '@/js/LogUtil.js'
+import API from '@/js/api.js'
 
 export default {
   install (Vue, options) {
@@ -47,6 +48,17 @@ export default {
     // 判断是否是日期类型
     Vue.prototype.$isDate = (val) => {
       return Object.prototype.toString.call(val) === '[object Date]'
+    }
+
+    // 判断请求结果是否正常
+    Vue.prototype.$isSuccess = resp => {
+      debug('check resp: ' + JSON.stringify(resp))
+      if (resp && resp.code === API.CODE_CONST.SUCCESS) {
+        return true
+      } else {
+        debug('请求失败，resp: ' + (resp === null ? null : resp.msg))
+        return false
+      }
     }
   }
 }

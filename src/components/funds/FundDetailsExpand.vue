@@ -2,7 +2,7 @@
  * @Author: TonyJiangWJ
  * @Date: 2020-07-01 14:37:43
  * @Last Modified by: TonyJiangWJ
- * @Last Modified time: 2020-07-18 10:43:00
+ * @Last Modified time: 2020-07-21 15:01:17
  * @Description: 
 --> 
 <template>
@@ -43,7 +43,8 @@ export default {
       detailFundsColumns: [
         {
           title: '买入成本',
-          key: 'purchaseCost'
+          key: 'purchaseCost',
+          sortable: 'custom'
         },
         {
           title: '确认增长',
@@ -55,7 +56,7 @@ export default {
               {
                 class: parseFloat(params.row.confirmedIncrease) >= 0 ? this.increaseClass : this.decreaseClass
               },
-              params.row.confirmedIncrease + '(' + params.row.confirmedIncreaseRate + '%)'
+              this.filterUndefinedAsMinus(params.row.confirmedIncrease) + '(' + this.filterUndefinedAsMinus(params.row.confirmedIncreaseRate) + '%)'
             )
           }
         },
@@ -69,7 +70,7 @@ export default {
               {
                 class: parseFloat(params.row.todayIncrease) >= 0 ? this.increaseClass : this.decreaseClass
               },
-              params.row.todayIncrease + '(' + params.row.todayIncreaseRate + '%)'
+              this.filterUndefinedAsMinus(params.row.todayIncrease) + '(' + this.filterUndefinedAsMinus(params.row.todayIncreaseRate) + '%)'
             )
           }
         },
@@ -83,25 +84,29 @@ export default {
               {
                 class: parseFloat(params.row.assessmentIncrease) >= 0 ? this.increaseClass : this.decreaseClass
               },
-              params.row.assessmentIncrease + '(' + params.row.assessmentIncreaseRate + '%)'
+              this.filterUndefinedAsMinus(params.row.assessmentIncrease) + '(' + this.filterUndefinedAsMinus(params.row.assessmentIncreaseRate) + '%)'
             )
           }
         },
         {
           title: '买入单位净值',
-          key: 'fundPurchaseValue'
+          key: 'fundPurchaseValue',
+          sortable: 'custom'
         },
         {
           title: '买入份额',
-          key: 'purchaseAmount'
+          key: 'purchaseAmount',
+          sortable: 'custom'
         },
         {
           title: '买入时间',
-          key: 'purchaseDate'
+          key: 'purchaseDate',
+          sortable: 'custom'
         },
         {
           title: '买入确认时间',
-          key: 'purchaseConfirmDate'
+          key: 'purchaseConfirmDate',
+          sortable: 'custom'
         }
       ],
       lastDayIncreaseColumn: {
@@ -116,7 +121,7 @@ export default {
             {
               class: parseFloat(params.row.lastDayConfirmedIncrease) >= 0 ? 'green' : 'red'
             },
-            params.row.lastDayConfirmedIncrease + '(' + parseFloat(params.row.lastDayConfirmedIncreaseRate).toFixed(2) + '%)'
+            this.filterUndefinedAsMinus(params.row.lastDayConfirmedIncrease) + '(' + this.filterUndefinedAsMinus(parseFloat(params.row.lastDayConfirmedIncreaseRate).toFixed(2)) + '%)'
           )
         }
       },
@@ -133,7 +138,7 @@ export default {
               {
                 class: parseFloat(params.row.todayConfirmedIncrease) >= 0 ? 'green' : 'red'
               },
-              params.row.todayConfirmedIncrease + '(' + parseFloat(params.row.todayConfirmedIncreaseRate).toFixed(2) + '%)'
+              this.filterUndefinedAsMinus(params.row.todayConfirmedIncrease) + '(' + this.filterUndefinedAsMinus(parseFloat(params.row.todayConfirmedIncreaseRate).toFixed(2)) + '%)'
             )
           }
         },
@@ -149,7 +154,7 @@ export default {
               {
                 class: parseFloat(params.row.todayActualIncrease) >= 0 ? 'green' : 'red'
               },
-              params.row.todayActualIncrease + '(' + parseFloat(params.row.todayActualIncreaseRate).toFixed(2) + '%)'
+              this.filterUndefinedAsMinus(params.row.todayActualIncrease) + '(' + this.filterUndefinedAsMinus(parseFloat(params.row.todayActualIncreaseRate).toFixed(2)) + '%)'
             )
           }
         }

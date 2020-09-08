@@ -67,7 +67,7 @@ export default {
       data.userName = this.userName
       data.password = this.password
       API.login(data).then((resp) => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           this.$debug('登录成功')
           this.loginError = false
           this.$store.commit('loginStatus/setLogin')
@@ -87,7 +87,7 @@ export default {
     },
     logout: function () {
       API.logout().then((resp) => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           this.$debug('退出成功')
           this.$store.commit('loginStatus/setLogout')
         }

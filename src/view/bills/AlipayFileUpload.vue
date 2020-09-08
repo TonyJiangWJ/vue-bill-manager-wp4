@@ -38,7 +38,7 @@ export default {
     },
     doUpload: function () {
       API.alipayUpload(this.file).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           let self = this
           this.$Modal.confirm({
             title: '上传成功，是否跳转到账单列表？',

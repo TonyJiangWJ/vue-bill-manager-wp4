@@ -100,7 +100,7 @@ export default {
             goodsName: this.newRecord.goodsName
           }
           API.addRecord(request).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
+            if (this.$isSuccess(resp)) {
               this.hideModal()
               this.$Message.success('添加成功')
               this.$emit('requery-list')

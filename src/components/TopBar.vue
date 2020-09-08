@@ -104,7 +104,7 @@ export default {
         title: '确定退出登录吗?',
         onOk: function() {
           API.logout().then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
+            if (this.$isSuccess(resp)) {
               // window.localStorage.removeItem('logined')
               that.$router.push('/login')
             }

@@ -121,7 +121,7 @@ export default {
           }
           this.$debug(JSON.stringify(data))
           API.addAssetType(data).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
+            if (this.$isSuccess(resp)) {
               alert('添加成功')
               this.refresh()
               this.newType = {
@@ -161,7 +161,7 @@ export default {
     },
     refresh: function() {
       API.getAssetParents().then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           this.parentTypes = resp.assetTypes
         }
       })
@@ -184,19 +184,19 @@ export default {
         API.getChildByParent({
           id: item.id
         }).then(resp => {
-          if (resp.code === API.CODE_CONST.SUCCESS) {
+          if (this.$isSuccess(resp)) {
             callback(this.convertToTreeNode(resp.assetTypes))
           }
         })
       } else if (item.title === '负债') {
         API.getLiabilityParents().then(resp => {
-          if (resp.code === API.CODE_CONST.SUCCESS) {
+          if (this.$isSuccess(resp)) {
             callback(this.convertToTreeNode(resp.assetTypes, true))
           }
         })
       } else if (item.title === '资产') {
         API.getAssetParents().then(resp => {
-          if (resp.code === API.CODE_CONST.SUCCESS) {
+          if (this.$isSuccess(resp)) {
             callback(this.convertToTreeNode(resp.assetTypes, true))
           }
         })
@@ -215,13 +215,13 @@ export default {
     typeIdentify: function(newVal) {
       if (newVal === 'L') {
         API.getLiabilityParents().then(resp => {
-          if (resp.code === API.CODE_CONST.SUCCESS) {
+          if (this.$isSuccess(resp)) {
             this.parentTypes = resp.assetTypes
           }
         })
       } else if (newVal === 'A') {
         API.getAssetParents().then(resp => {
-          if (resp.code === API.CODE_CONST.SUCCESS) {
+          if (this.$isSuccess(resp)) {
             this.parentTypes = resp.assetTypes
           }
         })

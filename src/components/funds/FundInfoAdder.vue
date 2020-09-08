@@ -102,7 +102,7 @@ export default {
     fundCode: function(newVal) {
       if (newVal.length >= 6) {
         API.queryFundInfo({ fundCode: newVal }).then(resp => {
-          if (resp.code === API.CODE_CONST.SUCCESS) {
+          if (this.$isSuccess(resp)) {
             this.fundInfo.fundName = resp.fundName
           }
         })
@@ -122,7 +122,7 @@ export default {
           this.fundInfo.purchaseConfirmDate = this.dateFormat(this.fundInfo.purchaseConfirmDate, 'yyyy-MM-dd')
           // TODO 校验是否已经存在
           API.addFundInfo(this.fundInfo).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
+            if (this.$isSuccess(resp)) {
               this.$emit('reload-funds')
               this.$Message.success('添加成功')
               this.fundInfo.purchaseValue = ''

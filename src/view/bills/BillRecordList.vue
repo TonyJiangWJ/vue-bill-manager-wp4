@@ -112,7 +112,6 @@ export default {
       showCostRecordAdder: false,
       communalTagManage: false,
       selectedTradeNo: '',
-      allTagList: [],
       showTagColumn: false,
       newTag: {
         tagName: ''
@@ -274,7 +273,7 @@ export default {
         costIds: this.selectedCostIds
       }
       API.loadCommunalTagsFromRecords(request).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           this.communalTags = resp.tagInfoModels
         } else {
           this.communalTags = []
@@ -285,7 +284,6 @@ export default {
       }
     },
     batchManageTags: function() {
-      this.getAllTagList()
       this.communalTagManage = true
       if (this.checkHaveItemSelection()) {
         let request = {
@@ -293,7 +291,7 @@ export default {
         }
         this.$debug(JSON.stringify(request))
         API.loadCommunalTagsFromRecords(request).then(resp => {
-          if (resp.code === API.CODE_CONST.SUCCESS || resp.code === API.CODE_CONST.DATA_NOT_EXIST) {
+          if (this.$isSuccess(resp) || resp.code === API.CODE_CONST.DATA_NOT_EXIST) {
             this.$debug(resp.tagInfoModels)
             this.communalTags = resp.tagInfoModels
             this.showTagManage = true
@@ -308,7 +306,7 @@ export default {
     },
     executeBatchDelete: function (request) {
       API.batchUpdateDelete(request).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           this.$Message.success('修改成功')
           this.query()
         } else {
@@ -318,7 +316,7 @@ export default {
     },
     executeBatchHide: function (request) {
       API.batchUpdateHide(request).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           this.$Message.success('修改成功')
           this.query()
         } else {
@@ -427,14 +425,6 @@ export default {
       this.pageNo = 0
       this.query()
     },
-    getAllTagList: function() {
-      API.loadAllTagList({}).then(resp => {
-        this.allTagList = []
-        if (resp.code === API.CODE_CONST.SUCCESS) {
-          this.allTagList = resp.tagInfoList
-        }
-      })
-    },
     doQuery: function() {
       this.pageNo = 0
       this.query()
@@ -454,7 +444,7 @@ export default {
         showTags: this.showTagColumn
       }
       API.loadBillList(requestData).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           this.$debug('请求成功')
           this.costRecordList = []
           if (typeof resp.costRecordList !== 'undefined' && resp.costRecordList.length > 0) {

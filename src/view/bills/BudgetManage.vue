@@ -151,7 +151,7 @@ export default {
       API.getBudgetInfo({
         id: reportItem.id
       }).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           this.budgetModal = true
           let budgetInfo = resp.budgetInfo
           this.budget = {
@@ -163,7 +163,7 @@ export default {
             tagInfos: budgetInfo.tagInfos
           }
           API.listBudgetAssignableTags({ budgetId: this.budget.id }).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
+            if (this.$isSuccess(resp)) {
               this.assignableTagList = resp.tagInfoList
             }
           })
@@ -191,7 +191,7 @@ export default {
           month: parseInt(this.budget.yearMonthInfo.substring(5))
         }
         API.putBudget(request).then(resp => {
-          if (resp.code === API.CODE_CONST.SUCCESS) {
+          if (this.$isSuccess(resp)) {
             this.$Message.success('添加成功')
             this.loadReport()
             this.budgetModal = false
@@ -207,7 +207,7 @@ export default {
           version: this.budget.version
         }
         API.updateBudget(request).then(resp => {
-          if (resp.code === API.CODE_CONST.SUCCESS) {
+          if (this.$isSuccess(resp)) {
             this.$Message.success('更新成功')
             this.loadReport()
             this.budgetModal = false
@@ -222,7 +222,7 @@ export default {
         budgetId: this.budget.id,
         tagId: tagId
       }).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           this.$Message.success('更新成功')
           if (typeof this.budget.tagInfos === 'undefined') {
             this.budget.tagInfos = []
@@ -239,7 +239,7 @@ export default {
         budgetId: this.budget.id,
         tagId: tagId
       }).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           this.$Message.success('更新成功')
           let tagInfo = this.budget.tagInfos.splice(this.budget.tagInfos.findIndex(tagInfo => tagInfo.tagId === tagId), 1)[0]
           this.$debug('JSON:' + JSON.stringify(tagInfo))
@@ -256,7 +256,7 @@ export default {
         content: '确定要删除该预算吗?',
         onOk: function() {
           API.deleteBudget({ id: self.budget.id }).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
+            if (this.$isSuccess(resp)) {
               self.$Message.success('删除成功')
               self.loadReport()
               self.budgetModal = false
@@ -269,7 +269,7 @@ export default {
     },
     loadReport: function() {
       API.loadBudgetReport({}).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           this.reportModelList = resp.reportModelList
         }
       })

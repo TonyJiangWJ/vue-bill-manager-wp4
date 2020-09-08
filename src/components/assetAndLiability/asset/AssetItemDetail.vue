@@ -77,7 +77,7 @@ export default {
         available: this.available
       }
       API.updateAsset(request).then(resp => {
-        if (resp.code === API.CODE_CONST.SUCCESS) {
+        if (this.$isSuccess(resp)) {
           this.$debug('更新成功')
           this.assetModal = false
           this.$emit('reloadAssetInfo')
@@ -95,7 +95,7 @@ export default {
             assetId: self.asset.id
           }
           API.deleteAsset(request).then(resp => {
-            if (resp.code === API.CODE_CONST.SUCCESS) {
+            if (this.$isSuccess(resp)) {
               self.$debug('删除成功')
               self.assetModal = false
               self.$emit('reloadAssetInfo')

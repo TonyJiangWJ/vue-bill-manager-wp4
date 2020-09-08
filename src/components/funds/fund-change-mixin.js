@@ -103,6 +103,9 @@ export default {
         this.sortOrder = 1
       }
       this.handleInnerSort()
+    },
+    filterUndefinedAsMinus: function (val) {
+      return this.$isNotEmpty(val) ? val : '--'
     }
   },
   watch: {
