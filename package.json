@@ -9,7 +9,7 @@
     "analyz": "NODE_ENV=production npm_config_report=true npm run build"
   },
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "clipboard": "^2.0.6",
     "core-js": "^2.6.11",
     "echarts": "^4.8.0",
